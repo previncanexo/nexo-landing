@@ -36,7 +36,7 @@ export function Hero() {
               className="w-2 h-2 rounded-full bg-[var(--pink)]"
               style={{ animation: 'pulse-dot 2s ease-in-out infinite' }}
             />
-            100% DIGITAL · SIN BUROCRACIA
+            100% pensado para vos
           </motion.div>
 
           {/* Hero Title */}
@@ -48,8 +48,8 @@ export function Hero() {
             transition={{ delay: 0.15 }}
           >
             <h1 className="font-['DM_Serif_Display'] leading-[0.92] tracking-[-2px] md:tracking-[-3px] mb-3">
-              <span className="block text-[clamp(32px,9vw,96px)] text-white">100% pensado</span>
-              <span className="block text-[clamp(32px,9vw,96px)] text-white italic">para vos</span>
+              <span className="block text-[clamp(32px,9vw,96px)] text-white">Tu salud,</span>
+              <span className="block text-[clamp(32px,9vw,96px)] text-white italic">digitalmente simple</span>
             </h1>
           </motion.div>
 
