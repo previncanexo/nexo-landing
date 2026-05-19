@@ -1,0 +1,148 @@
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { BackgroundMesh } from './components/BackgroundMesh';
+import { Navigation } from './components/Navigation';
+import { Hero } from './components/Hero';
+import { PlanBase } from './components/PlanBase';
+import { ALaCarta } from './components/ALaCarta';
+import { ComoFunciona } from './components/ComoFunciona';
+import { Testimonios } from './components/Testimonios';
+import { FAQ } from './components/FAQ';
+import { Footer } from './components/Footer';
+import { CheckoutModal } from './components/CheckoutModal';
+import { BackToTop } from './components/BackToTop';
+import { WhatsAppButton } from './components/WhatsAppButton';
+import { SocialProofToast } from './components/SocialProofToast';
+import { IPhoneCTA } from './components/IPhoneCTA';
+
+const testimonials = [
+  {
+    name: 'Denise Coletti',
+    role: 'Socia desde hace años',
+    content: 'Tengo el servicio desde que tengo uso de razón, con algunos cambios de por medio pero siempre con servicios asociado a mi familia. En la mayoría de los casos todo excelente: desde la atención vía mail, vía telefónica y presencialmente en consultorios y la calidad médica. Agradezco a Josefina Romero Acuña, Ejecutiva de Atención al Cliente, por su amabilidad, atención y rapidez a la hora de resolver y facilitarme un inconveniente con mis facturas.',
+  },
+  {
+    name: 'Felisa Albarran',
+    role: 'Socia desde hace más de 40 años',
+    content: 'Soy social desde hace más de 40 años, me cuesta la tecnología pero la atención de los empleados es impecable y con su guía me comunico y soluciono mis inquietudes. Gracias a la Srta J Romero y a sus compañeros.',
+  },
+  {
+    name: 'Clau Dowling',
+    role: 'Socia nueva',
+    content: 'Somos nuevos, pero destaco que ante unos errores me solucionaron todo rápido y excelente atención telefónica.',
+  },
+];
+
+const faqItems = [
+  {
+    question: '¿Cómo funciona Nexo?',
+    answer: 'Nexo es tu membresía de salud digital. Elegís un plan base que incluye medicina clínica y medicina general, y luego sumás especialidades a la carta según tus necesidades. Todo con una cuota mensual fija y transparente.',
+  },
+  {
+    question: '¿Qué incluye el Plan Base?',
+    answer: 'El Plan Base ($19.500/mes) incluye teleconsultas médicas 24/7 (DOC24), urgencias 24/7, descuentos del 50% en farmacias y guardias odontológicas.',
+  },
+  {
+    question: '¿Puedo agregar especialidades después?',
+    answer: 'Sí, totalmente. Podés sumar especialidades a la carta en cualquier momento. Solo pagás por las que uses y tenés la flexibilidad de activarlas o pausarlas cuando quieras.',
+  },
+  {
+    question: '¿Los médicos están matriculados?',
+    answer: 'Absolutamente. Todos nuestros profesionales están matriculados y cuentan con años de experiencia en sus especialidades. Verificamos credenciales y trayectoria antes de incorporarlos a la red de Nexo.',
+  },
+  {
+    question: '¿Cómo cancelo mi membresía?',
+    answer: 'Podés cancelar tu membresía en cualquier momento, sin penalidades ni costos adicionales. Tu acceso continuará hasta el final del período ya pagado.',
+  },
+];
+
+export default function App() {
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [showMobileCta, setShowMobileCta] = useState(false);
+  const [showBackToTop, setShowBackToTop] = useState(false);
+
+  // Refs to avoid unnecessary re-renders on scroll
+  const showMobileCtaRef = useRef(false);
+  const showBackToTopRef = useRef(false);
+
+  // Handle smooth scroll for anchor links via JS (not CSS scroll-behavior)
+  useEffect(() => {
+    const handleAnchorClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const anchor = target.closest('a[href^="#"]') as HTMLAnchorElement | null;
+      if (!anchor) return;
+      const id = anchor.getAttribute('href');
+      if (!id) return;
+      // Prevent href="#" from jumping to top
+      if (id === '#') {
+        e.preventDefault();
+        return;
+      }
+      const el = document.querySelector(id);
+      if (el) {
+        e.preventDefault();
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    };
+    document.addEventListener('click', handleAnchorClick);
+    return () => document.removeEventListener('click', handleAnchorClick);
+  }, []);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY;
+      // Show iPhone CTA after scrolling 600px but hide when reaching PlanBase section
+      const planBaseEl = document.getElementById('beneficios');
+      const planBaseTop = planBaseEl ? planBaseEl.offsetTop - 200 : Infinity;
+      const nextMobile = y > 600 && y < planBaseTop;
+      const nextBack = y > 800;
+
+      // Only setState when the value actually changes
+      if (nextMobile !== showMobileCtaRef.current) {
+        showMobileCtaRef.current = nextMobile;
+        setShowMobileCta(nextMobile);
+      }
+      if (nextBack !== showBackToTopRef.current) {
+        showBackToTopRef.current = nextBack;
+        setShowBackToTop(nextBack);
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  const openCheckout = useCallback(() => setIsCheckoutOpen(true), []);
+  const closeCheckout = useCallback(() => setIsCheckoutOpen(false), []);
+
+  return (
+    <>
+      <BackgroundMesh />
+      <Navigation onOpenCheckout={openCheckout} />
+      {/* Spacer for fixed nav */}
+      <div className="h-[96px]" />
+      <Hero onOpenCheckout={openCheckout} />
+      <PlanBase onOpenCheckout={openCheckout} />
+      <ALaCarta onOpenCheckout={openCheckout} />
+      <ComoFunciona onOpenCheckout={openCheckout} />
+      <Testimonios testimonials={testimonials} />
+      <FAQ items={faqItems} />
+      <Footer />
+
+      {/* Back to Top Button */}
+      <BackToTop isVisible={showBackToTop && !isCheckoutOpen} isMobileCTAVisible={showMobileCta} />
+
+      {/* WhatsApp Button */}
+      <WhatsAppButton isVisible={!isCheckoutOpen} isMobileCTAVisible={showMobileCta} />
+
+      {/* Social Proof Toast - Afiliados uniéndose */}
+      {!isCheckoutOpen && <SocialProofToast isMobileCTAVisible={showMobileCta} />}
+
+      {/* iPhone Mockup CTA */}
+      <IPhoneCTA isVisible={showMobileCta && !isCheckoutOpen} onOpenCheckout={openCheckout} />
+
+      <CheckoutModal
+        isOpen={isCheckoutOpen}
+        onClose={closeCheckout}
+      />
+    </>
+  );
+}
