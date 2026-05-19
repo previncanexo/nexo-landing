@@ -147,8 +147,8 @@ export function Hero() {
                   </svg>
                 </div>
                 <div>
-                  <div className="text-sm font-bold text-[var(--gray-900)]">Credencial al instante</div>
-                  <div className="text-xs text-[var(--gray-600)]">vía WhatsApp</div>
+                  <div className="text-sm font-bold text-[var(--gray-900)]">Portal Nexo</div>
+                  <div className="text-xs text-[var(--gray-600)]">credencial virtual</div>
                 </div>
               </div>
             </div>

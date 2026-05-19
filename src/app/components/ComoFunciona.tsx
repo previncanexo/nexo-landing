@@ -10,8 +10,8 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
     {
       number: '01',
       title: 'Elegís tu plan',
-      body: 'Seleccionás el Plan Base y agregás los servicios A la Carta que necesitás. Todo desde esta pantalla, sin salir de la web.',
-      tag: '2 min',
+      body: 'Revisás el resumen del Plan Base: las 4 prestaciones incluidas, topes, precio mensual y vigencia. Todo claro, sin letra chica.',
+      tag: '1 min',
       icon: (
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <circle cx="9" cy="21" r="1"/>
@@ -23,27 +23,42 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
     },
     {
       number: '02',
-      title: 'Completás tus datos y el pago',
-      body: 'Nombre, DNI y contacto. Luego elegís el método de pago a través de Mercado Pago: tarjeta, débito, transferencia o billetera virtual.',
+      title: 'Completás el formulario de alta',
+      body: 'Nombre, apellido, DNI, email y datos de contacto. El proceso es 100% digital, sin papeles ni turnos presenciales.',
       tag: '3 min',
       icon: (
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-          <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
-          <line x1="1" y1="10" x2="23" y2="10"/>
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
         </svg>
       ),
       iconBg: 'from-[#ee5cd0] to-[#8660ef]'
     },
     {
       number: '03',
-      title: 'Recibis tu alta en Nexo por WhatsApp',
-      body: 'Te guiamos y acompañamos durante el proceso de alta.',
+      title: 'Aceptás los términos y realizás el pago',
+      body: 'Revisás y aceptás las condiciones del plan. Luego pagás de forma segura a través de Mercado Pago: tarjeta, débito, transferencia o billetera virtual.',
+      tag: '2 min',
+      icon: (
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+          <line x1="1" y1="10" x2="23" y2="10"/>
+        </svg>
+      ),
+      iconBg: 'from-[#8660ef] to-[#ee5cd0]'
+    },
+    {
+      number: '04',
+      title: 'Accedés al Portal Nexo con tu credencial virtual',
+      body: 'Al confirmarse el pago, recibís acceso inmediato a tu Portal Nexo. Desde ahí gestionás todos tus beneficios y presentás tu credencial digital en cualquier prestador.',
       tag: 'Inmediato',
       icon: (
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-          <path d="M9 10h6"/>
-          <path d="M9 14h4"/>
+          <rect x="2" y="3" width="20" height="14" rx="2"/>
+          <line x1="8" y1="21" x2="16" y2="21"/>
+          <line x1="12" y1="17" x2="12" y2="21"/>
         </svg>
       ),
       iconBg: 'from-[#8660ef] to-[#e5ab9f]'
@@ -263,7 +278,7 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
               </h3>
 
               <p className="text-[15px] sm:text-base text-white/90 leading-relaxed mb-6 sm:mb-8 max-w-[480px] mx-auto">
-                Comenzá el proceso de afiliación ahora mismo. En menos de 10 minutos tenés tu credencial lista.
+                Completá el alta en minutos y accedé al instante a tu Portal Nexo con credencial virtual incluida.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center">
