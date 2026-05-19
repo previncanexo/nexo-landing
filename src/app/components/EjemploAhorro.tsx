@@ -171,7 +171,7 @@ export function EjemploAhorro({ onOpenCheckout }: EjemploAhorroProps) {
                 </h3>
 
                 <p className="text-base sm:text-lg text-white/90 leading-relaxed mb-8 max-w-[560px] mx-auto">
-                  Sin papeles, sin vueltas. Te das de alta en 3 minutos y ya tenés tu credencial lista para usar.
+                  Sin papeles, sin vueltas. Te das de alta en minutos y accedés directo al Portal Nexo con tu credencial virtual.
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">

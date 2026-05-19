@@ -56,7 +56,7 @@ export function Navigation({ onOpenCheckout }: NavigationProps) {
               />
             </a>
 
-            {/* Desktop Nav Links */}
+            {/* Desktop Nav Links + Mi Portal */}
             <ul className={`hidden items-center gap-1 list-none ${scrolled ? '' : 'lg:flex'}`}>
               {navLinks.map((link) => (
                 <li key={link.href}>
@@ -68,7 +68,35 @@ export function Navigation({ onOpenCheckout }: NavigationProps) {
                   </a>
                 </li>
               ))}
+              <li>
+                <a
+                  href="https://nexo-portal-ten.vercel.app"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 text-sm font-semibold text-white no-underline px-4 py-2 rounded-full border border-white/30 bg-white/12 transition-all duration-200 hover:bg-white/22 hover:border-white/50 active:scale-95 ml-2"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                  </svg>
+                  Mi Portal
+                </a>
+              </li>
             </ul>
+
+            {/* Mi Portal — mobile (visible sin abrir el menú) */}
+            <a
+              href="https://nexo-portal-ten.vercel.app"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`flex items-center gap-1.5 text-xs font-semibold text-white no-underline px-3 py-2 rounded-full border border-white/30 bg-white/12 transition-all duration-200 hover:bg-white/22 active:scale-95 ${scrolled ? 'hidden' : 'lg:hidden'}`}
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+              Mi Portal
+            </a>
 
             {/* Mobile Hamburger */}
             <button
@@ -166,7 +194,7 @@ export function Navigation({ onOpenCheckout }: NavigationProps) {
           </ul>
 
           <div
-            className="w-full max-w-xs"
+            className="w-full max-w-xs flex flex-col gap-3"
             style={{
               animation: mobileOpen ? 'fadeInUp 0.4s ease-out 0.35s backwards' : 'none',
             }}
@@ -180,6 +208,19 @@ export function Navigation({ onOpenCheckout }: NavigationProps) {
             >
               Lo quiero — $19.500/mes
             </button>
+            <a
+              href="https://nexo-portal-ten.vercel.app"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setMobileOpen(false)}
+              className="w-full flex items-center justify-center gap-2 text-white/80 no-underline py-3 px-8 rounded-full border border-white/25 bg-white/10 text-sm font-semibold transition-all hover:bg-white/20 hover:text-white"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+              Mi Portal
+            </a>
           </div>
         </div>
       </div>

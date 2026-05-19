@@ -504,7 +504,7 @@ export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
                     transition={{ delay: 0.5 }}
                     className="text-sm text-[var(--gray-600)] leading-relaxed mb-8 max-w-[380px] mx-auto"
                   >
-                    Tus datos fueron enviados. Un asesor de Nexo te va a acompañar durante todo el proceso de alta y te enviará tu credencial por WhatsApp.
+                    Tus datos fueron enviados. Un asesor de Nexo te va a contactar para acompañarte durante el proceso y activar tu acceso al Portal Nexo.
                   </motion.div>
 
                   <div className="space-y-3 mb-8">
@@ -535,7 +535,7 @@ export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
                             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                           </svg>
                         ),
-                        text: 'Tu credencial Nexo llegará a tu WhatsApp al completarse el alta',
+                        text: 'Accedés de inmediato al Portal Nexo con tu credencial virtual',
                         color: 'border-[var(--peach)]/40 bg-[var(--peach-light)]',
                         delay: 0.8,
                       }
