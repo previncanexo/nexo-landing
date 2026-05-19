@@ -1,11 +1,7 @@
 import { motion } from 'motion/react';
 import { fadeUp, fadeUpSubtle } from './motion-variants';
 
-interface HeroProps {
-  onOpenCheckout: () => void;
-}
-
-export function Hero({ onOpenCheckout }: HeroProps) {
+export function Hero() {
   const handleWhatsApp = () => {
     window.open('https://wa.me/5493415056130?text=Hola%2C%20quiero%20consultar%20sobre%20Nexo%20by%20Previnca', '_blank');
   };
@@ -81,7 +77,7 @@ export function Hero({ onOpenCheckout }: HeroProps) {
             transition={{ delay: 0.45 }}
           >
             <motion.button
-              onClick={onOpenCheckout}
+              onClick={() => window.open('https://nexo-portal-ten.vercel.app/registro', '_blank', 'noopener,noreferrer')}
               className="bg-white text-[var(--purple)] border-none px-8 sm:px-10 py-4 rounded-full text-[15px] sm:text-base font-bold cursor-pointer font-['DM_Sans'] whitespace-nowrap group w-full sm:w-auto justify-center flex items-center gap-2"
               whileHover={{ scale: 1.03, boxShadow: '0 20px 60px rgba(255,255,255,0.25)' }}
               whileTap={{ scale: 0.97 }}
@@ -119,7 +115,7 @@ export function Hero({ onOpenCheckout }: HeroProps) {
           transition={{ delay: 0.7 }}
         >
           <div className="relative">
-            <PhoneMockup onOpenCheckout={onOpenCheckout} />
+            <PhoneMockup />
 
             {/* Floating Badge 1 */}
             <div
@@ -172,7 +168,7 @@ export function Hero({ onOpenCheckout }: HeroProps) {
   );
 }
 
-function PhoneMockup({ onOpenCheckout }: { onOpenCheckout: () => void }) {
+function PhoneMockup() {
   return (
     <div className="w-[280px] sm:w-[320px] bg-white/95 backdrop-blur-xl rounded-[44px] border-4 border-white px-6 pt-7 pb-9 relative overflow-hidden shadow-2xl">
       {/* Gradient Background */}
@@ -246,7 +242,7 @@ function PhoneMockup({ onOpenCheckout }: { onOpenCheckout: () => void }) {
 
       {/* CTA Button */}
       <button
-        onClick={onOpenCheckout}
+        onClick={() => window.open('https://nexo-portal-ten.vercel.app/registro', '_blank', 'noopener,noreferrer')}
         className="block w-full bg-gradient-to-r from-[var(--pink)] to-[var(--purple)] text-white border-none py-4 rounded-full text-sm font-bold text-center font-['DM_Sans'] cursor-pointer mb-3 relative z-10 shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all flex items-center justify-center gap-2"
       >
         Lo quiero

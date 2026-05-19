@@ -119,8 +119,8 @@ export default function App() {
       <Navigation onOpenCheckout={openCheckout} />
       {/* Spacer for fixed nav */}
       <div className="h-[96px]" />
-      <Hero onOpenCheckout={openCheckout} />
-      <PlanBase onOpenCheckout={openCheckout} />
+      <Hero />
+      <PlanBase />
       <ALaCarta onOpenCheckout={openCheckout} />
       <ComoFunciona onOpenCheckout={openCheckout} />
       <Testimonios testimonials={testimonials} />

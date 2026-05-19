@@ -1,11 +1,7 @@
 import { motion } from 'motion/react';
 import { slideFromLeft, scaleUp, viewportOnce } from './motion-variants';
 
-interface CierreSectionProps {
-  onOpenCheckout: () => void;
-}
-
-export function CierreSection({ onOpenCheckout }: CierreSectionProps) {
+export function CierreSection() {
   const handleWhatsApp = () => {
     window.open('https://wa.me/5493415056130?text=Hola%2C%20quiero%20consultar%20sobre%20Nexo%20by%20Previnca', '_blank');
   };
@@ -98,7 +94,7 @@ export function CierreSection({ onOpenCheckout }: CierreSectionProps) {
                 {/* CTAs */}
                 <div className="space-y-3 mb-10">
                   <motion.button
-                    onClick={onOpenCheckout}
+                    onClick={() => window.open('https://nexo-portal-ten.vercel.app/registro', '_blank', 'noopener,noreferrer')}
                     className="w-full bg-white text-[var(--purple)] border-none px-8 py-[18px] rounded-full text-base cursor-pointer font-['DM_Sans'] font-bold flex items-center justify-center gap-3 group"
                     whileHover={{ scale: 1.02, boxShadow: '0 20px 60px rgba(255,255,255,0.2)' }}
                     whileTap={{ scale: 0.97 }}

@@ -9,11 +9,7 @@ import {
   viewportOnce,
 } from './motion-variants';
 
-interface PlanBaseProps {
-  onOpenCheckout: () => void;
-}
-
-export function PlanBase({ onOpenCheckout }: PlanBaseProps) {
+export function PlanBase() {
   const benefits = [
     {
       icon: (
@@ -273,7 +269,7 @@ export function PlanBase({ onOpenCheckout }: PlanBaseProps) {
 
               <div className="flex flex-col gap-5 items-center lg:items-end">
                 <motion.button
-                  onClick={onOpenCheckout}
+                  onClick={() => window.open('https://nexo-portal-ten.vercel.app/registro', '_blank', 'noopener,noreferrer')}
                   className="bg-white text-[var(--purple)] border-none px-8 sm:px-10 py-4 rounded-full text-base font-bold cursor-pointer font-['DM_Sans'] flex items-center gap-3 group w-full sm:w-auto justify-center"
                   whileHover={{ scale: 1.03, boxShadow: '0 20px 60px rgba(255,255,255,0.3)' }}
                   whileTap={{ scale: 0.97 }}
