@@ -114,11 +114,9 @@ export default function App() {
   const closeCheckout = useCallback(() => setIsCheckoutOpen(false), []);
 
   return (
-    <>
+    <div className="overflow-x-hidden">
       <BackgroundMesh />
       <Navigation onOpenCheckout={openCheckout} />
-      {/* Spacer for fixed nav */}
-      <div className="h-[96px]" />
       <Hero />
       <PlanBase />
       <ALaCarta onOpenCheckout={openCheckout} />
@@ -143,6 +141,6 @@ export default function App() {
         isOpen={isCheckoutOpen}
         onClose={closeCheckout}
       />
-    </>
+    </div>
   );
 }

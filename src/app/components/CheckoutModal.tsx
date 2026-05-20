@@ -146,12 +146,13 @@ export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
       onClick={handleOverlayClick}
     >
       <div
-        className={`bg-white rounded-t-[28px] sm:rounded-[28px] w-full max-w-[520px] max-h-[95vh] sm:max-h-[90vh] overflow-y-auto relative transition-all duration-400 shadow-2xl ${
+        className={`bg-white rounded-t-[28px] sm:rounded-[28px] w-full max-w-[520px] max-h-[92dvh] sm:max-h-[90vh] overflow-y-auto relative transition-all duration-400 shadow-2xl pb-safe ${
           isOpen ? 'translate-y-0 scale-100' : 'translate-y-4 scale-[0.97]'
         }`}
         style={{
           scrollbarWidth: 'thin',
-          scrollbarColor: 'var(--gray-300) transparent'
+          scrollbarColor: 'var(--gray-300) transparent',
+          paddingBottom: 'env(safe-area-inset-bottom, 0px)'
         }}
       >
         {/* Subtle Gradient Top Accent */}

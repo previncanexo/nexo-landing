@@ -164,7 +164,7 @@ export function Testimonios({ testimonials }: TestimoniosProps) {
           whileInView="visible"
           viewport={viewportOnce}
           variants={fadeUp}
-          className="text-center mb-16"
+          className="text-center mb-10 sm:mb-16"
         >
           <h2 className="font-['DM_Serif_Display'] text-[clamp(36px,5.5vw,68px)] mb-4 leading-[0.95] tracking-[-2px] text-white">
             Lo que dicen nuestros{' '}
@@ -172,7 +172,7 @@ export function Testimonios({ testimonials }: TestimoniosProps) {
               miembros
             </span>
           </h2>
-          <p className="text-white/70 text-lg max-w-2xl mx-auto">
+          <p className="text-white/70 text-base sm:text-lg max-w-2xl mx-auto">
             Historias reales de personas que transformaron su salud con Nexo
           </p>
         </motion.div>

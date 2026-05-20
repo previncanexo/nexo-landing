@@ -14,7 +14,8 @@ export function IPhoneCTA({ isVisible, onOpenCheckout }: IPhoneCTAProps) {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 120, opacity: 0 }}
           transition={{ type: 'spring', stiffness: 260, damping: 28 }}
-          className="fixed bottom-5 left-1/2 -translate-x-1/2 z-[90]"
+          className="fixed left-1/2 -translate-x-1/2 z-[90]"
+          style={{ bottom: 'calc(20px + env(safe-area-inset-bottom, 0px))' }}
         >
           {/* iPhone Frame */}
           <div

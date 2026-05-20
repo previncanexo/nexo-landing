@@ -82,9 +82,10 @@ export function WhatsAppButton({ isVisible, isMobileCTAVisible }: WhatsAppButton
 
       {/* Mobile version - hidden when iPhone CTA is visible to avoid overlap */}
       <div
-        className={`lg:hidden fixed z-[91] left-4 bottom-6 transition-all duration-500 ${
+        className={`lg:hidden fixed z-[91] left-4 transition-all duration-500 ${
           isMobileCTAVisible ? 'opacity-0 pointer-events-none translate-y-4' : 'opacity-100'
         }`}
+        style={{ bottom: 'calc(24px + env(safe-area-inset-bottom, 0px))' }}
       >
         {/* Tooltip/Dialog Bubble for Mobile */}
         <motion.div

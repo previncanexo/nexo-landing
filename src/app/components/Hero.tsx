@@ -7,7 +7,7 @@ export function Hero() {
   };
 
   return (
-    <section id="hero" className="flex flex-col items-center py-12 pt-20 sm:py-16 md:pt-24 md:pb-20 relative overflow-hidden">
+    <section id="hero" className="flex flex-col items-center py-12 pt-24 sm:py-16 sm:pt-28 md:pt-32 md:pb-20 relative overflow-hidden">
       {/* Enhanced Gradient Mesh Background with Grain */}
       <div
         className="absolute inset-0 opacity-30"
@@ -47,9 +47,9 @@ export function Hero() {
             animate="visible"
             transition={{ delay: 0.15 }}
           >
-            <h1 className="font-['DM_Serif_Display'] leading-[0.92] tracking-[-2px] md:tracking-[-3px] mb-3">
-              <span className="block text-[clamp(32px,9vw,96px)] text-white">Tu salud,</span>
-              <span className="block text-[clamp(32px,9vw,96px)] text-white italic">digitalmente simple</span>
+            <h1 className="font-['DM_Serif_Display'] leading-[0.92] tracking-[-1px] sm:tracking-[-2px] md:tracking-[-3px] mb-3">
+              <span className="block text-[clamp(30px,8vw,96px)] text-white">Tu salud,</span>
+              <span className="block text-[clamp(30px,8vw,96px)] text-white italic">digitalmente simple</span>
             </h1>
           </motion.div>
 

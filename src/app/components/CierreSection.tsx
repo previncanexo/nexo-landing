@@ -32,7 +32,7 @@ export function CierreSection() {
           >
             {/* Section heading — same style as Testimonios */}
             <h3
-              className="text-4xl lg:text-5xl mb-10 leading-tight"
+              className="text-3xl sm:text-4xl lg:text-5xl mb-6 sm:mb-10 leading-tight"
               style={{ fontFamily: 'DM Serif Display' }}
             >
               Comenzá{' '}
@@ -45,7 +45,7 @@ export function CierreSection() {
             </h3>
 
             {/* Giant editorial title */}
-            <h2 className="font-['DM_Serif_Display'] text-[clamp(40px,7vw,96px)] leading-[0.9] tracking-[-2px] sm:tracking-[-3px] mb-8">
+            <h2 className="font-['DM_Serif_Display'] text-[clamp(36px,7vw,96px)] leading-[0.92] tracking-[-1px] sm:tracking-[-2px] md:tracking-[-3px] mb-6 sm:mb-8">
               <span className="text-white">Tu salud</span>
               <br />
               <span className="text-white">no puede</span>
@@ -66,7 +66,7 @@ export function CierreSection() {
             </h2>
 
             {/* Subtitle */}
-            <p className="text-lg text-white/70 leading-relaxed max-w-[480px]">
+            <p className="text-base sm:text-lg text-white/70 leading-relaxed max-w-[480px]">
               Comenzá con el plan base y agregá lo que necesitás cuando quieras. Sin papeles. Sin excusas.
             </p>
           </motion.div>

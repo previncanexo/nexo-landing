@@ -34,7 +34,7 @@ export function FAQ({ items }: FAQProps) {
               frecuentes
             </span>
           </h2>
-          <p className="text-white/70 text-lg max-w-2xl mx-auto">
+          <p className="text-white/70 text-base sm:text-lg max-w-2xl mx-auto">
             Todo lo que necesitás saber sobre Nexo
           </p>
         </motion.div>
@@ -109,7 +109,7 @@ export function FAQ({ items }: FAQProps) {
           whileInView="visible"
           viewport={viewportOnce}
           variants={fadeUp}
-          className="mt-16 rounded-3xl p-8 lg:p-10 text-center backdrop-blur-xl border"
+          className="mt-10 sm:mt-16 rounded-3xl p-6 sm:p-8 lg:p-10 text-center backdrop-blur-xl border"
           style={{
             background: 'rgba(255, 255, 255, 0.03)',
             borderColor: 'rgba(255, 255, 255, 0.1)',

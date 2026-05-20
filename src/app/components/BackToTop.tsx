@@ -53,11 +53,12 @@ export function BackToTop({ isVisible, isMobileCTAVisible }: BackToTopProps) {
             transition={{ type: 'spring', stiffness: 300, damping: 25 }}
             whileTap={{ scale: 0.9 }}
             onClick={scrollToTop}
-            className={`lg:hidden fixed z-[91] bottom-[72px] w-12 h-12 rounded-xl border-2 border-white/20 cursor-pointer flex items-center justify-center shadow-lg transition-all duration-500 ${
+            className={`lg:hidden fixed z-[91] w-12 h-12 rounded-xl border-2 border-white/20 cursor-pointer flex items-center justify-center shadow-lg transition-all duration-500 ${
               isMobileCTAVisible ? 'opacity-0 pointer-events-none translate-y-4' : 'opacity-100'
             }`}
             style={{
               left: '1rem',
+              bottom: 'calc(72px + env(safe-area-inset-bottom, 0px))',
               background: 'linear-gradient(135deg, rgba(134, 96, 239, 0.95) 0%, rgba(238, 92, 208, 0.95) 100%)',
               backdropFilter: 'blur(16px)',
             }}
