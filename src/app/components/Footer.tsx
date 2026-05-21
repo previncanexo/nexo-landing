@@ -37,7 +37,7 @@ export function Footer() {
           <div className="col-span-2 md:col-span-4">
             <img src={logoImage} alt="Nexo by Previnca" className="h-16 mb-5" />
             <p className="text-sm text-white/80 leading-relaxed mb-6 max-w-[280px]">
-              Tu salud digitalmente simple. Cobertura médica esencial sin burocracia.
+              Tu salud digitalmente simple. Cobertura médica esencial.
             </p>
             {/* Social Icons */}
             <div className="flex gap-3">
@@ -121,7 +121,7 @@ export function Footer() {
                       <polyline points="22,6 12,13 2,6"/>
                     </svg>
                   ),
-                  text: 'hola@previnca.com.ar'
+                  text: 'hola@nexoprevinca.com.ar'
                 },
                 {
                   icon: (
