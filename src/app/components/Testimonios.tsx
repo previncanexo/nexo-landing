@@ -92,7 +92,7 @@ function TestimonialCard({ testimonial, index }: { testimonial: Testimonial; ind
             className="mt-3 flex items-center gap-1.5 cursor-pointer border-none bg-transparent p-0 group/btn"
           >
             <span
-              className={`text-[13px] font-semibold bg-gradient-to-r ${gradients[index % 3]} bg-clip-text`}
+              className={`text-sm font-semibold bg-gradient-to-r ${gradients[index % 3]} bg-clip-text`}
               style={{ WebkitTextFillColor: 'transparent' }}
             >
               {expanded ? 'Ver menos' : 'Ver más'}
@@ -146,7 +146,7 @@ function TestimonialCard({ testimonial, index }: { testimonial: Testimonial; ind
 
 export function Testimonios({ testimonials }: TestimoniosProps) {
   return (
-    <section className="relative py-16 sm:py-24 lg:py-32 px-5 sm:px-6 lg:px-8">
+    <section className="relative py-20 sm:py-28 px-5 sm:px-6 lg:px-8">
       {/* Dark backdrop for contrast */}
       <div
         className="absolute inset-0 z-0"

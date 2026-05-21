@@ -18,7 +18,7 @@ interface FAQProps {
 
 export function FAQ({ items }: FAQProps) {
   return (
-    <section className="relative py-16 sm:py-24 lg:py-32 px-5 sm:px-6 lg:px-8">
+    <section className="relative py-20 sm:py-28 px-5 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <motion.div
@@ -28,7 +28,7 @@ export function FAQ({ items }: FAQProps) {
           variants={fadeUp}
           className="text-center mb-16"
         >
-          <h2 className="font-['DM_Serif_Display'] text-[clamp(36px,5.5vw,68px)] mb-4 leading-[0.95] tracking-[-2px] text-white">
+          <h2 className="font-['DM_Serif_Display'] text-[clamp(36px,5.5vw,68px)] mb-4 leading-tight tracking-[-2px] text-white">
             Preguntas{' '}
             <span className="italic text-[var(--pink)]">
               frecuentes

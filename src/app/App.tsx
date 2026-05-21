@@ -11,7 +11,6 @@ import { Footer } from './components/Footer';
 import { CheckoutModal } from './components/CheckoutModal';
 import { BackToTop } from './components/BackToTop';
 import { WhatsAppButton } from './components/WhatsAppButton';
-import { SocialProofToast } from './components/SocialProofToast';
 import { IPhoneCTA } from './components/IPhoneCTA';
 
 const testimonials = [
@@ -130,9 +129,6 @@ export default function App() {
 
       {/* WhatsApp Button */}
       <WhatsAppButton isVisible={!isCheckoutOpen} isMobileCTAVisible={showMobileCta} />
-
-      {/* Social Proof Toast - Afiliados uniéndose */}
-      {!isCheckoutOpen && <SocialProofToast isMobileCTAVisible={showMobileCta} />}
 
       {/* iPhone Mockup CTA */}
       <IPhoneCTA isVisible={showMobileCta && !isCheckoutOpen} onOpenCheckout={openCheckout} />

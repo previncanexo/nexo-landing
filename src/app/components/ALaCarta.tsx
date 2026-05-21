@@ -64,7 +64,7 @@ export function ALaCarta({ onOpenCheckout: _onOpenCheckout }: ALaCartaProps) {
   return (
     <section
       id="carta"
-      className="py-16 md:py-[120px] relative z-[2] overflow-hidden"
+      className="py-20 sm:py-28 relative z-[2] overflow-hidden"
       style={{
         background: 'linear-gradient(180deg, #ffffff 0%, #faf9fc 50%, #ffffff 100%)'
       }}
@@ -101,7 +101,7 @@ export function ALaCarta({ onOpenCheckout: _onOpenCheckout }: ALaCartaProps) {
             <span className="bg-white/25 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full border border-white/40">Próximamente</span>
           </div>
 
-          <h2 className="font-['DM_Serif_Display'] text-[clamp(36px,5.5vw,68px)] text-[var(--gray-900)] leading-[0.95] tracking-[-2px] mb-5">
+          <h2 className="font-['DM_Serif_Display'] text-[clamp(36px,5.5vw,68px)] text-[var(--gray-900)] leading-tight tracking-[-2px] mb-5">
             Ampliá tu{' '}
             <span className="italic text-[var(--pink)]">cobertura</span>
           </h2>

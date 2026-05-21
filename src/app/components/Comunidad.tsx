@@ -52,7 +52,7 @@ export function Comunidad() {
   return (
     <section
       id="comunidad"
-      className="py-16 md:py-[120px] relative z-[2] overflow-hidden"
+      className="py-20 sm:py-28 relative z-[2] overflow-hidden"
       style={{
         background: 'linear-gradient(180deg, #ffffff 0%, #faf9fc 50%, #ffffff 100%)'
       }}
@@ -70,7 +70,7 @@ export function Comunidad() {
         }}
       />
 
-      <div className="max-w-[1400px] mx-auto px-5 sm:px-6 relative z-10">
+      <div className="max-w-[1200px] mx-auto px-5 sm:px-6 relative z-10">
         {/* Asymmetric Header */}
         <div className="grid md:grid-cols-[1.3fr_1fr] gap-8 md:gap-12 items-end mb-12 md:mb-20">
           {/* Left: Title */}
@@ -191,7 +191,7 @@ export function Comunidad() {
 
                   {/* Content */}
                   <div className="p-3 sm:p-6">
-                    <h3 className="text-[13px] sm:text-base font-bold text-[var(--gray-900)] mb-1 sm:mb-2 leading-tight">
+                    <h3 className="text-sm sm:text-base font-bold text-[var(--gray-900)] mb-1 sm:mb-2 leading-tight">
                       {card.title}
                     </h3>
                     <p className="text-[11px] sm:text-sm text-[var(--gray-600)] leading-relaxed">

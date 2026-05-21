@@ -67,7 +67,7 @@ export function PlanBase() {
   return (
     <section
       id="beneficios"
-      className="py-16 md:py-[120px] relative z-[2] overflow-hidden"
+      className="py-20 sm:py-28 relative z-[2] overflow-hidden"
       style={{
         background: 'linear-gradient(to bottom, #ffffff 0%, #faf9fc 50%, #ffffff 100%)'
       }}
@@ -85,7 +85,7 @@ export function PlanBase() {
         }}
       />
 
-      <div className="max-w-[1400px] mx-auto px-5 sm:px-6 relative z-10">
+      <div className="max-w-[1200px] mx-auto px-5 sm:px-6 relative z-10">
         {/* Asymmetric Header Layout */}
         <div className="grid md:grid-cols-[1fr_1.2fr] gap-8 md:gap-16 mb-12 md:mb-20 items-end">
 
@@ -103,23 +103,15 @@ export function PlanBase() {
               <span className="text-sm font-bold tracking-wide uppercase text-white">Plan Base</span>
             </div>
 
-            <h2 className="font-['DM_Serif_Display'] text-[clamp(36px,5.5vw,68px)] text-[var(--gray-900)] leading-[0.95] tracking-[-2px] mb-6">
-              Tu salud,<br />
-              <span className="italic text-[var(--pink)]">digitalmente</span><br />
-              simple
+            <h2 className="font-['DM_Serif_Display'] text-[clamp(36px,5.5vw,68px)] text-[var(--gray-900)] leading-tight tracking-[-2px] mb-6">
+              Las 4 coberturas<br />
+              <span className="italic text-[var(--pink)]">esenciales</span><br />
+              incluidas
             </h2>
 
             <p className="text-base sm:text-lg text-[var(--gray-600)] leading-relaxed max-w-[480px] mb-6 sm:mb-8">
-              Cuatro coberturas esenciales incluidas desde el primer día. Podes cancelar tu plan cuando quieras.
+              Cuatro prestaciones desde el primer día. Sin letra chica, sin trámites presenciales.
             </p>
-
-            <div className="flex items-center gap-3 text-sm text-[var(--gray-600)]">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10"/>
-                <polyline points="12 6 12 12 16 14"/>
-              </svg>
-              <span className="font-medium">Cancelá cuando quieras</span>
-            </div>
           </motion.div>
 
           {/* Right: Giant Price with Effects */}
@@ -185,10 +177,10 @@ export function PlanBase() {
                 <div className="bg-white rounded-3xl overflow-hidden transition-all duration-500 relative border border-[var(--gray-200)] group-hover:border-[var(--purple)]/30 group-hover:shadow-[var(--shadow-elevated)]">
 
                   {/* Gradient Header */}
-                  <div className={`h-24 sm:h-32 bg-gradient-to-br ${benefit.color} relative overflow-hidden`}>
-                    <div className="absolute -top-10 -right-10 w-28 sm:w-32 h-28 sm:h-32 rounded-full bg-white/20 group-hover:scale-150 transition-transform duration-700" />
+                  <div className={`h-16 sm:h-20 bg-gradient-to-br ${benefit.color} relative overflow-hidden`}>
+                    <div className="absolute -top-10 -right-10 w-28 sm:w-32 h-28 sm:h-32 rounded-full bg-white/20 transition-transform duration-700" />
 
-                    <div className="absolute bottom-3 sm:bottom-4 left-4 sm:left-6 w-12 sm:w-16 h-12 sm:h-16 rounded-xl sm:rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white shadow-xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 [&>svg]:w-[24px] [&>svg]:h-[24px] sm:[&>svg]:w-[32px] sm:[&>svg]:h-[32px]">
+                    <div className="absolute bottom-3 sm:bottom-4 left-4 sm:left-5 w-10 sm:w-12 h-10 sm:h-12 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white shadow-xl group-hover:scale-105 transition-all duration-300 [&>svg]:w-[20px] [&>svg]:h-[20px] sm:[&>svg]:w-[24px] sm:[&>svg]:h-[24px]">
                       {benefit.icon}
                     </div>
 
@@ -202,7 +194,7 @@ export function PlanBase() {
                     <h3 className="text-base sm:text-lg font-bold text-[var(--gray-900)] mb-2 sm:mb-3 leading-tight">
                       {benefit.name}
                     </h3>
-                    <p className="text-[13px] sm:text-sm text-[var(--gray-600)] leading-relaxed">
+                    <p className="text-sm text-[var(--gray-600)] leading-relaxed">
                       {benefit.desc}
                     </p>
                   </div>

@@ -68,7 +68,7 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
   return (
     <section
       id="como"
-      className="py-16 md:py-[120px] relative z-[2] overflow-hidden"
+      className="py-20 sm:py-28 relative z-[2] overflow-hidden"
       style={{
         background: 'linear-gradient(180deg, #ffffff 0%, #faf9fc 50%, #ffffff 100%)'
       }}
@@ -102,7 +102,7 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
             <span className="text-sm font-bold tracking-wide uppercase text-white">¿Cómo funciona?</span>
           </div>
 
-          <h2 className="font-['DM_Serif_Display'] text-[clamp(36px,5.5vw,68px)] text-[var(--gray-900)] leading-[0.95] tracking-[-2px] mb-4 sm:mb-5 max-w-[760px] mx-auto">
+          <h2 className="font-['DM_Serif_Display'] text-[clamp(36px,5.5vw,68px)] text-[var(--gray-900)] leading-tight tracking-[-2px] mb-4 sm:mb-5 max-w-[760px] mx-auto">
             Pensar en tu bienestar es{' '}
             <span className="italic text-[var(--pink)]">elegir Nexo by Previnca</span>
           </h2>
@@ -218,7 +218,7 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
                           </div>
                         </div>
 
-                        <p className="text-[13px] text-[var(--gray-600)] leading-relaxed">
+                        <p className="text-sm text-[var(--gray-600)] leading-relaxed">
                           {step.body}
                         </p>
 
@@ -301,7 +301,7 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
                     <polyline points="22 4 12 14.01 9 11.01"/>
                   </svg>
-                  <span className="text-[13px] sm:text-sm font-bold">Desde $19.500/mes</span>
+                  <span className="text-sm font-bold">Desde $19.500/mes</span>
                 </div>
               </div>
             </div>
