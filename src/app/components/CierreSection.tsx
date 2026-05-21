@@ -94,7 +94,7 @@ export function CierreSection() {
                 {/* CTAs */}
                 <div className="space-y-3 mb-10">
                   <motion.button
-                    onClick={() => window.open('https://nexo-portal-ten.vercel.app/registro', '_blank', 'noopener,noreferrer')}
+                    onClick={() => window.open('https://nexo.portal.previncasalud.com.ar/registro', '_blank', 'noopener,noreferrer')}
                     className="w-full bg-white text-[var(--purple)] border-none px-8 py-[18px] rounded-full text-base cursor-pointer font-['DM_Sans'] font-bold flex items-center justify-center gap-3 group"
                     whileHover={{ scale: 1.02, boxShadow: '0 20px 60px rgba(255,255,255,0.2)' }}
                     whileTap={{ scale: 0.97 }}

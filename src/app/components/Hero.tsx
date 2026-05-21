@@ -77,7 +77,7 @@ export function Hero() {
             transition={{ delay: 0.45 }}
           >
             <motion.button
-              onClick={() => window.open('https://nexo-portal-ten.vercel.app/registro', '_blank', 'noopener,noreferrer')}
+              onClick={() => window.open('https://nexo.portal.previncasalud.com.ar/registro', '_blank', 'noopener,noreferrer')}
               className="bg-white text-[var(--purple)] border-none px-8 sm:px-10 py-4 rounded-full text-[15px] sm:text-base font-bold cursor-pointer font-['DM_Sans'] whitespace-nowrap group w-full sm:w-auto justify-center flex items-center gap-2"
               whileHover={{ scale: 1.03, boxShadow: '0 20px 60px rgba(255,255,255,0.25)' }}
               whileTap={{ scale: 0.97 }}

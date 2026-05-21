@@ -12,7 +12,7 @@ import { BackToTop } from './components/BackToTop';
 import { WhatsAppButton } from './components/WhatsAppButton';
 import { IPhoneCTA } from './components/IPhoneCTA';
 
-const PORTAL_REGISTRO = 'https://nexo-portal-ten.vercel.app/registro';
+const PORTAL_REGISTRO = 'https://nexo.portal.previncasalud.com.ar/registro';
 
 const testimonials = [
   {

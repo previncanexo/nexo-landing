@@ -83,7 +83,7 @@ export function Navigation({ onOpenCheckout }: NavigationProps) {
                 Quiero mi cobertura
               </button>
               <a
-                href="https://nexo-portal-ten.vercel.app"
+                href="https://nexo.portal.previncasalud.com.ar"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1.5 text-sm font-semibold text-white no-underline px-4 py-2.5 rounded-full border border-white/30 bg-white/10 transition-all duration-200 hover:bg-white/20 hover:border-white/50 active:scale-95"
@@ -99,7 +99,7 @@ export function Navigation({ onOpenCheckout }: NavigationProps) {
             {/* Mobile: Mi Portal + Hamburger */}
             <div className="flex lg:hidden items-center gap-2">
               <a
-                href="https://nexo-portal-ten.vercel.app"
+                href="https://nexo.portal.previncasalud.com.ar"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1 text-[11px] font-semibold text-white no-underline px-3 py-2 rounded-full border border-white/30 bg-white/12 transition-all hover:bg-white/22 active:scale-95"
@@ -184,7 +184,7 @@ export function Navigation({ onOpenCheckout }: NavigationProps) {
               Quiero mi cobertura
             </button>
             <a
-              href="https://nexo-portal-ten.vercel.app"
+              href="https://nexo.portal.previncasalud.com.ar"
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setMobileOpen(false)}
