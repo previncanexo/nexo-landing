@@ -8,10 +8,11 @@ import { ComoFunciona } from './components/ComoFunciona';
 import { Testimonios } from './components/Testimonios';
 import { FAQ } from './components/FAQ';
 import { Footer } from './components/Footer';
-import { CheckoutModal } from './components/CheckoutModal';
 import { BackToTop } from './components/BackToTop';
 import { WhatsAppButton } from './components/WhatsAppButton';
 import { IPhoneCTA } from './components/IPhoneCTA';
+
+const PORTAL_REGISTRO = 'https://nexo-portal-ten.vercel.app/registro';
 
 const testimonials = [
   {
@@ -55,15 +56,16 @@ const faqItems = [
 ];
 
 export default function App() {
-  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [showMobileCta, setShowMobileCta] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
 
-  // Refs to avoid unnecessary re-renders on scroll
   const showMobileCtaRef = useRef(false);
   const showBackToTopRef = useRef(false);
 
-  // Handle smooth scroll for anchor links via JS (not CSS scroll-behavior)
+  const goToRegistro = useCallback(() => {
+    window.open(PORTAL_REGISTRO, '_blank', 'noopener,noreferrer');
+  }, []);
+
   useEffect(() => {
     const handleAnchorClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
@@ -71,7 +73,6 @@ export default function App() {
       if (!anchor) return;
       const id = anchor.getAttribute('href');
       if (!id) return;
-      // Prevent href="#" from jumping to top
       if (id === '#') {
         e.preventDefault();
         return;
@@ -89,13 +90,11 @@ export default function App() {
   useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY;
-      // Show iPhone CTA after scrolling 600px but hide when reaching PlanBase section
       const planBaseEl = document.getElementById('beneficios');
       const planBaseTop = planBaseEl ? planBaseEl.offsetTop - 200 : Infinity;
       const nextMobile = y > 600 && y < planBaseTop;
       const nextBack = y > 800;
 
-      // Only setState when the value actually changes
       if (nextMobile !== showMobileCtaRef.current) {
         showMobileCtaRef.current = nextMobile;
         setShowMobileCta(nextMobile);
@@ -109,34 +108,21 @@ export default function App() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const openCheckout = useCallback(() => setIsCheckoutOpen(true), []);
-  const closeCheckout = useCallback(() => setIsCheckoutOpen(false), []);
-
   return (
     <div className="overflow-x-hidden">
       <BackgroundMesh />
-      <Navigation onOpenCheckout={openCheckout} />
+      <Navigation onOpenCheckout={goToRegistro} />
       <Hero />
       <PlanBase />
-      <ALaCarta onOpenCheckout={openCheckout} />
-      <ComoFunciona onOpenCheckout={openCheckout} />
+      <ALaCarta onOpenCheckout={goToRegistro} />
+      <ComoFunciona onOpenCheckout={goToRegistro} />
       <Testimonios testimonials={testimonials} />
       <FAQ items={faqItems} />
       <Footer />
 
-      {/* Back to Top Button */}
-      <BackToTop isVisible={showBackToTop && !isCheckoutOpen} isMobileCTAVisible={showMobileCta} />
-
-      {/* WhatsApp Button */}
-      <WhatsAppButton isVisible={!isCheckoutOpen} isMobileCTAVisible={showMobileCta} />
-
-      {/* iPhone Mockup CTA */}
-      <IPhoneCTA isVisible={showMobileCta && !isCheckoutOpen} onOpenCheckout={openCheckout} />
-
-      <CheckoutModal
-        isOpen={isCheckoutOpen}
-        onClose={closeCheckout}
-      />
+      <BackToTop isVisible={showBackToTop} isMobileCTAVisible={showMobileCta} />
+      <WhatsAppButton isVisible={true} isMobileCTAVisible={showMobileCta} />
+      <IPhoneCTA isVisible={showMobileCta} onOpenCheckout={goToRegistro} />
     </div>
   );
 }
