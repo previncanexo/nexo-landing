@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#12053d"/>
+      <stop offset="35%" stop-color="#2d1266"/>
+      <stop offset="70%" stop-color="#6535cc"/>
+      <stop offset="100%" stop-color="#c94fb5"/>
+    </linearGradient>
+    <linearGradient id="badgeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6535cc"/>
+      <stop offset="100%" stop-color="#c94fb5"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="40" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <filter id="glowPink">
+      <feGaussianBlur stdDeviation="60" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bgGrad)"/>
+
+  <!-- Decorative orbs -->
+  <circle cx="1050" cy="150" r="220" fill="rgba(201,79,181,0.18)" filter="url(#glowPink)"/>
+  <circle cx="100" cy="500" r="180" fill="rgba(101,53,204,0.20)" filter="url(#glow)"/>
+  <circle cx="600" cy="630" r="150" fill="rgba(238,92,208,0.12)" filter="url(#glowPink)"/>
+
+  <!-- Decorative arcs -->
+  <ellipse cx="950" cy="315" rx="480" ry="340" stroke="rgba(255,255,255,0.05)" stroke-width="70" fill="none"/>
+  <ellipse cx="1180" cy="80" rx="260" ry="200" stroke="rgba(238,92,208,0.07)" stroke-width="50" fill="none"/>
+
+  <!-- Grain overlay effect (subtle) -->
+
+  <!-- Logo mark — "N" in circle -->
+  <rect x="80" y="80" width="72" height="72" rx="18" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.20)" stroke-width="1.5"/>
+  <text x="116" y="138" font-family="Georgia, serif" font-size="46" font-style="italic" fill="white" text-anchor="middle">N</text>
+
+  <!-- Brand name -->
+  <text x="172" y="128" font-family="Georgia, serif" font-size="36" font-style="italic" fill="white" opacity="0.92">Nexo</text>
+  <text x="172" y="152" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="14" fill="rgba(255,255,255,0.45)" letter-spacing="3" text-transform="uppercase">BY PREVINCA</text>
+
+  <!-- Divider -->
+  <line x1="80" y1="196" x2="320" y2="196" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+
+  <!-- Main headline -->
+  <text x="80" y="310" font-family="Georgia, serif" font-size="82" font-style="italic" fill="white" opacity="0.97" letter-spacing="-2">Tu salud,</text>
+  <text x="80" y="405" font-family="Georgia, serif" font-size="82" font-style="italic" fill="white" opacity="0.97" letter-spacing="-2">digitalmente simple</text>
+
+  <!-- Description -->
+  <text x="80" y="462" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="22" fill="rgba(255,255,255,0.62)" letter-spacing="0.2">Teleconsultas 24/7 · Urgencias · Farmacias · Odontología</text>
+
+  <!-- Price badge -->
+  <rect x="80" y="498" width="280" height="52" rx="26" fill="url(#badgeGrad)"/>
+  <text x="220" y="531" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20" font-weight="700" fill="white" text-anchor="middle">$19.500 por mes</text>
+
+  <!-- Right side decorative dots grid -->
+  <g opacity="0.12">
+    <circle cx="820" cy="220" r="3" fill="white"/>
+    <circle cx="860" cy="220" r="3" fill="white"/>
+    <circle cx="900" cy="220" r="3" fill="white"/>
+    <circle cx="940" cy="220" r="3" fill="white"/>
+    <circle cx="820" cy="260" r="3" fill="white"/>
+    <circle cx="860" cy="260" r="3" fill="white"/>
+    <circle cx="900" cy="260" r="3" fill="white"/>
+    <circle cx="940" cy="260" r="3" fill="white"/>
+    <circle cx="820" cy="300" r="3" fill="white"/>
+    <circle cx="860" cy="300" r="3" fill="white"/>
+    <circle cx="900" cy="300" r="3" fill="white"/>
+    <circle cx="940" cy="300" r="3" fill="white"/>
+  </g>
+</svg>
