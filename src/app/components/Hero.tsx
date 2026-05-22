@@ -19,7 +19,7 @@ export function Hero() {
   return (
     <section
       id="hero"
-      className="relative overflow-hidden"
+      className="relative overflow-hidden sticky top-0 z-0"
       style={{ minHeight: '100svh' }}
     >
       {/* ── BACKGROUND: opaque gradient base ── */}
