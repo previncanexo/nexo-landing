@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { fadeUp, fadeUpSubtle } from './motion-variants';
-import heroWoman from '@/assets/hero-woman.png';
-import heroWoman2 from '@/assets/hero-woman-2.png';
+import heroWoman from '@/assets/hero-woman.webp';
+import heroWoman2 from '@/assets/hero-woman-2.webp';
 
 const heroImages = [heroWoman, heroWoman2];
 

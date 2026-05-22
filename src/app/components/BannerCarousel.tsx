@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import banner1 from '@/assets/banner-comunidad-1.png';
-import banner2 from '@/assets/banner-comunidad-2.png';
+import banner1 from '@/assets/banner-comunidad-1.webp';
+import banner2 from '@/assets/banner-comunidad-2.webp';
 
 const slides = [
   {
