@@ -19,7 +19,7 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
           <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
         </svg>
       ),
-      iconBg: 'from-[#8660ef] to-[#ee5cd0]'
+      iconBg: 'from-[var(--purple)] to-[var(--pink)]'
     },
     {
       number: '02',
@@ -34,7 +34,7 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
           <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
         </svg>
       ),
-      iconBg: 'from-[#ee5cd0] to-[#8660ef]'
+      iconBg: 'from-[var(--purple)] to-[var(--pink)]'
     },
     {
       number: '03',
@@ -47,7 +47,7 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
           <line x1="1" y1="10" x2="23" y2="10"/>
         </svg>
       ),
-      iconBg: 'from-[#8660ef] to-[#ee5cd0]'
+      iconBg: 'from-[var(--purple)] to-[var(--pink)]'
     },
     {
       number: '04',
@@ -61,7 +61,7 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
           <line x1="12" y1="17" x2="12" y2="21"/>
         </svg>
       ),
-      iconBg: 'from-[#8660ef] to-[#e5ab9f]'
+      iconBg: 'from-[var(--purple)] to-[var(--pink)]'
     }
   ];
 
