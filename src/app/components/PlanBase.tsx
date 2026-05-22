@@ -263,7 +263,7 @@ export function PlanBase() {
                       {benefit.icon}
                     </div>
                     <div className="flex flex-col gap-1.5">
-                      <h3 className="text-[18px] sm:text-[17px] font-bold text-[var(--gray-900)] leading-snug">
+                      <h3 className="text-[18px] sm:text-[15px] font-bold text-[var(--gray-900)] leading-snug">
                         {benefit.name}
                       </h3>
                       <p className="text-sm text-[var(--gray-500)] leading-relaxed font-light">
