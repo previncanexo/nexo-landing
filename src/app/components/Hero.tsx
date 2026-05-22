@@ -9,6 +9,7 @@ const heroImages = [heroWoman, heroWoman2, heroWoman3];
 
 export function Hero() {
   const [current, setCurrent] = useState(0);
+  const [prev, setPrev] = useState<number | null>(null);
   const heroRef = useRef<HTMLElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -22,7 +23,10 @@ export function Hero() {
 
   useEffect(() => {
     const id = setInterval(() => {
-      setCurrent((c) => (c + 1) % heroImages.length);
+      setCurrent((c) => {
+        setPrev(c);
+        return (c + 1) % heroImages.length;
+      });
     }, 3500);
     return () => clearInterval(id);
   }, []);
@@ -66,26 +70,39 @@ export function Hero() {
         <ellipse cx="160" cy="620" rx="220" ry="180" stroke="rgba(134,96,239,0.07)" strokeWidth="50" />
       </svg>
 
-      {/* ── HERO PHOTOS — CSS crossfade, sin AnimatePresence ── */}
+      {/* ── HERO PHOTOS — prev queda como base opaca, current entra encima ── */}
       <motion.div className="absolute inset-0 z-[3]" style={{ scale: bgScale }}>
-        {heroImages.map((img, i) => (
+        {/* Imagen anterior — base sólida siempre visible */}
+        {prev !== null && (
           <img
-            key={i}
-            src={img}
+            src={heroImages[prev]}
             alt=""
             aria-hidden="true"
             draggable={false}
-            className={`absolute inset-0 w-full h-full object-cover select-none transition-opacity duration-700 ease-in-out ${
-              i === current ? 'opacity-100' : 'opacity-0'
-            }`}
-            style={{ objectPosition: '65% center' }}
+            className="absolute inset-0 w-full h-full object-cover select-none"
+            style={{ objectPosition: '65% center', zIndex: 1 }}
           />
-        ))}
+        )}
 
-        {/* Dark overlay — legibilidad del texto */}
+        {/* Imagen actual — entra con fade-in sobre la anterior */}
+        <motion.img
+          key={current}
+          src={heroImages[current]}
+          alt=""
+          aria-hidden="true"
+          draggable={false}
+          className="absolute inset-0 w-full h-full object-cover select-none"
+          style={{ objectPosition: '65% center', zIndex: 2 }}
+          initial={{ opacity: prev === null ? 1 : 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, ease: 'easeInOut' }}
+        />
+
+        {/* Dark overlay */}
         <div
           className="absolute inset-0"
           style={{
+            zIndex: 3,
             background:
               'linear-gradient(to bottom, rgba(10,3,40,0.62) 0%, rgba(10,3,40,0.32) 50%, rgba(10,3,40,0.58) 100%)',
           }}
@@ -93,8 +110,8 @@ export function Hero() {
 
         {/* Top fade */}
         <div
-          className="absolute top-0 left-0 right-0 h-36 z-10"
-          style={{ background: 'linear-gradient(to bottom, rgba(18,5,61,0.55) 0%, transparent 100%)' }}
+          className="absolute top-0 left-0 right-0 h-36"
+          style={{ zIndex: 4, background: 'linear-gradient(to bottom, rgba(18,5,61,0.55) 0%, transparent 100%)' }}
         />
       </motion.div>
 
