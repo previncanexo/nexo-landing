@@ -370,7 +370,7 @@ export function PlanBase() {
                     <circle cx="12" cy="7" r="4"/>
                   </svg>
                 ),
-                stat: '10.000',
+                stat: '65.000',
                 desc: 'Afiliados activos'
               },
               {
