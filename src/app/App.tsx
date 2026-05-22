@@ -4,6 +4,7 @@ import { Hero } from './components/Hero';
 import { PlanBase } from './components/PlanBase';
 import { ALaCarta } from './components/ALaCarta';
 import { ComoFunciona } from './components/ComoFunciona';
+import { BannerCarousel } from './components/BannerCarousel';
 import { Testimonios } from './components/Testimonios';
 import { FAQ } from './components/FAQ';
 import { Footer } from './components/Footer';
@@ -114,6 +115,7 @@ export default function App() {
       <PlanBase />
       <ALaCarta onOpenCheckout={goToRegistro} />
       <ComoFunciona onOpenCheckout={goToRegistro} />
+      <BannerCarousel />
       <Testimonios testimonials={testimonials} />
       <FAQ items={faqItems} />
       <Footer />
