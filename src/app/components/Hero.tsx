@@ -1,8 +1,21 @@
-import { motion } from 'motion/react';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { fadeUp, fadeUpSubtle } from './motion-variants';
 import heroWoman from '@/assets/hero-woman.png';
+import heroWoman2 from '@/assets/hero-woman-2.png';
+
+const heroImages = [heroWoman, heroWoman2];
 
 export function Hero() {
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setCurrent((c) => (c + 1) % heroImages.length);
+    }, 3500);
+    return () => clearInterval(id);
+  }, []);
+
   return (
     <section
       id="hero"
@@ -40,16 +53,23 @@ export function Hero() {
         <ellipse cx="160" cy="620" rx="220" ry="180" stroke="rgba(134,96,239,0.07)" strokeWidth="50" />
       </svg>
 
-      {/* ─── WOMAN PHOTO — full width background ─── */}
+      {/* ─── HERO PHOTOS — crossfade carousel ─── */}
       <div className="absolute inset-0 z-[3]">
-        <img
-          src={heroWoman}
-          alt=""
-          aria-hidden="true"
-          draggable={false}
-          className="absolute inset-0 w-full h-full object-cover select-none"
-          style={{ objectPosition: '70% center' }}
-        />
+        <AnimatePresence mode="sync">
+          <motion.img
+            key={current}
+            src={heroImages[current]}
+            alt=""
+            aria-hidden="true"
+            draggable={false}
+            className="absolute inset-0 w-full h-full object-cover select-none"
+            style={{ objectPosition: '70% center' }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.6, ease: 'easeInOut' }}
+          />
+        </AnimatePresence>
 
         {/* Subtle purple tint — just enough to unify palette */}
         <div
