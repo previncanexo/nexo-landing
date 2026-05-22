@@ -209,7 +209,7 @@ export function Hero() {
           </motion.div>
 
           {/* H1 — blur reveal */}
-          <h1 className="font-['DM_Serif_Display'] text-[clamp(36px,5.5vw,68px)] text-white leading-tight tracking-[-1px] sm:tracking-[-2px] md:tracking-[-3px] mb-6 sm:mb-8">
+          <h1 className="font-['DM_Serif_Display'] text-[42px] sm:text-[clamp(36px,5.5vw,68px)] text-white leading-tight tracking-[-1px] sm:tracking-[-2px] md:tracking-[-3px] mb-6 sm:mb-8">
             <BlurRevealText text="Tu salud, " delay={0.2} />
             <BlurRevealText text="digitalmente simple" className="italic sm:whitespace-nowrap" delay={0.45} />
           </h1>
