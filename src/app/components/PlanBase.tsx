@@ -178,13 +178,13 @@ export function PlanBase() {
             </div>
 
             <h2 className="font-['DM_Serif_Display'] text-[clamp(36px,5.5vw,68px)] text-[var(--gray-900)] leading-tight tracking-[-2px] mb-7">
-              Las 4 coberturas<br />
-              <span className="italic text-[var(--pink)]">esenciales</span><br />
-              incluidas
+              El plan que<br />
+              <span className="italic text-[var(--pink)]">siempre</span><br />
+              necesitás
             </h2>
 
             <p className="text-base sm:text-lg text-[var(--gray-500)] leading-relaxed max-w-[460px] font-light">
-              Cuatro prestaciones desde el primer día. Sin letra chica, sin trámites presenciales.
+              Cuatro coberturas esenciales incluidas desde el primer día. Sin trámites, sin espera, sin excusas.
             </p>
           </motion.div>
 
