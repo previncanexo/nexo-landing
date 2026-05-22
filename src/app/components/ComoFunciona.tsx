@@ -122,12 +122,15 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
               variants={staggerItem}
               whileHover={{ y: -4, transition: { type: 'spring', stiffness: 400, damping: 28 } }}
             >
-              {/* Top row: step label + time badge */}
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-[11px] font-bold text-[var(--purple)]/50 uppercase tracking-[0.14em]">
-                  Paso {step.number}
-                </span>
-                <div className="inline-flex items-center gap-1.5 bg-[var(--gray-100)] px-3 py-1.5 rounded-full">
+              {/* Top row: large number + time badge */}
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex flex-col leading-none">
+                  <span className="text-[9px] font-bold text-[var(--purple)]/40 uppercase tracking-[0.18em] mb-0.5">Paso</span>
+                  <span className="font-['DM_Serif_Display'] text-5xl italic leading-none bg-gradient-to-br from-[var(--purple)] to-[var(--pink)] bg-clip-text text-transparent">
+                    {step.number}
+                  </span>
+                </div>
+                <div className="inline-flex items-center gap-1.5 bg-[var(--gray-100)] px-3 py-1.5 rounded-full mt-1">
                   <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <circle cx="12" cy="12" r="10"/>
                     <polyline points="12 6 12 12 16 14"/>
@@ -137,7 +140,7 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
               </div>
 
               {/* Icon */}
-              <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${step.iconBg} flex items-center justify-center text-white shadow-md mb-4`}>
+              <div className={`w-11 h-11 rounded-2xl bg-gradient-to-br ${step.iconBg} flex items-center justify-center text-white shadow-md mb-4`}>
                 {step.icon}
               </div>
 
@@ -160,7 +163,7 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
           whileInView="visible"
           viewport={viewportOnce}
         >
-          <div className="relative overflow-hidden rounded-3xl sm:rounded-[36px] max-w-[900px] mx-auto">
+          <div className="relative overflow-hidden rounded-3xl sm:rounded-[36px] max-w-[960px] mx-auto">
             <div className="absolute inset-0 bg-gradient-to-br from-[var(--purple)] via-[var(--pink)] to-[var(--purple)]" />
 
             <div className="absolute inset-0 opacity-30">
