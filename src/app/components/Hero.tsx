@@ -7,6 +7,51 @@ import heroWoman3 from '@/assets/hero-woman-3.webp';
 
 const heroImages = [heroWoman, heroWoman2, heroWoman3];
 
+const BLUR_STAGGER = 0.025;
+const BLUR_EASE: [number, number, number, number] = [0.2, 0.65, 0.3, 0.9];
+
+function BlurRevealText({
+  text,
+  className,
+  delay = 0,
+}: {
+  text: string;
+  className?: string;
+  delay?: number;
+}) {
+  return (
+    <motion.span
+      className={className}
+      initial="hidden"
+      animate="visible"
+      variants={{
+        hidden: {},
+        visible: {
+          transition: { staggerChildren: BLUR_STAGGER, delayChildren: delay },
+        },
+      }}
+    >
+      {text.split('').map((char, i) => (
+        <motion.span
+          key={i}
+          style={{ display: 'inline-block' }}
+          variants={{
+            hidden: { opacity: 0, y: 20, filter: 'blur(12px)' },
+            visible: {
+              opacity: 1,
+              y: 0,
+              filter: 'blur(0px)',
+              transition: { duration: 0.55, ease: BLUR_EASE },
+            },
+          }}
+        >
+          {char === ' ' ? ' ' : char}
+        </motion.span>
+      ))}
+    </motion.span>
+  );
+}
+
 export function Hero() {
   const [current, setCurrent] = useState(0);
   const [prev, setPrev] = useState<number | null>(null);
@@ -137,17 +182,12 @@ export function Hero() {
             100% pensado para vos
           </motion.div>
 
-          {/* H1 */}
-          <motion.h1
-            className="font-['DM_Serif_Display'] text-[clamp(36px,5.5vw,68px)] text-white leading-tight tracking-[-1px] sm:tracking-[-2px] md:tracking-[-3px] mb-6 sm:mb-8"
-            variants={fadeUp}
-            initial="hidden"
-            animate="visible"
-            transition={{ delay: 0.15 }}
-          >
-            Tu salud,{' '}
-            <span className="italic whitespace-nowrap">digitalmente simple</span>
-          </motion.h1>
+          {/* H1 — blur reveal letra por letra */}
+          <h1 className="font-['DM_Serif_Display'] text-[clamp(36px,5.5vw,68px)] text-white leading-tight tracking-[-1px] sm:tracking-[-2px] md:tracking-[-3px] mb-6 sm:mb-8">
+            {/* "Tu salud, " = 10 chars → delay de la segunda parte: 0.2 + 10*0.025 = 0.45 */}
+            <BlurRevealText text="Tu salud, " delay={0.2} />
+            <BlurRevealText text="digitalmente simple" className="italic whitespace-nowrap" delay={0.45} />
+          </h1>
 
           {/* Description */}
           <motion.p
@@ -155,7 +195,7 @@ export function Hero() {
             variants={fadeUp}
             initial="hidden"
             animate="visible"
-            transition={{ delay: 0.3 }}
+            transition={{ delay: 0.5 }}
           >
             Contá con el respaldo que necesitas desde{' '}
             <span className="inline-block bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-white font-bold border border-white/30">
@@ -170,7 +210,7 @@ export function Hero() {
             variants={fadeUp}
             initial="hidden"
             animate="visible"
-            transition={{ delay: 0.45 }}
+            transition={{ delay: 0.7 }}
           >
             <motion.button
               onClick={() =>
