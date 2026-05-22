@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { BackgroundMesh } from './components/BackgroundMesh';
 import { Navigation } from './components/Navigation';
 import { Hero } from './components/Hero';
 import { PlanBase } from './components/PlanBase';
@@ -110,7 +109,6 @@ export default function App() {
 
   return (
     <div className="overflow-x-hidden">
-      <BackgroundMesh />
       <Navigation onOpenCheckout={goToRegistro} />
       <Hero />
       <PlanBase />
