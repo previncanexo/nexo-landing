@@ -10,6 +10,10 @@ import {
   viewportOnce,
   organicPatternStyle,
 } from './motion-variants';
+import planTeleconsulta from '@/assets/plan-teleconsulta.webp';
+import planUrgencias from '@/assets/plan-urgencias.webp';
+import planFarmacia from '@/assets/plan-farmacia.webp';
+import planOdontologia from '@/assets/plan-odontologia.webp';
 
 const featureItems = [
   {
@@ -53,8 +57,9 @@ const featureItems = [
 export function PlanBase() {
   const benefits = [
     {
+      image: planTeleconsulta,
       icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
           <line x1="8" y1="21" x2="16" y2="21"/>
           <line x1="12" y1="17" x2="12" y2="21"/>
@@ -66,11 +71,10 @@ export function PlanBase() {
       shadowColor: 'rgba(134,96,239,0.22)',
     },
     {
+      image: planUrgencias,
       icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M7.5 4.27l-4.12 2.6A2 2 0 0 0 2.5 8.6v6.8a2 2 0 0 0 .88 1.66l7.5 5a2 2 0 0 0 2.24 0l7.5-5a2 2 0 0 0 .88-1.66V8.6a2 2 0 0 0-.88-1.73L16.5 4.27a2 2 0 0 0-2.24 0z"/>
-          <line x1="12" y1="8" x2="12" y2="16"/>
-          <line x1="8" y1="12" x2="16" y2="12"/>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
         </svg>
       ),
       name: 'Urgencias 24/7',
@@ -79,12 +83,11 @@ export function PlanBase() {
       shadowColor: 'rgba(238,92,208,0.22)',
     },
     {
+      image: planFarmacia,
       icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M10.5 1h3a1.5 1.5 0 0 1 1.5 1.5V5h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2V2.5A1.5 1.5 0 0 1 10.5 1z"/>
           <line x1="9" y1="12" x2="15" y2="12"/>
-          <line x1="9" y1="16" x2="13" y2="16"/>
-          <path d="M10.5 1v4M13.5 1v4"/>
         </svg>
       ),
       name: 'Descuentos 50% en farmacias',
@@ -93,8 +96,9 @@ export function PlanBase() {
       shadowColor: 'rgba(134,96,239,0.22)',
     },
     {
+      image: planOdontologia,
       icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M12 2c-1.7 0-3 1.5-3 3.5 0 1.2.5 2.3 1.2 3C9 9.3 7 11 7 13.5 7 17 9 22 12 22s5-5 5-8.5c0-2.5-2-4.2-3.2-5 .7-.7 1.2-1.8 1.2-3C15 3.5 13.7 2 12 2z"/>
         </svg>
       ),
@@ -234,33 +238,40 @@ export function PlanBase() {
             {benefits.map((benefit) => (
               <motion.div
                 key={benefit.name}
-                className="group relative"
+                className="group"
                 variants={staggerItem}
                 whileHover={{ y: -5, transition: { type: 'spring', stiffness: 400, damping: 28 } }}
               >
-                <div className="h-full bg-white rounded-[28px] p-8 sm:p-9 flex flex-col gap-6 relative overflow-hidden border border-[var(--gray-100)] transition-all duration-500 group-hover:border-[var(--purple)]/15"
+                <div
+                  className="h-full bg-white rounded-[28px] overflow-hidden flex flex-col border border-[var(--gray-100)] transition-all duration-500 group-hover:border-[var(--purple)]/15"
                   style={{ boxShadow: '0 2px 24px rgba(0,0,0,0.04)' }}
                 >
-                  {/* Circular icon — refined, smaller */}
-                  <div
-                    className={`w-11 h-11 rounded-full bg-gradient-to-br ${benefit.color} flex items-center justify-center shrink-0 [&>svg]:stroke-white transition-transform duration-300 group-hover:scale-105`}
-                    style={{ boxShadow: `0 4px 14px ${benefit.shadowColor}` }}
-                  >
-                    {benefit.icon}
+                  {/* Foto */}
+                  <div className="w-full overflow-hidden" style={{ aspectRatio: '4/3' }}>
+                    <img
+                      src={benefit.image}
+                      alt={benefit.name}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
                   </div>
 
-                  {/* Text — lighter body */}
-                  <div className="flex flex-col gap-2 flex-1">
-                    <h3 className="text-[15px] font-bold text-[var(--gray-900)] leading-snug">
-                      {benefit.name}
-                    </h3>
-                    <p className="text-sm text-[var(--gray-500)] leading-relaxed font-light">
-                      {benefit.desc}
-                    </p>
+                  {/* Texto */}
+                  <div className="p-5 sm:p-6 flex flex-col gap-3 flex-1">
+                    <div
+                      className={`w-9 h-9 rounded-full bg-gradient-to-br ${benefit.color} flex items-center justify-center shrink-0 [&>svg]:stroke-white`}
+                      style={{ boxShadow: `0 4px 12px ${benefit.shadowColor}` }}
+                    >
+                      {benefit.icon}
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                      <h3 className="text-[15px] font-bold text-[var(--gray-900)] leading-snug">
+                        {benefit.name}
+                      </h3>
+                      <p className="text-sm text-[var(--gray-500)] leading-relaxed font-light">
+                        {benefit.desc}
+                      </p>
+                    </div>
                   </div>
-
-                  {/* Subtle hover glow */}
-                  <div className={`absolute inset-0 rounded-[28px] bg-gradient-to-br ${benefit.color} opacity-0 group-hover:opacity-[0.03] transition-opacity duration-500 pointer-events-none`} />
                 </div>
               </motion.div>
             ))}
