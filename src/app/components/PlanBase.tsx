@@ -68,7 +68,7 @@ export function PlanBase() {
       name: 'Teleconsultas médicas: DOC24',
       desc: 'Consultas virtuales con médicos las 24 horas, desde cualquier lugar.',
       color: 'from-[var(--purple)] to-[var(--pink)]',
-      shadowColor: 'rgba(134,96,239,0.22)',
+      shadowColor: 'rgba(134,96,239,0.25)',
     },
     {
       image: planUrgencias,
@@ -79,8 +79,8 @@ export function PlanBase() {
       ),
       name: 'Urgencias 24/7',
       desc: 'Asistencia inmediata ante situaciones de urgencia, estés donde estés.',
-      color: 'from-[var(--pink)] to-[var(--purple)]',
-      shadowColor: 'rgba(238,92,208,0.22)',
+      color: 'from-[var(--purple)] to-[var(--pink)]',
+      shadowColor: 'rgba(134,96,239,0.25)',
     },
     {
       image: planFarmacia,
@@ -92,8 +92,8 @@ export function PlanBase() {
       ),
       name: 'Descuentos 50% en farmacias',
       desc: 'Beneficios y descuentos en farmacias adheridas de todo el país.',
-      color: 'from-[var(--purple)] to-[var(--peach)]',
-      shadowColor: 'rgba(134,96,239,0.22)',
+      color: 'from-[var(--purple)] to-[var(--pink)]',
+      shadowColor: 'rgba(134,96,239,0.25)',
     },
     {
       image: planOdontologia,
@@ -104,8 +104,8 @@ export function PlanBase() {
       ),
       name: 'Guardias Odontológicas',
       desc: 'Atención odontológica ante dolores agudos y/o urgencias inesperadas.',
-      color: 'from-[var(--pink)] to-[var(--peach)]',
-      shadowColor: 'rgba(238,92,208,0.20)',
+      color: 'from-[var(--purple)] to-[var(--pink)]',
+      shadowColor: 'rgba(134,96,239,0.25)',
     }
   ];
 
@@ -312,10 +312,7 @@ export function PlanBase() {
                 </div>
                 <h3 className="text-[clamp(22px,4vw,40px)] font-['DM_Serif_Display'] text-white mb-4 leading-tight tracking-tight">
                   El ahorro de farmacia{' '}
-                  <span className="relative inline-block">
-                    <span className="relative z-10">compensa la cuota</span>
-                    <span className="absolute bottom-1 left-0 w-full h-2.5 bg-white/20 -z-0" />
-                  </span>
+                  compensa la cuota
                 </h3>
                 <p className="text-white/75 text-base leading-relaxed max-w-[520px] mx-auto lg:mx-0 font-light">
                   Hasta 50% Off en miles de productos en farmacias adheridas de todo el país.
