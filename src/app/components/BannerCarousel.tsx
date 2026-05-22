@@ -56,8 +56,8 @@ export function BannerCarousel() {
 
   return (
     <section
-      className="relative w-full overflow-hidden"
-      style={{ height: 'clamp(320px, 52vw, 620px)' }}
+      className="relative z-[2] w-full overflow-hidden"
+      style={{ height: 'clamp(320px, 52vw, 620px)', background: '#12053d' }}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >

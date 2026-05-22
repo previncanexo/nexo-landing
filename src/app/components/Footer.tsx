@@ -5,9 +5,9 @@ import { fadeUp, viewportOnce } from './motion-variants';
 export function Footer() {
   return (
     <footer
-      className="relative z-[2] overflow-hidden"
+      className="relative z-[20] overflow-hidden"
       style={{
-        background: 'linear-gradient(135deg, color-mix(in srgb, var(--purple) 98%, transparent) 0%, color-mix(in srgb, var(--pink) 98%, transparent) 100%)'
+        background: 'linear-gradient(135deg, var(--purple) 0%, var(--pink) 100%)'
       }}
     >
       {/* Subtle Pattern */}
