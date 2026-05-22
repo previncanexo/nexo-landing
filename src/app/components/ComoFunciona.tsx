@@ -123,15 +123,6 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
                 whileHover={{ y: -4, boxShadow: '0 8px 40px rgba(134,96,239,0.10)' }}
                 transition={{ type: 'spring', stiffness: 400, damping: 28 }}
               >
-                {/* Número como marca de agua — absoluto, sin altura en el flujo */}
-                <div
-                  className="absolute -top-3 -left-1 font-['DM_Serif_Display'] italic select-none pointer-events-none"
-                  style={{ fontSize: '110px', lineHeight: 1, color: 'rgba(134,96,239,0.07)' }}
-                  aria-hidden="true"
-                >
-                  {step.number}
-                </div>
-
                 {/* Paso label + time badge */}
                 <div className="relative flex items-center justify-between mb-4">
                   <span className="text-[9px] font-bold text-[var(--purple)]/40 uppercase tracking-[0.18em]">Paso {step.number}</span>
