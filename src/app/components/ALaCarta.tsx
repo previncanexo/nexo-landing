@@ -64,7 +64,7 @@ export function ALaCarta({ onOpenCheckout: _onOpenCheckout }: ALaCartaProps) {
   return (
     <section
       id="carta"
-      className="py-28 sm:py-36 md:py-44 relative z-[2] overflow-hidden"
+      className="py-16 sm:py-24 md:py-32 relative z-[2] overflow-hidden"
       style={{
         background: 'linear-gradient(180deg, #ffffff 0%, #faf9fc 50%, #ffffff 100%)'
       }}
@@ -79,7 +79,7 @@ export function ALaCarta({ onOpenCheckout: _onOpenCheckout }: ALaCartaProps) {
       <div className="max-w-[1200px] mx-auto px-5 sm:px-6 relative z-10">
         {/* Header */}
         <motion.div
-          className="text-center mb-10 md:mb-14"
+          className="text-center mb-12 sm:mb-16"
           variants={fadeUp}
           initial="hidden"
           whileInView="visible"
@@ -111,7 +111,7 @@ export function ALaCarta({ onOpenCheckout: _onOpenCheckout }: ALaCartaProps) {
 
         {/* CTA capture */}
         <motion.div
-          className="flex flex-col items-center gap-5 mb-14 md:mb-20"
+          className="flex flex-col items-center gap-5 mb-12 sm:mb-16"
           variants={fadeUp}
           initial="hidden"
           whileInView="visible"
@@ -138,7 +138,7 @@ export function ALaCarta({ onOpenCheckout: _onOpenCheckout }: ALaCartaProps) {
 
         {/* Floating Icon Items */}
         <motion.div
-          className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6"
+          className="grid grid-cols-2 md:grid-cols-4 gap-6"
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
@@ -149,7 +149,7 @@ export function ALaCarta({ onOpenCheckout: _onOpenCheckout }: ALaCartaProps) {
               key={service.title}
               variants={staggerItem}
               whileHover={{ y: -5, transition: { type: 'spring', stiffness: 400, damping: 28 } }}
-              className="bg-white rounded-[28px] border border-[var(--gray-100)] hover:border-[var(--purple)]/15 transition-all duration-500 p-8 flex flex-col items-center text-center gap-5"
+              className="bg-white rounded-[28px] border border-[var(--gray-100)] hover:border-[var(--purple)]/15 transition-all duration-500 p-8 sm:p-10 flex flex-col items-center text-center gap-5"
               style={{ boxShadow: '0 2px 24px rgba(0,0,0,0.04)' }}
             >
               {/* Circular icon — diffuse gradient, not solid fill */}

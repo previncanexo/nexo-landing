@@ -46,7 +46,7 @@ export function FAQ({ items }: FAQProps) {
         </svg>
       </div>
 
-      <div className="relative z-[3] max-w-4xl mx-auto px-5 sm:px-6 lg:px-8 pt-24 sm:pt-32 pb-20 sm:pb-28">
+      <div className="relative z-[3] max-w-4xl mx-auto px-5 sm:px-6 lg:px-8 pt-24 sm:pt-32 md:pt-40 pb-16 sm:pb-24 md:pb-32">
 
         {/* Header */}
         <motion.div
@@ -54,7 +54,7 @@ export function FAQ({ items }: FAQProps) {
           whileInView="visible"
           viewport={viewportOnce}
           variants={fadeUp}
-          className="text-center mb-14"
+          className="text-center mb-12 sm:mb-16"
         >
           <h2 className="font-['DM_Serif_Display'] text-[clamp(36px,5.5vw,68px)] mb-4 leading-tight tracking-[-2px] text-white">
             Preguntas{' '}

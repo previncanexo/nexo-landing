@@ -68,7 +68,7 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
   return (
     <section
       id="como"
-      className="py-28 sm:py-36 md:py-44 relative z-[2] overflow-hidden"
+      className="py-16 sm:py-24 md:py-32 relative z-[2] overflow-hidden"
       style={{
         background: 'linear-gradient(180deg, #ffffff 0%, #faf9fc 50%, #ffffff 100%)'
       }}
@@ -83,7 +83,7 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
       <div className="max-w-[1200px] mx-auto px-5 sm:px-6 relative z-10">
         {/* Header */}
         <motion.div
-          className="text-center mb-10 md:mb-20"
+          className="text-center mb-12 sm:mb-16"
           variants={fadeUp}
           initial="hidden"
           whileInView="visible"
@@ -107,7 +107,7 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
         </motion.div>
 
         {/* Steps - Timeline */}
-        <div className="relative max-w-[960px] mx-auto mb-12 md:mb-20">
+        <div className="relative max-w-[960px] mx-auto mb-12 sm:mb-16">
           {/* Vertical connector line (desktop) — 1px, elegant */}
           <div className="hidden md:block absolute left-[39px] top-12 bottom-12 w-[1px]">
             <div className="w-full h-full bg-gradient-to-b from-[var(--purple)]/10 via-[var(--pink)]/10 to-[var(--peach)]/10 rounded-full" />
@@ -164,7 +164,7 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
                   <div className="flex-1 bg-white rounded-[28px] border transition-all duration-500 overflow-hidden border-[var(--gray-100)] hover:border-[var(--purple)]/15"
                     style={{ boxShadow: '0 2px 24px rgba(0,0,0,0.04)' }}
                   >
-                    <div className="p-9 sm:p-10">
+                    <div className="p-8 sm:p-10">
                       <div className="flex items-start justify-between gap-4 mb-4">
                         <div className="flex items-center gap-4 flex-1 min-w-0">
                           <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${step.iconBg} flex items-center justify-center text-white flex-shrink-0 shadow-md`}>

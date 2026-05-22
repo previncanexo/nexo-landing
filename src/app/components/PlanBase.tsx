@@ -158,7 +158,7 @@ export function PlanBase() {
         </motion.div>
 
         {/* ── ASYMMETRIC HEADER ── */}
-        <div className="grid md:grid-cols-[1fr_1.2fr] gap-10 md:gap-20 mb-16 md:mb-24 items-end">
+        <div className="grid md:grid-cols-[1fr_1.2fr] gap-10 md:gap-20 mb-12 sm:mb-16 items-end">
 
           <motion.div
             variants={slideFromLeft}
@@ -224,13 +224,13 @@ export function PlanBase() {
 
         {/* ── BENEFITS GRID — circular icons, minimal cards ── */}
         <motion.div
-          className="relative mb-12 md:mb-20"
+          className="relative mb-12 sm:mb-16"
           variants={staggerContainerSlow}
           initial="hidden"
           whileInView="visible"
           viewport={viewportOnce}
         >
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {benefits.map((benefit) => (
               <motion.div
                 key={benefit.name}
@@ -338,13 +338,13 @@ export function PlanBase() {
 
         {/* ── TRUST INDICATORS ── */}
         <motion.div
-          className="mt-12 md:mt-20 relative"
+          className="mt-12 sm:mt-16 relative"
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
           viewport={viewportOnce}
         >
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             {[
               {
                 icon: (

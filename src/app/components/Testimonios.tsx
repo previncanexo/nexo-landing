@@ -40,7 +40,7 @@ function TestimonialCard({ testimonial, index }: { testimonial: Testimonial; ind
     <motion.div
       variants={staggerItem}
       whileHover={{ y: -6, transition: { type: 'spring', stiffness: 400, damping: 28 } }}
-      className="bg-white rounded-[28px] p-8 lg:p-10 border border-[var(--gray-100)] group cursor-default flex flex-col transition-all duration-500 hover:border-[var(--purple)]/15"
+      className="bg-white rounded-[28px] p-8 sm:p-10 border border-[var(--gray-100)] group cursor-default flex flex-col transition-all duration-500 hover:border-[var(--purple)]/15"
       style={{ boxShadow: '0 2px 24px rgba(0,0,0,0.04)' }}
     >
       {/* Quote Icon */}
@@ -126,7 +126,7 @@ function TestimonialCard({ testimonial, index }: { testimonial: Testimonial; ind
 export function Testimonios({ testimonials }: TestimoniosProps) {
   return (
     <section
-      className="relative py-28 sm:py-36 md:py-44 px-5 sm:px-6 lg:px-8 z-[2]"
+      className="relative py-16 sm:py-24 md:py-32 px-5 sm:px-6 lg:px-8 z-[2]"
       style={{ background: 'linear-gradient(to bottom, #ffffff 0%, #faf9fc 50%, #ffffff 100%)' }}
     >
       <div className="absolute inset-0 pointer-events-none z-[1]" style={organicPatternStyle} />
@@ -140,7 +140,7 @@ export function Testimonios({ testimonials }: TestimoniosProps) {
           whileInView="visible"
           viewport={viewportOnce}
           variants={fadeUp}
-          className="text-center mb-10 sm:mb-16"
+          className="text-center mb-12 sm:mb-16"
         >
           <h2 className="font-['DM_Serif_Display'] text-[clamp(36px,5.5vw,68px)] mb-4 leading-tight tracking-[-2px] text-[var(--gray-900)]">
             Lo que dicen nuestros{' '}
@@ -157,7 +157,7 @@ export function Testimonios({ testimonials }: TestimoniosProps) {
           whileInView="visible"
           viewport={viewportOnce}
           variants={staggerContainer}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
         >
           {testimonials.map((testimonial, index) => (
             <TestimonialCard key={index} testimonial={testimonial} index={index} />
