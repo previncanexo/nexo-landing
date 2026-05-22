@@ -166,43 +166,47 @@ export function PlanBase() {
           whileInView="visible"
           viewport={viewportOnce}
         >
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
             {benefits.map((benefit) => (
               <motion.div
                 key={benefit.name}
                 className="group relative"
                 variants={staggerItem}
-                whileHover={{ y: -8, transition: { duration: 0.3, ease: [0.25, 1, 0.5, 1] } }}
+                whileHover={{ y: -6, transition: { duration: 0.3, ease: [0.25, 1, 0.5, 1] } }}
               >
-                <div className="bg-white rounded-3xl overflow-hidden transition-all duration-500 relative border border-[var(--gray-200)] group-hover:border-[var(--purple)]/30 group-hover:shadow-[var(--shadow-elevated)]">
+                <div className="h-full bg-white rounded-3xl p-6 sm:p-7 flex flex-col gap-5 relative overflow-hidden border border-[var(--gray-100)] shadow-sm transition-all duration-500 group-hover:shadow-2xl group-hover:border-[var(--purple)]/20">
 
-                  {/* Gradient Header */}
-                  <div className={`h-16 sm:h-20 bg-gradient-to-br ${benefit.color} relative overflow-hidden`}>
-                    <div className="absolute -top-10 -right-10 w-28 sm:w-32 h-28 sm:h-32 rounded-full bg-white/20 transition-transform duration-700" />
+                  {/* Gradient accent line top */}
+                  <div className={`absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r ${benefit.color} rounded-t-3xl`} />
 
-                    <div className="absolute bottom-3 sm:bottom-4 left-4 sm:left-5 w-10 sm:w-12 h-10 sm:h-12 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white shadow-xl group-hover:scale-105 transition-all duration-300 [&>svg]:w-[20px] [&>svg]:h-[20px] sm:[&>svg]:w-[24px] sm:[&>svg]:h-[24px]">
-                      {benefit.icon}
-                    </div>
-
-                    <div className="absolute top-4 right-4 bg-white/25 backdrop-blur-md text-white text-xs font-bold px-3 py-1.5 rounded-full border border-white/40">
-                      {benefit.highlight}
-                    </div>
+                  {/* Icon */}
+                  <div
+                    className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${benefit.color} flex items-center justify-center shadow-lg transition-transform duration-300 group-hover:scale-110 [&>svg]:stroke-white`}
+                    style={{ color: 'white' }}
+                  >
+                    {benefit.icon}
                   </div>
 
-                  {/* Content */}
-                  <div className="p-4 sm:p-6">
-                    <h3 className="text-base sm:text-lg font-bold text-[var(--gray-900)] mb-2 sm:mb-3 leading-tight">
+                  {/* Text */}
+                  <div className="flex flex-col gap-2 flex-1">
+                    <h3 className="text-[17px] font-bold text-[var(--gray-900)] leading-tight">
                       {benefit.name}
                     </h3>
-                    <p className="text-sm text-[var(--gray-600)] leading-relaxed">
+                    <p className="text-sm text-[var(--gray-500)] leading-relaxed">
                       {benefit.desc}
                     </p>
                   </div>
 
-                  {/* Hover Gradient Border */}
-                  <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${benefit.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10`} style={{ padding: '2px' }}>
-                    <div className="w-full h-full bg-white rounded-3xl" />
+                  {/* Highlight badge */}
+                  <div className="mt-auto">
+                    <span className={`inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full bg-gradient-to-r ${benefit.color} text-white shadow-sm`}>
+                      <span className="w-1.5 h-1.5 rounded-full bg-white/70" />
+                      {benefit.highlight}
+                    </span>
                   </div>
+
+                  {/* Hover glow */}
+                  <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${benefit.color} opacity-0 group-hover:opacity-[0.04] transition-opacity duration-500 pointer-events-none`} />
                 </div>
               </motion.div>
             ))}
