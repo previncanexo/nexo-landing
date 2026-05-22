@@ -47,34 +47,35 @@ export function Hero() {
           alt=""
           aria-hidden="true"
           draggable={false}
-          className="absolute inset-0 w-full h-full object-cover object-center select-none"
+          className="absolute inset-0 w-full h-full object-cover select-none"
+          style={{ objectPosition: '70% center' }}
         />
 
-        {/* Purple tint over the whole photo */}
+        {/* Subtle purple tint — just enough to unify palette */}
         <div
           className="absolute inset-0"
-          style={{ background: 'rgba(30, 10, 90, 0.50)' }}
+          style={{ background: 'rgba(20, 5, 70, 0.22)' }}
         />
 
-        {/* Left gradient — keeps text readable */}
+        {/* Left gradient — dark text area, fades to transparent */}
         <div
           className="absolute inset-y-0 left-0 z-10"
           style={{
-            width: '65%',
+            width: '58%',
             background:
-              'linear-gradient(to right, rgba(18,5,61,0.96) 0%, rgba(30,10,90,0.80) 45%, rgba(45,18,102,0.30) 75%, transparent 100%)',
+              'linear-gradient(to right, #12053d 0%, rgba(18,5,61,0.92) 35%, rgba(30,10,90,0.60) 65%, transparent 100%)',
           }}
         />
 
         {/* Top fade */}
         <div
-          className="absolute top-0 left-0 right-0 h-40 z-10"
-          style={{ background: 'linear-gradient(to bottom, rgba(18,5,61,0.70) 0%, transparent 100%)' }}
+          className="absolute top-0 left-0 right-0 h-36 z-10"
+          style={{ background: 'linear-gradient(to bottom, rgba(18,5,61,0.60) 0%, transparent 100%)' }}
         />
 
         {/* Bottom fade to white */}
         <div
-          className="absolute bottom-0 left-0 right-0 h-40 z-10"
+          className="absolute bottom-0 left-0 right-0 h-44 z-10"
           style={{ background: 'linear-gradient(to top, #ffffff 0%, rgba(255,255,255,0) 100%)' }}
         />
       </div>
