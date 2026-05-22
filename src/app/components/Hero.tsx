@@ -18,6 +18,28 @@ function BlurRevealWords({
   delay?: number;
 }) {
   const words = text.trim().split(' ').filter(Boolean);
+  // Spaces go OUTSIDE inline-block spans — dentro de inline-block los colapsa el browser
+  const elements: React.ReactNode[] = [];
+  words.forEach((word, i) => {
+    elements.push(
+      <motion.span
+        key={i}
+        style={{ display: 'inline-block' }}
+        variants={{
+          hidden: { opacity: 0, y: 16, filter: 'blur(10px)' },
+          visible: {
+            opacity: 1,
+            y: 0,
+            filter: 'blur(0px)',
+            transition: { duration: 0.5, ease: BLUR_EASE },
+          },
+        }}
+      >
+        {word}
+      </motion.span>
+    );
+    if (i < words.length - 1) elements.push(' ');
+  });
   return (
     <motion.span
       initial="hidden"
@@ -29,23 +51,7 @@ function BlurRevealWords({
         },
       }}
     >
-      {words.map((word, i) => (
-        <motion.span
-          key={i}
-          style={{ display: 'inline-block' }}
-          variants={{
-            hidden: { opacity: 0, y: 16, filter: 'blur(10px)' },
-            visible: {
-              opacity: 1,
-              y: 0,
-              filter: 'blur(0px)',
-              transition: { duration: 0.5, ease: BLUR_EASE },
-            },
-          }}
-        >
-          {word}{i < words.length - 1 ? ' ' : ''}
-        </motion.span>
-      ))}
+      {elements}
     </motion.span>
   );
 }
@@ -59,6 +65,8 @@ function BlurRevealText({
   className?: string;
   delay?: number;
 }) {
+  // Spaces go OUTSIDE inline-block spans para que el browser pueda hacer word-wrap
+  const chars = text.split('');
   return (
     <motion.span
       className={className}
@@ -71,23 +79,27 @@ function BlurRevealText({
         },
       }}
     >
-      {text.split('').map((char, i) => (
-        <motion.span
-          key={i}
-          style={{ display: 'inline-block' }}
-          variants={{
-            hidden: { opacity: 0, y: 20, filter: 'blur(12px)' },
-            visible: {
-              opacity: 1,
-              y: 0,
-              filter: 'blur(0px)',
-              transition: { duration: 0.55, ease: BLUR_EASE },
-            },
-          }}
-        >
-          {char === ' ' ? ' ' : char}
-        </motion.span>
-      ))}
+      {chars.map((char, i) =>
+        char === ' ' ? (
+          ' '
+        ) : (
+          <motion.span
+            key={i}
+            style={{ display: 'inline-block' }}
+            variants={{
+              hidden: { opacity: 0, y: 20, filter: 'blur(12px)' },
+              visible: {
+                opacity: 1,
+                y: 0,
+                filter: 'blur(0px)',
+                transition: { duration: 0.55, ease: BLUR_EASE },
+              },
+            }}
+          >
+            {char}
+          </motion.span>
+        )
+      )}
     </motion.span>
   );
 }
