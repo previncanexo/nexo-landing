@@ -1,5 +1,9 @@
 import { motion } from 'motion/react';
 import { fadeUp, staggerContainer, staggerItem, viewportOnce, organicPatternStyle } from './motion-variants';
+import cartaTelemedicina from '@/assets/carta-telemedicina.webp';
+import cartaOdontologia from '@/assets/carta-odontologia.webp';
+import cartaMascota from '@/assets/carta-mascota.webp';
+import cartaSeguros from '@/assets/carta-seguros.webp';
 
 interface ALaCartaProps {
   onOpenCheckout: () => void;
@@ -12,8 +16,9 @@ export function ALaCarta({ onOpenCheckout: _onOpenCheckout }: ALaCartaProps) {
 
   const services = [
     {
+      image: cartaTelemedicina,
       icon: (
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
           <path d="M8 21h8"/>
           <path d="M12 17v4"/>
@@ -23,21 +28,21 @@ export function ALaCarta({ onOpenCheckout: _onOpenCheckout }: ALaCartaProps) {
         </svg>
       ),
       title: 'Telemedicina & Psicología',
-      color: 'from-[var(--purple)] to-[var(--pink)]'
     },
     {
+      image: cartaOdontologia,
       icon: (
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M12 2c-1.7 0-3 1.5-3 3.5 0 1.2.5 2.3 1.2 3C9 9.3 7 11 7 13.5 7 17 9 22 12 22s5-5 5-8.5c0-2.5-2-4.2-3.2-5 .7-.7 1.2-1.8 1.2-3C15 3.5 13.7 2 12 2z"/>
           <path d="M9.5 17l2.5-3 2.5 3"/>
         </svg>
       ),
       title: 'Odontología estética',
-      color: 'from-[var(--pink)] to-[var(--peach)]'
     },
     {
+      image: cartaMascota,
       icon: (
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M10 5.172C10 3.782 8.423 2.679 6.5 3c-2.823.47-4.113 6.006-4 7 .08.703 1.725 1.722 3.656 1 1.261-.472 1.96-1.45 2.344-2.5"/>
           <path d="M14.267 5.172c0-1.39 1.577-2.493 3.5-2.172 2.823.47 4.113 6.006 4 7-.08.703-1.725 1.722-3.656 1-1.261-.472-1.855-1.45-2.239-2.5"/>
           <path d="M8 14v.5"/>
@@ -47,18 +52,17 @@ export function ALaCarta({ onOpenCheckout: _onOpenCheckout }: ALaCartaProps) {
         </svg>
       ),
       title: 'Cobertura para tu mascota',
-      color: 'from-[var(--purple)] to-[var(--pink)]'
     },
     {
+      image: cartaSeguros,
       icon: (
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
           <polyline points="9 12 11 14 15 10"/>
         </svg>
       ),
       title: 'Seguros personales',
-      color: 'from-[#ee5cd0] to-[#8660ef]'
-    }
+    },
   ];
 
   return (
@@ -149,20 +153,31 @@ export function ALaCarta({ onOpenCheckout: _onOpenCheckout }: ALaCartaProps) {
               key={service.title}
               variants={staggerItem}
               whileHover={{ y: -5, transition: { type: 'spring', stiffness: 400, damping: 28 } }}
-              className="bg-white rounded-[28px] border border-[var(--gray-100)] hover:border-[var(--purple)]/15 transition-all duration-500 p-8 sm:p-10 flex flex-col items-center text-center gap-5"
+              className="group bg-white rounded-[28px] border border-[var(--gray-100)] hover:border-[var(--purple)]/15 transition-all duration-500 overflow-hidden flex flex-col"
               style={{ boxShadow: '0 2px 24px rgba(0,0,0,0.04)' }}
             >
-              {/* Circular icon — diffuse gradient, not solid fill */}
-              <div
-                className="w-12 h-12 rounded-full flex items-center justify-center text-[var(--purple)]"
-                style={{
-                  background: 'linear-gradient(135deg, rgba(134,96,239,0.08) 0%, rgba(238,92,208,0.06) 100%)',
-                  border: '1px solid rgba(134,96,239,0.18)',
-                }}
-              >
-                {service.icon}
+              {/* Foto */}
+              <div className="w-full overflow-hidden" style={{ aspectRatio: '4/3' }}>
+                <img
+                  src={service.image}
+                  alt={service.title}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
               </div>
-              <p className="text-[13px] font-semibold text-[var(--gray-700)] leading-snug">{service.title}</p>
+
+              {/* Contenido */}
+              <div className="p-5 sm:p-6 flex flex-col items-center text-center gap-3 flex-1">
+                <div
+                  className="w-10 h-10 rounded-full flex items-center justify-center text-[var(--purple)]"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(134,96,239,0.08) 0%, rgba(238,92,208,0.06) 100%)',
+                    border: '1px solid rgba(134,96,239,0.18)',
+                  }}
+                >
+                  {service.icon}
+                </div>
+                <p className="text-[13px] font-semibold text-[var(--gray-700)] leading-snug">{service.title}</p>
+              </div>
             </motion.div>
           ))}
         </motion.div>
