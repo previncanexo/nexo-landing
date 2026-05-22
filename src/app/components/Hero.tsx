@@ -139,7 +139,7 @@ export function Hero() {
 
           {/* H1 */}
           <motion.h1
-            className="font-['DM_Serif_Display'] text-[clamp(28px,4.5vw,68px)] text-white leading-tight tracking-[-1px] sm:tracking-[-2px] md:tracking-[-3px] mb-6 sm:mb-8"
+            className="font-['DM_Serif_Display'] text-[clamp(36px,5.5vw,68px)] text-white leading-tight tracking-[-1px] sm:tracking-[-2px] md:tracking-[-3px] mb-6 sm:mb-8"
             variants={fadeUp}
             initial="hidden"
             animate="visible"
