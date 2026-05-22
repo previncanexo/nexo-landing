@@ -25,7 +25,7 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
       number: '02',
       title: 'Completás el formulario de alta',
       body: 'Nombre, apellido, DNI, email y datos de contacto. El proceso es 100% digital, sin papeles ni turnos presenciales.',
-      tag: '3 min',
+      tag: '1 min',
       icon: (
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
