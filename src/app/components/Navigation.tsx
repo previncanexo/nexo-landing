@@ -63,7 +63,7 @@ export function Navigation({ onOpenCheckout }: NavigationProps) {
             </ul>
 
             {/* Center: logo */}
-            <a href="#hero" className="flex items-center justify-center overflow-hidden">
+            <a href="#hero" className="flex items-center justify-center">
               <img
                 src={logoImage}
                 alt="Nexo by Previnca"
@@ -109,7 +109,7 @@ export function Navigation({ onOpenCheckout }: NavigationProps) {
 
           {/* ── MOBILE: logo left — actions right ── */}
           <div className="lg:hidden flex items-center justify-between gap-2">
-            <a href="#hero" className="flex items-center overflow-hidden">
+            <a href="#hero" className="flex items-center">
               <img
                 src={logoImage}
                 alt="Nexo by Previnca"
