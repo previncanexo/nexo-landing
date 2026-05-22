@@ -115,42 +115,47 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
           viewport={viewportOnce}
         >
           {steps.map((step) => (
-            <motion.div
-              key={step.number}
-              className="group bg-white rounded-[24px] border border-[var(--gray-100)] hover:border-[var(--purple)]/15 transition-all duration-500 p-5 sm:p-6 flex flex-col"
-              style={{ boxShadow: '0 2px 24px rgba(0,0,0,0.04)' }}
-              variants={staggerItem}
-              whileHover={{ y: -4, transition: { type: 'spring', stiffness: 400, damping: 28 } }}
-            >
-              {/* Top row: large number + time badge */}
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex flex-col leading-none">
-                  <span className="text-[9px] font-bold text-[var(--purple)]/40 uppercase tracking-[0.18em] mb-0.5">Paso</span>
-                  <span className="font-['DM_Serif_Display'] text-5xl italic leading-none bg-gradient-to-br from-[var(--purple)] to-[var(--pink)] bg-clip-text text-transparent">
-                    {step.number}
-                  </span>
+            /* Outer: solo entrada stagger. Inner: solo hover. Sin conflicto. */
+            <motion.div key={step.number} variants={staggerItem}>
+              <motion.div
+                className="group bg-white rounded-[24px] border border-[var(--gray-100)] hover:border-[var(--purple)]/15 transition-colors duration-500 p-5 sm:p-6 flex flex-col h-full"
+                style={{ boxShadow: '0 2px 24px rgba(0,0,0,0.04)' }}
+                whileHover={{ y: -4, boxShadow: '0 8px 40px rgba(134,96,239,0.10)' }}
+                transition={{ type: 'spring', stiffness: 400, damping: 28 }}
+              >
+                {/* Paso label + time badge */}
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[9px] font-bold text-[var(--purple)]/35 uppercase tracking-[0.18em]">Paso</span>
+                  <div className="inline-flex items-center gap-1.5 bg-[var(--gray-100)] px-3 py-1.5 rounded-full">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10"/>
+                      <polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                    <span className="text-[10px] font-bold text-[var(--purple)] uppercase tracking-wide">{step.tag}</span>
+                  </div>
                 </div>
-                <div className="inline-flex items-center gap-1.5 bg-[var(--gray-100)] px-3 py-1.5 rounded-full mt-1">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="12" r="10"/>
-                    <polyline points="12 6 12 12 16 14"/>
-                  </svg>
-                  <span className="text-[10px] font-bold text-[var(--purple)] uppercase tracking-wide">{step.tag}</span>
+
+                {/* Número grande, clarito */}
+                <div
+                  className="font-['DM_Serif_Display'] italic leading-[0.82] select-none mb-4"
+                  style={{ fontSize: 'clamp(72px, 10vw, 96px)', color: 'rgba(134,96,239,0.09)' }}
+                >
+                  {step.number}
                 </div>
-              </div>
 
-              {/* Icon */}
-              <div className={`w-11 h-11 rounded-2xl bg-gradient-to-br ${step.iconBg} flex items-center justify-center text-white shadow-md mb-4`}>
-                {step.icon}
-              </div>
+                {/* Icon */}
+                <div className={`w-11 h-11 rounded-2xl bg-gradient-to-br ${step.iconBg} flex items-center justify-center text-white shadow-md mb-4`}>
+                  {step.icon}
+                </div>
 
-              {/* Content */}
-              <h3 className="text-[15px] font-bold text-[var(--gray-900)] leading-snug mb-2">
-                {step.title}
-              </h3>
-              <p className="text-sm text-[var(--gray-500)] leading-relaxed flex-1">
-                {step.body}
-              </p>
+                {/* Content */}
+                <h3 className="text-[15px] font-bold text-[var(--gray-900)] leading-snug mb-2">
+                  {step.title}
+                </h3>
+                <p className="text-sm text-[var(--gray-500)] leading-relaxed flex-1">
+                  {step.body}
+                </p>
+              </motion.div>
             </motion.div>
           ))}
         </motion.div>
