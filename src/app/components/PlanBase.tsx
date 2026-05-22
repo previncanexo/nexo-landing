@@ -311,11 +311,11 @@ export function PlanBase() {
                   <span className="text-white text-[11px] font-bold uppercase tracking-[0.14em]">Ahorro Garantizado</span>
                 </div>
                 <h3 className="text-[clamp(22px,4vw,40px)] font-['DM_Serif_Display'] text-white mb-4 leading-tight tracking-tight">
-                  El ahorro de farmacia{' '}
+                  El ahorro en farmacia{' '}
                   compensa la cuota
                 </h3>
                 <p className="text-white/75 text-base leading-relaxed max-w-[520px] mx-auto lg:mx-0 font-light">
-                  Hasta 50% Off en miles de productos en farmacias adheridas de todo el país.
+                  Nexo te conviene incluso si no usás los servicios de salud. Con el descuento en medicamentos, recuperás el costo del plan.
                 </p>
               </div>
               <div className="flex flex-col gap-4 items-center lg:items-end">
