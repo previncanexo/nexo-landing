@@ -247,7 +247,7 @@ export function PlanBase() {
                   style={{ boxShadow: '0 2px 24px rgba(0,0,0,0.04)' }}
                 >
                   {/* Foto */}
-                  <div className="w-full overflow-hidden" style={{ aspectRatio: '4/3' }}>
+                  <div className="w-full overflow-hidden" style={{ aspectRatio: '3/4' }}>
                     <img
                       src={benefit.image}
                       alt={benefit.name}
