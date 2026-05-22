@@ -154,7 +154,7 @@ export function ALaCarta({ onOpenCheckout: _onOpenCheckout }: ALaCartaProps) {
             <motion.div
               key={service.title}
               variants={staggerItem}
-              whileHover={{ y: -6, transition: { duration: 0.3, ease: [0.25, 1, 0.5, 1] } }}
+              whileHover={{ y: -6, transition: { type: 'spring', stiffness: 400, damping: 28 } }}
               className="bg-white rounded-3xl border border-[var(--gray-200)] hover:border-[var(--purple)]/30 hover:shadow-[var(--shadow-elevated)] transition-all duration-500 p-6 flex flex-col items-center text-center gap-4"
             >
               <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${service.color} flex items-center justify-center text-white shadow-lg`}>

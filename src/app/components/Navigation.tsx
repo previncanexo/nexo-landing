@@ -10,7 +10,7 @@ export function Navigation({ onOpenCheckout }: NavigationProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    const onScroll = () => setScrolled(window.scrollY > 60);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
@@ -27,29 +27,48 @@ export function Navigation({ onOpenCheckout }: NavigationProps) {
 
   return (
     <>
-      <nav
-        className="fixed top-0 left-0 right-0 z-[100] transition-all duration-300"
-        style={{
-          padding: scrolled ? '6px 0' : '10px 0',
-          background: scrolled
-            ? 'rgba(80, 30, 160, 0.72)'
-            : 'linear-gradient(135deg, color-mix(in srgb, var(--purple) 88%, transparent) 0%, color-mix(in srgb, var(--pink) 88%, transparent) 100%)',
-          backdropFilter: 'blur(24px) saturate(1.3)',
-          WebkitBackdropFilter: 'blur(24px) saturate(1.3)',
-          borderBottom: scrolled ? '1px solid rgba(255,255,255,0.12)' : '1px solid transparent',
-          boxShadow: scrolled ? '0 8px 32px rgba(0,0,0,0.18)' : 'none',
-        }}
-      >
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between gap-4">
+      {/* Floating pill wrapper — pointer-events-none so the transparent area never blocks clicks */}
+      <div className="fixed top-0 left-0 right-0 z-[100] flex justify-center pt-3 px-3 sm:px-5 pointer-events-none">
+        <nav
+          className="w-full max-w-[1200px] rounded-full pointer-events-auto transition-all duration-300"
+          style={{
+            background: scrolled
+              ? 'rgba(18, 5, 61, 0.84)'
+              : 'rgba(255, 255, 255, 0.08)',
+            backdropFilter: 'blur(24px) saturate(1.4)',
+            WebkitBackdropFilter: 'blur(24px) saturate(1.4)',
+            border: `1px solid ${scrolled ? 'rgba(255,255,255,0.14)' : 'rgba(255,255,255,0.20)'}`,
+            boxShadow: scrolled
+              ? '0 8px 40px rgba(0,0,0,0.28), 0 2px 8px rgba(0,0,0,0.12)'
+              : '0 4px 24px rgba(0,0,0,0.10)',
+            padding: '5px 8px 5px 16px',
+          }}
+        >
 
-            {/* Logo — overflow hidden para recortar espacio en blanco lateral */}
-            <a href="#hero" className="shrink-0 overflow-hidden flex items-center" style={{ marginLeft: '-10px', marginRight: '-4px' }}>
+          {/* ── DESKTOP: 3-col grid — links | logo | CTAs ── */}
+          <div className="hidden lg:grid items-center gap-2" style={{ gridTemplateColumns: '1fr auto 1fr' }}>
+
+            {/* Left: nav links */}
+            <ul className="flex items-center gap-0.5 list-none m-0 p-0">
+              {navLinks.map((link) => (
+                <li key={link.href}>
+                  <a
+                    href={link.href}
+                    className="text-[13px] text-white/80 no-underline font-medium px-3.5 py-2 rounded-full transition-all duration-200 hover:text-white hover:bg-white/10 block whitespace-nowrap"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+
+            {/* Center: logo */}
+            <a href="#hero" className="flex items-center justify-center overflow-hidden">
               <img
                 src={logoImage}
                 alt="Nexo by Previnca"
                 style={{
-                  height: scrolled ? '56px' : '72px',
+                  height: scrolled ? '50px' : '64px',
                   width: 'auto',
                   maxWidth: 'none',
                   marginLeft: '-12px',
@@ -60,49 +79,14 @@ export function Navigation({ onOpenCheckout }: NavigationProps) {
               />
             </a>
 
-            {/* Desktop links */}
-            <ul className="hidden lg:flex items-center gap-1 list-none flex-1 justify-center">
-              {navLinks.map((link) => (
-                <li key={link.href}>
-                  <a
-                    href={link.href}
-                    className="text-sm text-white/85 no-underline font-medium px-4 py-2 rounded-full transition-all duration-200 hover:text-white hover:bg-white/12 block"
-                  >
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-
-            {/* Desktop CTAs */}
-            <div className="hidden lg:flex items-center gap-2 shrink-0">
-              <button
-                onClick={onOpenCheckout}
-                className="bg-white text-[var(--purple)] border-none px-5 py-2.5 rounded-full text-sm font-bold cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-[1.02] active:scale-95 font-['DM_Sans']"
-              >
-                Quiero mi cobertura
-              </button>
+            {/* Right: CTAs */}
+            <div className="flex items-center gap-2 justify-end">
               <a
                 href="https://nexo.portal.previncasalud.com.ar"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 text-sm font-semibold text-white no-underline px-4 py-2.5 rounded-full border border-white/30 bg-white/10 transition-all duration-200 hover:bg-white/20 hover:border-white/50 active:scale-95"
-              >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                  <circle cx="12" cy="7" r="4"/>
-                </svg>
-                Mi Portal
-              </a>
-            </div>
-
-            {/* Mobile: Mi Portal + Hamburger */}
-            <div className="flex lg:hidden items-center gap-2">
-              <a
-                href="https://nexo.portal.previncasalud.com.ar"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-1 text-[11px] font-semibold text-white no-underline px-3 py-2 rounded-full border border-white/30 bg-white/12 transition-all hover:bg-white/22 active:scale-95"
+                className="flex items-center gap-1.5 text-[13px] font-semibold text-white/80 no-underline px-3.5 py-2 rounded-full border border-white/25 transition-all duration-200 hover:bg-white/10 hover:text-white hover:border-white/40 active:scale-95 whitespace-nowrap"
+                style={{ backgroundColor: 'rgba(255,255,255,0.07)' }}
               >
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
@@ -111,23 +95,67 @@ export function Navigation({ onOpenCheckout }: NavigationProps) {
                 Mi Portal
               </a>
               <button
+                onClick={onOpenCheckout}
+                className="bg-white text-[var(--purple)] border-none px-5 py-2.5 rounded-full text-[13px] font-bold cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-[1.02] active:scale-95 font-['DM_Sans'] whitespace-nowrap flex items-center gap-1.5 group"
+              >
+                Quiero mi cobertura
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="group-hover:translate-x-0.5 transition-transform">
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                  <polyline points="12 5 19 12 12 19"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          {/* ── MOBILE: logo left — actions right ── */}
+          <div className="lg:hidden flex items-center justify-between gap-2">
+            <a href="#hero" className="flex items-center overflow-hidden">
+              <img
+                src={logoImage}
+                alt="Nexo by Previnca"
+                style={{
+                  height: '52px',
+                  width: 'auto',
+                  maxWidth: 'none',
+                  marginLeft: '-10px',
+                  marginRight: '-10px',
+                  objectFit: 'contain',
+                }}
+              />
+            </a>
+            <div className="flex items-center gap-2">
+              <a
+                href="https://nexo.portal.previncasalud.com.ar"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 text-[11px] font-semibold text-white no-underline px-3 py-2 rounded-full border border-white/30 transition-all hover:bg-white/20 active:scale-95"
+                style={{ backgroundColor: 'rgba(255,255,255,0.10)' }}
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                Mi Portal
+              </a>
+              <button
                 onClick={() => setMobileOpen(!mobileOpen)}
-                className="w-10 h-10 flex items-center justify-center bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 cursor-pointer transition-all hover:bg-white/20 active:scale-95"
+                className="w-9 h-9 flex items-center justify-center rounded-full border border-white/20 cursor-pointer transition-all hover:bg-white/20 active:scale-95"
+                style={{ backgroundColor: 'rgba(255,255,255,0.10)' }}
                 aria-label="Menú"
               >
-                <div className="flex flex-col gap-[5px]">
-                  <span className={`block w-5 h-[2px] bg-white rounded-full transition-all duration-300 origin-center ${mobileOpen ? 'rotate-45 translate-y-[7px]' : ''}`} />
-                  <span className={`block w-5 h-[2px] bg-white rounded-full transition-all duration-300 ${mobileOpen ? 'opacity-0 scale-0' : ''}`} />
-                  <span className={`block w-5 h-[2px] bg-white rounded-full transition-all duration-300 origin-center ${mobileOpen ? '-rotate-45 -translate-y-[7px]' : ''}`} />
+                <div className="flex flex-col gap-[4px]">
+                  <span className={`block w-[18px] h-[1.5px] bg-white rounded-full transition-all duration-300 origin-center ${mobileOpen ? 'rotate-45 translate-y-[5.5px]' : ''}`} />
+                  <span className={`block w-[18px] h-[1.5px] bg-white rounded-full transition-all duration-300 ${mobileOpen ? 'opacity-0 scale-0' : ''}`} />
+                  <span className={`block w-[18px] h-[1.5px] bg-white rounded-full transition-all duration-300 origin-center ${mobileOpen ? '-rotate-45 -translate-y-[5.5px]' : ''}`} />
                 </div>
               </button>
             </div>
-
           </div>
-        </div>
-      </nav>
 
-      {/* Mobile Menu Overlay */}
+        </nav>
+      </div>
+
+      {/* ── MOBILE MENU OVERLAY ── */}
       <div
         className={`fixed inset-0 z-[99] lg:hidden transition-all duration-400 ${
           mobileOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
@@ -137,11 +165,9 @@ export function Navigation({ onOpenCheckout }: NavigationProps) {
           backdropFilter: 'blur(30px)',
         }}
       >
-        {/* Orbs decorativos */}
         <div className="absolute top-20 right-10 w-64 h-64 rounded-full bg-white/10 blur-[80px]" />
         <div className="absolute bottom-40 left-10 w-48 h-48 rounded-full bg-white/10 blur-[60px]" />
 
-        {/* Close */}
         <button
           onClick={() => setMobileOpen(false)}
           className="absolute top-5 right-4 z-10 w-10 h-10 flex items-center justify-center rounded-xl border border-white/20 bg-white/10 cursor-pointer hover:bg-white/20 active:scale-95 transition-all"
@@ -155,7 +181,7 @@ export function Navigation({ onOpenCheckout }: NavigationProps) {
         </button>
 
         <div className="flex flex-col items-center justify-center h-full px-8 relative z-10">
-          <ul className="list-none flex flex-col items-center gap-1 mb-10 w-full max-w-xs">
+          <ul className="list-none flex flex-col items-center gap-1 mb-10 w-full max-w-xs p-0 m-0">
             {navLinks.map((link, i) => (
               <li
                 key={link.href}
@@ -179,9 +205,13 @@ export function Navigation({ onOpenCheckout }: NavigationProps) {
           >
             <button
               onClick={() => { setMobileOpen(false); onOpenCheckout(); }}
-              className="w-full bg-white text-[var(--purple)] border-none px-8 py-4 rounded-full text-base cursor-pointer transition-all hover:shadow-2xl font-['DM_Sans'] font-bold"
+              className="w-full bg-white text-[var(--purple)] border-none px-8 py-4 rounded-full text-base cursor-pointer transition-all hover:shadow-2xl font-['DM_Sans'] font-bold flex items-center justify-center gap-2 group"
             >
               Quiero mi cobertura
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="group-hover:translate-x-0.5 transition-transform">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
             </button>
             <a
               href="https://nexo.portal.previncasalud.com.ar"
