@@ -1,13 +1,24 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { useState, useEffect, useRef } from 'react';
+import { motion, useScroll, useTransform } from 'motion/react';
 import { fadeUp, fadeUpSubtle } from './motion-variants';
 import heroWoman from '@/assets/hero-woman.webp';
 import heroWoman2 from '@/assets/hero-woman-2.webp';
+import heroWoman3 from '@/assets/hero-woman-3.webp';
 
-const heroImages = [heroWoman, heroWoman2];
+const heroImages = [heroWoman, heroWoman2, heroWoman3];
 
 export function Hero() {
   const [current, setCurrent] = useState(0);
+  const heroRef = useRef<HTMLElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ['start start', 'end start'],
+  });
+
+  const contentScale = useTransform(scrollYProgress, [0, 1], [1, 0.88]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.65], [1, 0]);
+  const bgScale = useTransform(scrollYProgress, [0, 1], [1, 1.08]);
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -18,6 +29,7 @@ export function Hero() {
 
   return (
     <section
+      ref={heroRef}
       id="hero"
       className="relative overflow-hidden sticky top-0 z-0"
       style={{ minHeight: '100svh' }}
@@ -54,25 +66,23 @@ export function Hero() {
         <ellipse cx="160" cy="620" rx="220" ry="180" stroke="rgba(134,96,239,0.07)" strokeWidth="50" />
       </svg>
 
-      {/* ── HERO PHOTOS — crossfade carousel ── */}
-      <div className="absolute inset-0 z-[3]">
-        <AnimatePresence mode="sync">
-          <motion.img
-            key={current}
-            src={heroImages[current]}
+      {/* ── HERO PHOTOS — CSS crossfade, sin AnimatePresence ── */}
+      <motion.div className="absolute inset-0 z-[3]" style={{ scale: bgScale }}>
+        {heroImages.map((img, i) => (
+          <img
+            key={i}
+            src={img}
             alt=""
             aria-hidden="true"
             draggable={false}
-            className="absolute inset-0 w-full h-full object-cover select-none"
+            className={`absolute inset-0 w-full h-full object-cover select-none transition-opacity duration-700 ease-in-out ${
+              i === current ? 'opacity-100' : 'opacity-0'
+            }`}
             style={{ objectPosition: '65% center' }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.6, ease: 'easeInOut' }}
           />
-        </AnimatePresence>
+        ))}
 
-        {/* Centered dark overlay — ensures text legibility over any image */}
+        {/* Dark overlay — legibilidad del texto */}
         <div
           className="absolute inset-0"
           style={{
@@ -86,13 +96,16 @@ export function Hero() {
           className="absolute top-0 left-0 right-0 h-36 z-10"
           style={{ background: 'linear-gradient(to bottom, rgba(18,5,61,0.55) 0%, transparent 100%)' }}
         />
-      </div>
+      </motion.div>
 
-      {/* ── CONTENT — centered ── */}
-      <div className="relative z-[10] w-full flex flex-col items-center justify-center" style={{ minHeight: '100svh' }}>
+      {/* ── CONTENT — scroll-linked scale + fade ── */}
+      <motion.div
+        className="relative z-[10] w-full flex flex-col items-center justify-center"
+        style={{ minHeight: '100svh', scale: contentScale, opacity: contentOpacity }}
+      >
         <div className="max-w-[700px] mx-auto px-5 sm:px-8 text-center" style={{ paddingTop: '7rem', paddingBottom: '6rem' }}>
 
-          {/* Badge — minimal label, Lumiera-style */}
+          {/* Badge */}
           <motion.div
             variants={fadeUpSubtle}
             initial="hidden"
@@ -138,7 +151,7 @@ export function Hero() {
             {'. '}Obtené tu cobertura médica esencial en minutos, sin papeles ni trámites presenciales.
           </motion.p>
 
-          {/* CTAs — centered */}
+          {/* CTAs */}
           <motion.div
             className="flex gap-3 flex-col sm:flex-row justify-center items-center"
             variants={fadeUp}
@@ -204,7 +217,7 @@ export function Hero() {
           </motion.div>
 
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }
