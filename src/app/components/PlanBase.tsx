@@ -131,33 +131,60 @@ export function PlanBase() {
 
         {/* ── FEATURE STRIP ── */}
         <motion.div
-          className="flex flex-wrap items-center justify-center mb-16 sm:mb-24 pb-8 border-b border-[var(--gray-100)]"
+          className="mb-16 sm:mb-24 pb-8 border-b border-[var(--gray-100)]"
           variants={fadeUp}
           initial="hidden"
           whileInView="visible"
           viewport={viewportOnce}
         >
-          {featureItems.map((item, i, arr) => (
-            <Fragment key={item.label}>
-              <div className="flex items-center gap-3 px-5 sm:px-7 py-4 sm:py-5">
+          {/* Mobile: 2×2 grid */}
+          <div className="grid grid-cols-2 gap-2.5 sm:hidden">
+            {featureItems.map((item) => (
+              <div
+                key={item.label}
+                className="flex items-center gap-2.5 px-3.5 py-3 rounded-2xl"
+                style={{
+                  background: 'rgba(134,96,239,0.06)',
+                  border: '1px solid rgba(134,96,239,0.10)',
+                }}
+              >
                 <div
-                  className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
-                  style={{
-                    background: 'linear-gradient(135deg, var(--purple), var(--pink))',
-                    boxShadow: '0 4px 12px rgba(134,96,239,0.25)',
-                  }}
+                  className="w-7 h-7 rounded-full flex items-center justify-center shrink-0"
+                  style={{ background: 'linear-gradient(135deg, var(--purple), var(--pink))' }}
                 >
                   {item.icon}
                 </div>
-                <span className="text-[13px] sm:text-sm font-medium text-[var(--gray-600)] whitespace-nowrap tracking-wide">
+                <span className="text-[12px] font-semibold text-[var(--gray-700)] leading-tight">
                   {item.label}
                 </span>
               </div>
-              {i < arr.length - 1 && (
-                <div className="hidden sm:block self-stretch w-px bg-[var(--gray-200)] my-3" />
-              )}
-            </Fragment>
-          ))}
+            ))}
+          </div>
+
+          {/* Desktop: horizontal strip */}
+          <div className="hidden sm:flex flex-wrap items-center justify-center">
+            {featureItems.map((item, i, arr) => (
+              <Fragment key={item.label}>
+                <div className="flex items-center gap-3 px-7 py-5">
+                  <div
+                    className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
+                    style={{
+                      background: 'linear-gradient(135deg, var(--purple), var(--pink))',
+                      boxShadow: '0 4px 12px rgba(134,96,239,0.25)',
+                    }}
+                  >
+                    {item.icon}
+                  </div>
+                  <span className="text-sm font-medium text-[var(--gray-600)] whitespace-nowrap tracking-wide">
+                    {item.label}
+                  </span>
+                </div>
+                {i < arr.length - 1 && (
+                  <div className="self-stretch w-px bg-[var(--gray-200)] my-3" />
+                )}
+              </Fragment>
+            ))}
+          </div>
         </motion.div>
 
         {/* ── ASYMMETRIC HEADER ── */}
@@ -176,10 +203,18 @@ export function PlanBase() {
               <span className="text-xs font-bold tracking-[0.12em] uppercase text-white">Plan Base</span>
             </div>
 
-            <h2 className="font-['DM_Serif_Display'] text-[clamp(36px,5.5vw,68px)] text-[var(--gray-900)] leading-tight tracking-[-2px] mb-7">
-              El plan que<br />
-              <span className="italic text-[var(--pink)]">siempre</span><br />
-              necesitás
+            <h2 className="font-['DM_Serif_Display'] text-[44px] sm:text-[clamp(36px,5.5vw,68px)] text-[var(--gray-900)] leading-[1.05] tracking-[-2px] mb-7">
+              {/* Mobile: 2 líneas */}
+              <span className="block sm:hidden">
+                El plan que<br />
+                <span className="italic text-[var(--pink)]">siempre</span>{' '}necesitás
+              </span>
+              {/* Desktop: 3 líneas */}
+              <span className="hidden sm:block">
+                El plan que<br />
+                <span className="italic text-[var(--pink)]">siempre</span><br />
+                necesitás
+              </span>
             </h2>
 
             <p className="text-base sm:text-lg text-[var(--gray-500)] leading-relaxed max-w-[460px] font-light">
