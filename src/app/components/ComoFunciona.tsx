@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { fadeUp, staggerContainerSlow, staggerItem, lineDraw, viewportOnce } from './motion-variants';
+import { fadeUp, staggerContainerSlow, staggerItem, lineDraw, viewportOnce, organicPatternStyle } from './motion-variants';
 
 interface ComoFuncionaProps {
   onOpenCheckout: () => void;
@@ -68,23 +68,17 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
   return (
     <section
       id="como"
-      className="py-20 sm:py-28 relative z-[2] overflow-hidden"
+      className="py-28 sm:py-36 md:py-44 relative z-[2] overflow-hidden"
       style={{
         background: 'linear-gradient(180deg, #ffffff 0%, #faf9fc 50%, #ffffff 100%)'
       }}
     >
-      {/* Decorative Background Elements */}
-      <div className="absolute top-20 left-[5%] w-[400px] h-[400px] rounded-full bg-[var(--purple)] opacity-5 blur-[100px]" />
-      <div className="absolute bottom-32 right-[8%] w-[450px] h-[450px] rounded-full bg-[var(--pink)] opacity-5 blur-[110px]" />
+      {/* Organic pattern */}
+      <div className="absolute inset-0 pointer-events-none z-[1]" style={organicPatternStyle} />
 
-      {/* Noise Texture */}
-      <div
-        className="absolute inset-0 opacity-[0.015] pointer-events-none"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' /%3E%3C/svg%3E")`,
-          backgroundRepeat: 'repeat'
-        }}
-      />
+      {/* Decorative orbs */}
+      <div className="absolute top-20 left-[5%] w-[500px] h-[500px] rounded-full bg-[var(--purple)] opacity-[0.03] blur-[110px] pointer-events-none" />
+      <div className="absolute bottom-32 right-[8%] w-[500px] h-[500px] rounded-full bg-[var(--pink)] opacity-[0.03] blur-[120px] pointer-events-none" />
 
       <div className="max-w-[1200px] mx-auto px-5 sm:px-6 relative z-10">
         {/* Header */}
@@ -114,21 +108,8 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
 
         {/* Steps - Timeline */}
         <div className="relative max-w-[960px] mx-auto mb-12 md:mb-20">
-          {/* Vertical connector line (desktop) */}
-          <div className="hidden md:block absolute left-[39px] top-12 bottom-12 w-[2px]">
-            <div className="w-full h-full bg-gradient-to-b from-[var(--purple)]/15 via-[var(--pink)]/15 to-[var(--peach)]/15 rounded-full" />
-            <motion.div
-              className="absolute top-0 left-0 w-full bg-gradient-to-b from-[var(--purple)] via-[var(--pink)] to-[var(--peach)] rounded-full origin-top"
-              variants={lineDraw}
-              initial="hidden"
-              whileInView="visible"
-              viewport={viewportOnce}
-              style={{ height: '100%' }}
-            />
-          </div>
-
-          {/* Mobile vertical connector */}
-          <div className="md:hidden absolute left-[23px] top-8 bottom-8 w-[2px]">
+          {/* Vertical connector line (desktop) — 1px, elegant */}
+          <div className="hidden md:block absolute left-[39px] top-12 bottom-12 w-[1px]">
             <div className="w-full h-full bg-gradient-to-b from-[var(--purple)]/10 via-[var(--pink)]/10 to-[var(--peach)]/10 rounded-full" />
             <motion.div
               className="absolute top-0 left-0 w-full bg-gradient-to-b from-[var(--purple)] via-[var(--pink)] to-[var(--peach)] rounded-full origin-top"
@@ -140,8 +121,21 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
             />
           </div>
 
+          {/* Mobile vertical connector — 1px */}
+          <div className="md:hidden absolute left-[23px] top-8 bottom-8 w-[1px]">
+            <div className="w-full h-full bg-gradient-to-b from-[var(--purple)]/08 via-[var(--pink)]/08 to-[var(--peach)]/08 rounded-full" />
+            <motion.div
+              className="absolute top-0 left-0 w-full bg-gradient-to-b from-[var(--purple)] via-[var(--pink)] to-[var(--peach)] rounded-full origin-top"
+              variants={lineDraw}
+              initial="hidden"
+              whileInView="visible"
+              viewport={viewportOnce}
+              style={{ height: '100%' }}
+            />
+          </div>
+
           <motion.div
-            className="space-y-5 md:space-y-6"
+            className="space-y-6 md:space-y-8"
             variants={staggerContainerSlow}
             initial="hidden"
             whileInView="visible"
@@ -157,17 +151,20 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
                 <div className="hidden md:flex gap-10 items-start">
                   <div className="flex-shrink-0 relative z-10">
                     <motion.div
-                      className={`w-[80px] h-[80px] rounded-3xl bg-gradient-to-br ${step.iconBg} flex flex-col items-center justify-center text-white shadow-lg`}
-                      whileHover={{ scale: 1.08, rotate: 3 }}
+                      className={`w-[72px] h-[72px] rounded-full bg-gradient-to-br ${step.iconBg} flex flex-col items-center justify-center text-white`}
+                      style={{ boxShadow: '0 4px 20px rgba(134,96,239,0.22)' }}
+                      whileHover={{ scale: 1.06, rotate: 2 }}
                       transition={{ type: 'spring', stiffness: 300, damping: 20 }}
                     >
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-white/60 mb-0.5">Paso</span>
+                      <span className="text-[9px] font-medium uppercase tracking-widest text-white/50 mb-0.5">Paso</span>
                       <span className="font-['DM_Serif_Display'] text-2xl leading-none">{step.number}</span>
                     </motion.div>
                   </div>
 
-                  <div className="flex-1 bg-white rounded-3xl border transition-all duration-500 overflow-hidden border-[var(--gray-200)] hover:border-[var(--purple)]/30 hover:shadow-[var(--shadow-elevated)]">
-                    <div className="p-8">
+                  <div className="flex-1 bg-white rounded-[28px] border transition-all duration-500 overflow-hidden border-[var(--gray-100)] hover:border-[var(--purple)]/15"
+                    style={{ boxShadow: '0 2px 24px rgba(0,0,0,0.04)' }}
+                  >
+                    <div className="p-9 sm:p-10">
                       <div className="flex items-start justify-between gap-4 mb-4">
                         <div className="flex items-center gap-4 flex-1 min-w-0">
                           <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${step.iconBg} flex items-center justify-center text-white flex-shrink-0 shadow-md`}>
@@ -186,7 +183,7 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
                         </div>
                       </div>
 
-                      <p className="text-sm text-[var(--gray-600)] leading-relaxed ml-16">
+                      <p className="text-sm text-[var(--gray-500)] leading-relaxed ml-16 font-light">
                         {step.body}
                       </p>
 

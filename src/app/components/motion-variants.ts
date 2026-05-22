@@ -1,3 +1,4 @@
+import type React from 'react';
 import type { Variants } from 'motion/react';
 
 // ─── Spring Presets ─────────────────────────────────────────
@@ -78,3 +79,9 @@ export const lineDraw: Variants = {
 // ─── Viewport settings (reusable) ───────────────────────────
 export const viewportOnce = { once: true, margin: '-60px' as const };
 export const viewportOnceEarly = { once: true, margin: '-30px' as const };
+
+// ─── Organic background pattern (Lumiera-inspired, white sections) ───────────
+export const organicPatternStyle: React.CSSProperties = {
+  backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='10' cy='10' r='1.5' fill='%238660ef' fill-opacity='0.07'/%3E%3Ccircle cx='70' cy='70' r='1.5' fill='%238660ef' fill-opacity='0.07'/%3E%3Ccircle cx='40' cy='40' r='1' fill='%23ee5cd0' fill-opacity='0.05'/%3E%3Ccircle cx='70' cy='10' r='1' fill='%238660ef' fill-opacity='0.05'/%3E%3Ccircle cx='10' cy='70' r='1' fill='%23ee5cd0' fill-opacity='0.05'/%3E%3C/svg%3E")`,
+  backgroundRepeat: 'repeat',
+};

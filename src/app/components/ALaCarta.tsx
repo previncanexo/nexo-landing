@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { fadeUp, staggerContainer, staggerItem, viewportOnce } from './motion-variants';
+import { fadeUp, staggerContainer, staggerItem, viewportOnce, organicPatternStyle } from './motion-variants';
 
 interface ALaCartaProps {
   onOpenCheckout: () => void;
@@ -64,23 +64,17 @@ export function ALaCarta({ onOpenCheckout: _onOpenCheckout }: ALaCartaProps) {
   return (
     <section
       id="carta"
-      className="py-20 sm:py-28 relative z-[2] overflow-hidden"
+      className="py-28 sm:py-36 md:py-44 relative z-[2] overflow-hidden"
       style={{
         background: 'linear-gradient(180deg, #ffffff 0%, #faf9fc 50%, #ffffff 100%)'
       }}
     >
-      {/* Decorative Background Elements */}
-      <div className="absolute top-32 left-[8%] w-[450px] h-[450px] rounded-full bg-[var(--purple)] opacity-5 blur-[120px]" />
-      <div className="absolute bottom-20 right-[12%] w-[400px] h-[400px] rounded-full bg-[var(--pink)] opacity-5 blur-[100px]" />
+      {/* Organic pattern */}
+      <div className="absolute inset-0 pointer-events-none z-[1]" style={organicPatternStyle} />
 
-      {/* Noise Texture */}
-      <div
-        className="absolute inset-0 opacity-[0.02] pointer-events-none"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' /%3E%3C/svg%3E")`,
-          backgroundRepeat: 'repeat'
-        }}
-      />
+      {/* Decorative orbs */}
+      <div className="absolute top-32 left-[8%] w-[500px] h-[500px] rounded-full bg-[var(--purple)] opacity-[0.03] blur-[130px] pointer-events-none" />
+      <div className="absolute bottom-20 right-[12%] w-[450px] h-[450px] rounded-full bg-[var(--pink)] opacity-[0.03] blur-[110px] pointer-events-none" />
 
       <div className="max-w-[1200px] mx-auto px-5 sm:px-6 relative z-10">
         {/* Header */}
@@ -154,13 +148,21 @@ export function ALaCarta({ onOpenCheckout: _onOpenCheckout }: ALaCartaProps) {
             <motion.div
               key={service.title}
               variants={staggerItem}
-              whileHover={{ y: -6, transition: { type: 'spring', stiffness: 400, damping: 28 } }}
-              className="bg-white rounded-3xl border border-[var(--gray-200)] hover:border-[var(--purple)]/30 hover:shadow-[var(--shadow-elevated)] transition-all duration-500 p-6 flex flex-col items-center text-center gap-4"
+              whileHover={{ y: -5, transition: { type: 'spring', stiffness: 400, damping: 28 } }}
+              className="bg-white rounded-[28px] border border-[var(--gray-100)] hover:border-[var(--purple)]/15 transition-all duration-500 p-8 flex flex-col items-center text-center gap-5"
+              style={{ boxShadow: '0 2px 24px rgba(0,0,0,0.04)' }}
             >
-              <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${service.color} flex items-center justify-center text-white shadow-lg`}>
+              {/* Circular icon — diffuse gradient, not solid fill */}
+              <div
+                className="w-12 h-12 rounded-full flex items-center justify-center text-[var(--purple)]"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(134,96,239,0.08) 0%, rgba(238,92,208,0.06) 100%)',
+                  border: '1px solid rgba(134,96,239,0.18)',
+                }}
+              >
                 {service.icon}
               </div>
-              <p className="text-sm font-bold text-[var(--gray-800)] leading-snug">{service.title}</p>
+              <p className="text-[13px] font-semibold text-[var(--gray-700)] leading-snug">{service.title}</p>
             </motion.div>
           ))}
         </motion.div>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { fadeUp, staggerContainer, staggerItem, viewportOnce } from './motion-variants';
+import { fadeUp, staggerContainer, staggerItem, viewportOnce, organicPatternStyle } from './motion-variants';
 
 interface Testimonial {
   name: string;
@@ -39,8 +39,9 @@ function TestimonialCard({ testimonial, index }: { testimonial: Testimonial; ind
   return (
     <motion.div
       variants={staggerItem}
-      whileHover={{ y: -8, transition: { type: 'spring', stiffness: 400, damping: 28 } }}
-      className="bg-white rounded-3xl p-6 lg:p-8 border border-[var(--gray-200)] group cursor-default flex flex-col transition-all duration-500 hover:border-[var(--purple)]/30 hover:shadow-[var(--shadow-elevated)]"
+      whileHover={{ y: -6, transition: { type: 'spring', stiffness: 400, damping: 28 } }}
+      className="bg-white rounded-[28px] p-8 lg:p-10 border border-[var(--gray-100)] group cursor-default flex flex-col transition-all duration-500 hover:border-[var(--purple)]/15"
+      style={{ boxShadow: '0 2px 24px rgba(0,0,0,0.04)' }}
     >
       {/* Quote Icon */}
       <div
@@ -125,11 +126,12 @@ function TestimonialCard({ testimonial, index }: { testimonial: Testimonial; ind
 export function Testimonios({ testimonials }: TestimoniosProps) {
   return (
     <section
-      className="relative py-20 sm:py-28 px-5 sm:px-6 lg:px-8 z-[2]"
+      className="relative py-28 sm:py-36 md:py-44 px-5 sm:px-6 lg:px-8 z-[2]"
       style={{ background: 'linear-gradient(to bottom, #ffffff 0%, #faf9fc 50%, #ffffff 100%)' }}
     >
-      <div className="absolute top-20 right-[8%] w-[400px] h-[400px] rounded-full bg-[var(--purple)] opacity-[0.04] blur-[100px]" />
-      <div className="absolute bottom-20 left-[5%] w-[350px] h-[350px] rounded-full bg-[var(--pink)] opacity-[0.04] blur-[90px]" />
+      <div className="absolute inset-0 pointer-events-none z-[1]" style={organicPatternStyle} />
+      <div className="absolute top-20 right-[8%] w-[500px] h-[500px] rounded-full bg-[var(--purple)] opacity-[0.03] blur-[110px] pointer-events-none" />
+      <div className="absolute bottom-20 left-[5%] w-[450px] h-[450px] rounded-full bg-[var(--pink)] opacity-[0.03] blur-[100px] pointer-events-none" />
 
       <div className="max-w-[1200px] mx-auto relative z-10">
         {/* Header */}

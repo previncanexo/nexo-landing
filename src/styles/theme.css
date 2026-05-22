@@ -38,11 +38,11 @@
   --radius-sm: 10px;
   --radius-pill: 100px;
 
-  /* Elevation system */
-  --shadow-subtle: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
-  --shadow-card: 0 4px 16px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
-  --shadow-elevated: 0 12px 40px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
-  --shadow-float: 0 20px 60px rgba(0,0,0,0.1), 0 8px 20px rgba(0,0,0,0.06);
+  /* Elevation system — diffuse and soft, Lumiera-inspired */
+  --shadow-subtle: 0 1px 4px rgba(0,0,0,0.03), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-card: 0 2px 24px rgba(0,0,0,0.04), 0 1px 4px rgba(0,0,0,0.02);
+  --shadow-elevated: 0 8px 48px rgba(0,0,0,0.06), 0 2px 12px rgba(0,0,0,0.03);
+  --shadow-float: 0 16px 64px rgba(0,0,0,0.07), 0 4px 20px rgba(0,0,0,0.04);
 
   /* Transitions */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -65,7 +65,7 @@
     background: #0D0520;
     color: #fff;
     overflow-x: hidden;
-    line-height: 1.5;
+    line-height: 1.65;
   }
 
   h1, h2, h3 {

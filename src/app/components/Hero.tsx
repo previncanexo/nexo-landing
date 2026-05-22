@@ -92,15 +92,16 @@ export function Hero() {
       <div className="relative z-[10] w-full flex flex-col items-center justify-center" style={{ minHeight: '100svh' }}>
         <div className="max-w-[700px] mx-auto px-5 sm:px-8 text-center" style={{ paddingTop: '7rem', paddingBottom: '6rem' }}>
 
-          {/* Badge */}
+          {/* Badge — minimal label, Lumiera-style */}
           <motion.div
             variants={fadeUpSubtle}
             initial="hidden"
             animate="visible"
-            className="inline-flex items-center gap-2 bg-white/90 backdrop-blur-md border-2 border-[var(--purple)] rounded-full px-4 sm:px-5 py-2 sm:py-2.5 text-[11px] sm:text-xs text-[var(--purple)] font-bold mb-6 sm:mb-8 shadow-xl"
+            className="inline-flex items-center gap-2.5 rounded-full px-5 py-2 text-[10px] sm:text-[11px] text-white/50 font-medium tracking-[0.20em] uppercase mb-8 sm:mb-10 border border-white/12 backdrop-blur-sm"
+            style={{ backgroundColor: 'rgba(255,255,255,0.06)' }}
           >
             <div
-              className="w-2 h-2 rounded-full bg-[var(--pink)]"
+              className="w-1.5 h-1.5 rounded-full bg-[var(--pink)]"
               style={{ animation: 'pulse-dot 2s ease-in-out infinite' }}
             />
             100% pensado para vos
