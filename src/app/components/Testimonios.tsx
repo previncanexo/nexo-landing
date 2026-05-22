@@ -147,7 +147,7 @@ export function Testimonios({ testimonials }: TestimoniosProps) {
             <span className="italic text-[var(--pink)]">miembros</span>
           </h2>
           <p className="text-[var(--gray-600)] text-base sm:text-lg max-w-2xl mx-auto">
-            Historias reales de personas que confiaron en Nexo by Previnca
+            Historias reales de personas que confían en Previnca
           </p>
         </motion.div>
 
