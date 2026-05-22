@@ -68,9 +68,9 @@ export function ALaCarta({ onOpenCheckout: _onOpenCheckout }: ALaCartaProps) {
   return (
     <section
       id="carta"
-      className="py-16 sm:py-24 md:py-32 relative z-[2] overflow-hidden"
+      className="pt-10 sm:pt-16 md:pt-20 pb-16 sm:pb-24 md:pb-32 relative z-[2] overflow-hidden"
       style={{
-        background: 'linear-gradient(180deg, #ffffff 0%, #faf9fc 50%, #ffffff 100%)'
+        background: 'linear-gradient(180deg, #ffffff 0%, #f5f0ff 50%, #ffffff 100%)'
       }}
     >
       {/* Organic pattern */}

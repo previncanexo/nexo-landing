@@ -118,7 +118,7 @@ export function PlanBase() {
         marginTop: 'clamp(-48px, -6vw, -80px)',
         borderRadius: 'clamp(40px, 5.5vw, 72px) clamp(40px, 5.5vw, 72px) 0 0',
         paddingTop: 'clamp(48px, 5.5vw, 72px)',
-        paddingBottom: 'clamp(96px, 10vw, 144px)',
+        paddingBottom: 'clamp(40px, 4vw, 60px)',
       }}
     >
       {/* Organic background pattern */}

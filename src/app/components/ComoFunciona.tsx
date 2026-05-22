@@ -70,7 +70,7 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
       id="como"
       className="py-16 sm:py-24 md:py-32 relative z-[2] overflow-hidden"
       style={{
-        background: 'linear-gradient(180deg, #ffffff 0%, #faf9fc 50%, #ffffff 100%)'
+        background: 'linear-gradient(180deg, #ffffff 0%, #fff0fd 50%, #ffffff 100%)'
       }}
     >
       {/* Organic pattern */}
