@@ -40,11 +40,8 @@ export function Hero() {
         <ellipse cx="160" cy="620" rx="220" ry="180" stroke="rgba(134,96,239,0.07)" strokeWidth="50" />
       </svg>
 
-      {/* ─── WOMAN PHOTO — right side, composited into gradient ─── */}
-      <div
-        className="absolute right-0 top-0 z-[3] hidden md:block"
-        style={{ width: '54%', bottom: '60px' }}
-      >
+      {/* ─── WOMAN PHOTO — full width background ─── */}
+      <div className="absolute inset-0 z-[3]">
         <img
           src={heroWoman}
           alt=""
@@ -53,36 +50,32 @@ export function Hero() {
           className="absolute inset-0 w-full h-full object-cover object-center select-none"
         />
 
-        {/* Purple tint — pulls warm tones toward brand palette */}
+        {/* Purple tint over the whole photo */}
         <div
           className="absolute inset-0"
-          style={{ background: 'rgba(45, 18, 110, 0.40)' }}
+          style={{ background: 'rgba(30, 10, 90, 0.50)' }}
         />
 
-        {/* Left gradient fade — seamless blend into text area */}
+        {/* Left gradient — keeps text readable */}
         <div
           className="absolute inset-y-0 left-0 z-10"
           style={{
-            width: '68%',
+            width: '65%',
             background:
-              'linear-gradient(to right, #2d1266 0%, rgba(45,18,102,0.82) 40%, rgba(45,18,102,0.30) 75%, transparent 100%)',
+              'linear-gradient(to right, rgba(18,5,61,0.96) 0%, rgba(30,10,90,0.80) 45%, rgba(45,18,102,0.30) 75%, transparent 100%)',
           }}
         />
 
         {/* Top fade */}
         <div
           className="absolute top-0 left-0 right-0 h-40 z-10"
-          style={{
-            background: 'linear-gradient(to bottom, rgba(18,5,61,0.55) 0%, transparent 100%)',
-          }}
+          style={{ background: 'linear-gradient(to bottom, rgba(18,5,61,0.70) 0%, transparent 100%)' }}
         />
 
-        {/* Bottom fade — transitions to white */}
+        {/* Bottom fade to white */}
         <div
           className="absolute bottom-0 left-0 right-0 h-40 z-10"
-          style={{
-            background: 'linear-gradient(to top, #ffffff 0%, rgba(255,255,255,0) 100%)',
-          }}
+          style={{ background: 'linear-gradient(to top, #ffffff 0%, rgba(255,255,255,0) 100%)' }}
         />
       </div>
 
