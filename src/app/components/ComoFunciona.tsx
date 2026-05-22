@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { fadeUp, staggerContainerSlow, staggerItem, lineDraw, viewportOnce, organicPatternStyle } from './motion-variants';
+import { fadeUp, staggerContainerSlow, staggerItem, viewportOnce, organicPatternStyle } from './motion-variants';
 
 interface ComoFuncionaProps {
   onOpenCheckout: () => void;
@@ -106,127 +106,51 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
           </p>
         </motion.div>
 
-        {/* Steps - Timeline */}
-        <div className="relative max-w-[960px] mx-auto mb-12 sm:mb-16">
-          {/* Vertical connector line (desktop) — 1px, elegant */}
-          <div className="hidden md:block absolute left-[39px] top-12 bottom-12 w-[1px]">
-            <div className="w-full h-full bg-gradient-to-b from-[var(--purple)]/10 via-[var(--pink)]/10 to-[var(--peach)]/10 rounded-full" />
+        {/* Steps Grid — 2×2 */}
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 max-w-[960px] mx-auto mb-12 sm:mb-16"
+          variants={staggerContainerSlow}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportOnce}
+        >
+          {steps.map((step) => (
             <motion.div
-              className="absolute top-0 left-0 w-full bg-gradient-to-b from-[var(--purple)] via-[var(--pink)] to-[var(--peach)] rounded-full origin-top"
-              variants={lineDraw}
-              initial="hidden"
-              whileInView="visible"
-              viewport={viewportOnce}
-              style={{ height: '100%' }}
-            />
-          </div>
-
-          {/* Mobile vertical connector — 1px */}
-          <div className="md:hidden absolute left-[23px] top-8 bottom-8 w-[1px]">
-            <div className="w-full h-full bg-gradient-to-b from-[var(--purple)]/[0.08] via-[var(--pink)]/[0.08] to-[var(--peach)]/[0.08] rounded-full" />
-            <motion.div
-              className="absolute top-0 left-0 w-full bg-gradient-to-b from-[var(--purple)] via-[var(--pink)] to-[var(--peach)] rounded-full origin-top"
-              variants={lineDraw}
-              initial="hidden"
-              whileInView="visible"
-              viewport={viewportOnce}
-              style={{ height: '100%' }}
-            />
-          </div>
-
-          <motion.div
-            className="space-y-6 md:space-y-8"
-            variants={staggerContainerSlow}
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewportOnce}
-          >
-            {steps.map((step) => (
-              <motion.div
-                key={step.number}
-                className="group relative"
-                variants={staggerItem}
-              >
-                {/* ===== DESKTOP LAYOUT (md+) ===== */}
-                <div className="hidden md:flex gap-10 items-start">
-                  <div className="flex-shrink-0 relative z-10">
-                    <motion.div
-                      className={`w-[72px] h-[72px] rounded-full bg-gradient-to-br ${step.iconBg} flex flex-col items-center justify-center text-white`}
-                      style={{ boxShadow: '0 4px 20px rgba(134,96,239,0.22)' }}
-                      whileHover={{ scale: 1.06, rotate: 2 }}
-                      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                    >
-                      <span className="text-[9px] font-medium uppercase tracking-widest text-white/50 mb-0.5">Paso</span>
-                      <span className="font-['DM_Serif_Display'] text-2xl leading-none">{step.number}</span>
-                    </motion.div>
-                  </div>
-
-                  <div className="flex-1 bg-white rounded-[28px] border transition-all duration-500 overflow-hidden border-[var(--gray-100)] hover:border-[var(--purple)]/15"
-                    style={{ boxShadow: '0 2px 24px rgba(0,0,0,0.04)' }}
-                  >
-                    <div className="p-8 sm:p-10">
-                      <div className="flex items-start justify-between gap-4 mb-4">
-                        <div className="flex items-center gap-4 flex-1 min-w-0">
-                          <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${step.iconBg} flex items-center justify-center text-white flex-shrink-0 shadow-md`}>
-                            {step.icon}
-                          </div>
-                          <h3 className="text-xl font-bold text-[var(--gray-900)] leading-tight">
-                            {step.title}
-                          </h3>
-                        </div>
-                        <div className="inline-flex items-center gap-1.5 bg-[var(--gray-100)] px-3 py-1.5 rounded-full flex-shrink-0">
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                            <circle cx="12" cy="12" r="10"/>
-                            <polyline points="12 6 12 12 16 14"/>
-                          </svg>
-                          <span className="text-[11px] font-bold text-[var(--purple)] uppercase tracking-wide">{step.tag}</span>
-                        </div>
-                      </div>
-
-                      <p className="text-sm text-[var(--gray-500)] leading-relaxed ml-16 font-light">
-                        {step.body}
-                      </p>
-
-                    </div>
-                  </div>
+              key={step.number}
+              className="group bg-white rounded-[24px] border border-[var(--gray-100)] hover:border-[var(--purple)]/15 transition-all duration-500 p-5 sm:p-6 flex flex-col"
+              style={{ boxShadow: '0 2px 24px rgba(0,0,0,0.04)' }}
+              variants={staggerItem}
+              whileHover={{ y: -4, transition: { type: 'spring', stiffness: 400, damping: 28 } }}
+            >
+              {/* Top row: step label + time badge */}
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-[11px] font-bold text-[var(--purple)]/50 uppercase tracking-[0.14em]">
+                  Paso {step.number}
+                </span>
+                <div className="inline-flex items-center gap-1.5 bg-[var(--gray-100)] px-3 py-1.5 rounded-full">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                  <span className="text-[10px] font-bold text-[var(--purple)] uppercase tracking-wide">{step.tag}</span>
                 </div>
+              </div>
 
-                {/* ===== MOBILE LAYOUT (<md) ===== */}
-                <div className="md:hidden">
-                  <div className="flex items-start gap-4">
-                    <div className="flex-shrink-0 relative z-10">
-                      <div className={`w-[48px] h-[48px] rounded-2xl bg-gradient-to-br ${step.iconBg} flex items-center justify-center text-white shadow-lg`}>
-                        <span className="font-['DM_Serif_Display'] text-lg leading-none">{step.number}</span>
-                      </div>
-                    </div>
+              {/* Icon */}
+              <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${step.iconBg} flex items-center justify-center text-white shadow-md mb-4`}>
+                {step.icon}
+              </div>
 
-                    <div className="flex-1 min-w-0 bg-white rounded-2xl border border-[var(--gray-200)] overflow-hidden shadow-[var(--shadow-subtle)]">
-                      <div className="p-4">
-                        <div className="flex items-start justify-between gap-2 mb-2.5">
-                          <h3 className="text-[15px] font-bold text-[var(--gray-900)] leading-snug flex-1">
-                            {step.title}
-                          </h3>
-                          <div className="inline-flex items-center gap-1 bg-[var(--gray-100)] px-2 py-1 rounded-full flex-shrink-0">
-                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                              <circle cx="12" cy="12" r="10"/>
-                              <polyline points="12 6 12 12 16 14"/>
-                            </svg>
-                            <span className="text-[10px] font-bold text-[var(--purple)] uppercase tracking-wide">{step.tag}</span>
-                          </div>
-                        </div>
-
-                        <p className="text-sm text-[var(--gray-600)] leading-relaxed">
-                          {step.body}
-                        </p>
-
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
+              {/* Content */}
+              <h3 className="text-[15px] font-bold text-[var(--gray-900)] leading-snug mb-2">
+                {step.title}
+              </h3>
+              <p className="text-sm text-[var(--gray-500)] leading-relaxed flex-1">
+                {step.body}
+              </p>
+            </motion.div>
+          ))}
+        </motion.div>
 
         {/* Bottom CTA */}
         <motion.div
@@ -267,11 +191,7 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
               </div>
 
               <h3 className="text-[clamp(22px,3.5vw,40px)] font-['DM_Serif_Display'] font-bold text-white mb-4 sm:mb-5 leading-tight tracking-tight max-w-[560px] mx-auto">
-                ¿Listo para{' '}
-                <span className="relative inline-block">
-                  <span className="relative z-10">simplificar tu salud?</span>
-                  <span className="absolute bottom-1 left-0 w-full h-2.5 bg-white/25 -z-0" />
-                </span>
+                ¿Listo para simplificar tu salud?
               </h3>
 
               <p className="text-[15px] sm:text-base text-white/90 leading-relaxed mb-6 sm:mb-8 max-w-[480px] mx-auto">
