@@ -13,9 +13,11 @@ const BLUR_EASE: [number, number, number, number] = [0.2, 0.65, 0.3, 0.9];
 function BlurRevealWords({
   text,
   delay = 0,
+  withBlur = true,
 }: {
   text: string;
   delay?: number;
+  withBlur?: boolean;
 }) {
   const words = text.trim().split(' ').filter(Boolean);
   return (
@@ -34,16 +36,16 @@ function BlurRevealWords({
           key={i}
           style={{ display: 'inline-block' }}
           variants={{
-            hidden: { opacity: 0, y: 16, filter: 'blur(10px)' },
+            hidden: { opacity: 0, y: 16, ...(withBlur ? { filter: 'blur(10px)' } : {}) },
             visible: {
               opacity: 1,
               y: 0,
-              filter: 'blur(0px)',
+              ...(withBlur ? { filter: 'blur(0px)' } : {}),
               transition: { duration: 0.5, ease: BLUR_EASE },
             },
           }}
         >
-          {word}{i < words.length - 1 ? ' ' : ''}
+          {word}{i < words.length - 1 ? ' ' : ''}
         </motion.span>
       ))}
     </motion.span>
@@ -54,10 +56,12 @@ function BlurRevealText({
   text,
   className,
   delay = 0,
+  withBlur = true,
 }: {
   text: string;
   className?: string;
   delay?: number;
+  withBlur?: boolean;
 }) {
   return (
     <motion.span
@@ -76,11 +80,11 @@ function BlurRevealText({
           key={i}
           style={{ display: 'inline-block' }}
           variants={{
-            hidden: { opacity: 0, y: 20, filter: 'blur(12px)' },
+            hidden: { opacity: 0, y: 20, ...(withBlur ? { filter: 'blur(12px)' } : {}) },
             visible: {
               opacity: 1,
               y: 0,
-              filter: 'blur(0px)',
+              ...(withBlur ? { filter: 'blur(0px)' } : {}),
               transition: { duration: 0.55, ease: BLUR_EASE },
             },
           }}
@@ -95,6 +99,8 @@ function BlurRevealText({
 export function Hero() {
   const [current, setCurrent] = useState(0);
   const [prev, setPrev] = useState<number | null>(null);
+  // Default true so SSR + first paint don't apply scroll/blur — avoids hydration mismatch
+  const [isMobile, setIsMobile] = useState(true);
   const heroRef = useRef<HTMLElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -102,9 +108,18 @@ export function Hero() {
     offset: ['start start', 'end start'],
   });
 
+  // These are always created (hooks must be unconditional) but only applied on desktop
   const contentScale = useTransform(scrollYProgress, [0, 1], [1, 0.88]);
   const contentOpacity = useTransform(scrollYProgress, [0, 0.65], [1, 0]);
   const bgScale = useTransform(scrollYProgress, [0, 1], [1, 1.08]);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 767px)');
+    setIsMobile(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -115,6 +130,16 @@ export function Hero() {
     }, 3500);
     return () => clearInterval(id);
   }, []);
+
+  const blurInitial = (extraDelay: number) =>
+    isMobile
+      ? { opacity: 0, y: 16 }
+      : { opacity: 0, y: 16, filter: 'blur(10px)' };
+
+  const blurAnimate = (extraDelay: number) =>
+    isMobile
+      ? { opacity: 1, y: 0, transition: { delay: extraDelay, duration: 0.5, ease: BLUR_EASE } }
+      : { opacity: 1, y: 0, filter: 'blur(0px)', transition: { delay: extraDelay, duration: 0.5, ease: BLUR_EASE } };
 
   return (
     <section
@@ -155,9 +180,11 @@ export function Hero() {
         <ellipse cx="160" cy="620" rx="220" ry="180" stroke="rgba(134,96,239,0.07)" strokeWidth="50" />
       </svg>
 
-      {/* ── HERO PHOTOS — prev queda como base opaca, current entra encima ── */}
-      <motion.div className="absolute inset-0 z-[3]" style={{ scale: bgScale }}>
-        {/* Imagen anterior — base sólida siempre visible */}
+      {/* ── HERO PHOTOS ── */}
+      <motion.div
+        className="absolute inset-0 z-[3]"
+        style={isMobile ? {} : { scale: bgScale }}
+      >
         {prev !== null && (
           <img
             src={heroImages[prev]}
@@ -169,7 +196,6 @@ export function Hero() {
           />
         )}
 
-        {/* Imagen actual — entra con fade-in sobre la anterior */}
         <motion.img
           key={current}
           src={heroImages[current]}
@@ -200,10 +226,10 @@ export function Hero() {
         />
       </motion.div>
 
-      {/* ── CONTENT — scroll-linked scale + fade ── */}
+      {/* ── CONTENT ── */}
       <motion.div
         className="relative z-[10] w-full flex flex-col items-center justify-center"
-        style={{ minHeight: '100svh', scale: contentScale, opacity: contentOpacity }}
+        style={isMobile ? { minHeight: '100svh' } : { minHeight: '100svh', scale: contentScale, opacity: contentOpacity }}
       >
         <div className="max-w-[700px] mx-auto px-5 sm:px-8 text-center" style={{ paddingTop: '7rem', paddingBottom: '6rem' }}>
 
@@ -222,36 +248,31 @@ export function Hero() {
             100% pensado para vos
           </motion.div>
 
-          {/* H1 — blur reveal letra por letra */}
+          {/* H1 */}
           <h1 className="font-['DM_Serif_Display'] text-[clamp(36px,5.5vw,68px)] text-white leading-tight tracking-[-1px] sm:tracking-[-2px] md:tracking-[-3px] mb-6 sm:mb-8">
-            {/* "Tu salud, " = 10 chars → delay de la segunda parte: 0.2 + 10*0.025 = 0.45 */}
-            <BlurRevealText text="Tu salud, " delay={0.2} />
-            <BlurRevealText text="digitalmente simple" className="italic whitespace-nowrap" delay={0.45} />
+            <BlurRevealText text="Tu salud, " delay={0.2} withBlur={!isMobile} />
+            <BlurRevealText text="digitalmente simple" className="italic whitespace-nowrap" delay={0.45} withBlur={!isMobile} />
           </h1>
 
           {/* Description */}
           <p className="text-[15px] sm:text-base text-white/80 leading-relaxed mb-10 sm:mb-12 mx-auto max-w-[480px] font-medium">
-            {/* 7 palabras × 0.05s = 0.35s → pill aparece a 0.5+0.35=0.85 */}
-            <BlurRevealWords text="Contá con el respaldo que necesitas desde" delay={0.5} />{' '}
+            <BlurRevealWords text="Contá con el respaldo que necesitas desde" delay={0.5} withBlur={!isMobile} />{' '}
             <motion.span
               className="inline-block bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-white font-bold border border-white/30"
-              initial={{ opacity: 0, y: 16, filter: 'blur(10px)' }}
-              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-              transition={{ delay: 0.85, duration: 0.5, ease: BLUR_EASE }}
+              initial={blurInitial(0.85)}
+              animate={blurAnimate(0.85)}
             >
               $19.500 por mes
             </motion.span>
-            {/* continúa 0.1s después del pill */}
-            <BlurRevealWords text=". Obtené tu cobertura médica esencial en minutos, sin papeles ni trámites presenciales." delay={0.95} />
+            <BlurRevealWords text=". Obtené tu cobertura médica esencial en minutos, sin papeles ni trámites presenciales." delay={0.95} withBlur={!isMobile} />
           </p>
 
           {/* CTAs */}
           <div className="flex gap-3 flex-col sm:flex-row justify-center items-center">
             <motion.div
               className="w-full sm:w-auto"
-              initial={{ opacity: 0, y: 16, filter: 'blur(10px)' }}
-              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-              transition={{ delay: 1.3, duration: 0.5, ease: BLUR_EASE }}
+              initial={blurInitial(1.3)}
+              animate={blurAnimate(1.3)}
             >
               <motion.button
                 onClick={() =>
@@ -286,9 +307,8 @@ export function Hero() {
 
             <motion.div
               className="w-full sm:w-auto"
-              initial={{ opacity: 0, y: 16, filter: 'blur(10px)' }}
-              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-              transition={{ delay: 1.45, duration: 0.5, ease: BLUR_EASE }}
+              initial={blurInitial(1.45)}
+              animate={blurAnimate(1.45)}
             >
               <motion.button
                 onClick={() =>

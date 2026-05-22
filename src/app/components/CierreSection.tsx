@@ -50,19 +50,9 @@ export function CierreSection() {
               <br />
               <span className="text-white">no puede</span>
               <br />
-              <motion.span
-                className="italic inline-block"
-                style={{
-                  background: 'linear-gradient(135deg, #ee5cd0, #e5ab9f, #ee5cd0)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundSize: '200% 200%',
-                }}
-                animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }}
-                transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-              >
+              <span className="gradient-text-animated italic inline-block">
                 esperar más.
-              </motion.span>
+              </span>
             </h2>
 
             {/* Subtitle */}
