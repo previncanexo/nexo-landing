@@ -94,7 +94,6 @@ function BlurRevealText({
 
 export function Hero() {
   const [current, setCurrent] = useState(0);
-  const [prev, setPrev] = useState<number | null>(null);
   const heroRef = useRef<HTMLElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -104,14 +103,10 @@ export function Hero() {
 
   const contentScale = useTransform(scrollYProgress, [0, 1], [1, 0.88]);
   const contentOpacity = useTransform(scrollYProgress, [0, 0.65], [1, 0]);
-  const bgScale = useTransform(scrollYProgress, [0, 1], [1, 1.08]);
 
   useEffect(() => {
     const id = setInterval(() => {
-      setCurrent((c) => {
-        setPrev(c);
-        return (c + 1) % heroImages.length;
-      });
+      setCurrent((c) => (c + 1) % heroImages.length);
     }, 3500);
     return () => clearInterval(id);
   }, []);
@@ -155,31 +150,24 @@ export function Hero() {
         <ellipse cx="160" cy="620" rx="220" ry="180" stroke="rgba(134,96,239,0.07)" strokeWidth="50" />
       </svg>
 
-      {/* ── HERO PHOTOS ── */}
-      <div className="absolute inset-0 z-[3]" style={{ transform: 'translateZ(0)' }}>
-        {prev !== null && (
+      {/* ── HERO PHOTOS — CSS crossfade, sin remount ── */}
+      <div className="absolute inset-0 z-[3]">
+        {heroImages.map((img, i) => (
           <img
-            src={heroImages[prev]}
+            key={i}
+            src={img}
             alt=""
             aria-hidden="true"
             draggable={false}
             className="absolute inset-0 w-full h-full object-cover select-none"
-            style={{ objectPosition: '65% center', zIndex: 1 }}
+            style={{
+              objectPosition: '65% center',
+              opacity: i === current ? 1 : 0,
+              transition: 'opacity 0.9s ease-in-out',
+              willChange: 'opacity',
+            }}
           />
-        )}
-
-        <motion.img
-          key={current}
-          src={heroImages[current]}
-          alt=""
-          aria-hidden="true"
-          draggable={false}
-          className="absolute inset-0 w-full h-full object-cover select-none"
-          style={{ objectPosition: '65% center', zIndex: 2 }}
-          initial={{ opacity: prev === null ? 1 : 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, ease: 'easeInOut' }}
-        />
+        ))}
 
         {/* Dark overlay */}
         <div
