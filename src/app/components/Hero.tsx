@@ -181,6 +181,7 @@ export function Hero() {
                 window.open(
                   'https://wa.me/5493415056130?text=Hola%2C%20quiero%20consultar%20sobre%20Nexo%20by%20Previnca',
                   '_blank',
+                  'noopener,noreferrer',
                 )
               }
               className="backdrop-blur-md text-white border-2 px-6 sm:px-8 py-3.5 rounded-full text-[15px] sm:text-base font-bold cursor-pointer font-['DM_Sans'] whitespace-nowrap flex items-center gap-2 w-full sm:w-auto justify-center"

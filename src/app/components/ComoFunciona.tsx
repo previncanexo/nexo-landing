@@ -123,7 +123,7 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
 
           {/* Mobile vertical connector — 1px */}
           <div className="md:hidden absolute left-[23px] top-8 bottom-8 w-[1px]">
-            <div className="w-full h-full bg-gradient-to-b from-[var(--purple)]/08 via-[var(--pink)]/08 to-[var(--peach)]/08 rounded-full" />
+            <div className="w-full h-full bg-gradient-to-b from-[var(--purple)]/[0.08] via-[var(--pink)]/[0.08] to-[var(--peach)]/[0.08] rounded-full" />
             <motion.div
               className="absolute top-0 left-0 w-full bg-gradient-to-b from-[var(--purple)] via-[var(--pink)] to-[var(--peach)] rounded-full origin-top"
               variants={lineDraw}
