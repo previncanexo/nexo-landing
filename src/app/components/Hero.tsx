@@ -24,7 +24,7 @@ function BlurRevealWords({
     elements.push(
       <motion.span
         key={i}
-        style={{ display: 'inline-block' }}
+        style={{ display: 'inline-block', willChange: 'transform, opacity, filter' }}
         variants={{
           hidden: { opacity: 0, y: 16, filter: 'blur(10px)' },
           visible: {
@@ -85,7 +85,7 @@ function BlurRevealText({
         ) : (
           <motion.span
             key={i}
-            style={{ display: 'inline-block' }}
+            style={{ display: 'inline-block', willChange: 'transform, opacity, filter' }}
             variants={{
               hidden: { opacity: 0, y: 20, filter: 'blur(12px)' },
               visible: {
@@ -106,6 +106,7 @@ function BlurRevealText({
 
 export function Hero() {
   const [current, setCurrent] = useState(0);
+  const [isDesktop, setIsDesktop] = useState(false);
   const heroRef = useRef<HTMLElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -115,6 +116,14 @@ export function Hero() {
 
   const contentScale = useTransform(scrollYProgress, [0, 1], [1, 0.88]);
   const contentOpacity = useTransform(scrollYProgress, [0, 0.65], [1, 0]);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 768px)');
+    setIsDesktop(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -198,10 +207,14 @@ export function Hero() {
         />
       </div>
 
-      {/* ── CONTENT — scroll-linked scale + fade (desktop only via CSS) ── */}
+      {/* ── CONTENT — scroll-linked scale + fade (desktop only) ── */}
       <motion.div
         className="hero-content relative z-[10] w-full flex flex-col items-center justify-center"
-        style={{ minHeight: '100svh', scale: contentScale, opacity: contentOpacity }}
+        style={{
+          minHeight: '100svh',
+          scale: isDesktop ? contentScale : 1,
+          opacity: isDesktop ? contentOpacity : 1,
+        }}
       >
         <div className="max-w-[700px] mx-auto px-5 sm:px-8 text-center" style={{ paddingTop: '7rem', paddingBottom: '6rem' }}>
 
