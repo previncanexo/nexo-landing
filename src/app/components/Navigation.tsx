@@ -68,7 +68,7 @@ export function Navigation({ onOpenCheckout }: NavigationProps) {
                 src={logoImage}
                 alt="Nexo by Previnca"
                 style={{
-                  height: scrolled ? '50px' : '64px',
+                  height: scrolled ? '38px' : '48px',
                   width: 'auto',
                   maxWidth: 'none',
                   marginLeft: '-12px',
@@ -114,7 +114,7 @@ export function Navigation({ onOpenCheckout }: NavigationProps) {
                 src={logoImage}
                 alt="Nexo by Previnca"
                 style={{
-                  height: '52px',
+                  height: '40px',
                   width: 'auto',
                   maxWidth: 'none',
                   marginLeft: '-10px',

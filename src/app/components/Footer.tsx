@@ -35,7 +35,7 @@ export function Footer() {
         >
           {/* Logo & Description - 4 cols */}
           <div className="col-span-2 md:col-span-4">
-            <img src={logoImage} alt="Nexo by Previnca" className="h-16 mb-5" />
+            <img src={logoImage} alt="Nexo by Previnca" className="h-10 mb-5" />
             <p className="text-sm text-white/80 leading-relaxed mb-6 max-w-[280px]">
               Tu salud digitalmente simple. Cobertura médica esencial.
             </p>
