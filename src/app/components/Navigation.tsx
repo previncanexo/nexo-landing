@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import logoImage from "figma:asset/ecd8e061081ccf04576b02fa005ef90a6411ef89.png";
+import logoImage from "@/assets/logo.png";
 
 interface NavigationProps {
   onOpenCheckout: () => void;

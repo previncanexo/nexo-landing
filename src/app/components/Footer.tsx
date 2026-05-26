@@ -1,4 +1,4 @@
-import logoImage from "figma:asset/ecd8e061081ccf04576b02fa005ef90a6411ef89.png";
+import logoImage from "@/assets/logo.png";
 import { motion } from 'motion/react';
 import { fadeUp, viewportOnce } from './motion-variants';
 
