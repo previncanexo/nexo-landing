@@ -114,8 +114,10 @@ export function FAQ({ items }: FAQProps) {
                     </div>
                   </AccordionTrigger>
                   <AccordionContent className="px-6 pb-5 pt-1">
-                    <div className="pl-[52px] text-white/60 leading-relaxed text-[15px]">
-                      {item.answer}
+                    <div className="pl-[52px] text-white/60 leading-relaxed text-[15px] space-y-2">
+                      {item.answer.split('\n').map((line, i) => (
+                        <p key={i}>{line}</p>
+                      ))}
                     </div>
                   </AccordionContent>
                 </AccordionItem>

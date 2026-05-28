@@ -34,24 +34,52 @@ const testimonials = [
 
 const faqItems = [
   {
-    question: '¿Cómo funciona Nexo?',
-    answer: 'Nexo es tu membresía de salud digital. Elegís un plan base que incluye medicina clínica y medicina general, y luego sumás especialidades a la carta según tus necesidades. Todo con una cuota mensual fija y transparente.',
+    question: '¿Cómo me suscribo?',
+    answer: 'Hacé clic en "Lo quiero", revisá los servicios incluidos y el valor del plan, completá el formulario con tus datos y realizá el pago a través de Mercado Pago.\nTodo el proceso se hace desde el celular, sin papeles y en menos de 5 minutos.',
   },
   {
-    question: '¿Qué incluye el Plan Base?',
-    answer: 'El Plan Base ($19.500/mes) incluye teleconsultas médicas 24/7 (DOC24), urgencias 24/7, descuentos del 50% en farmacias y guardias odontológicas.',
+    question: '¿Cuándo puedo empezar a usar los servicios?',
+    answer: 'Una vez confirmado el pago, recibirás tu credencial digital por WhatsApp y correo electrónico.\nLos servicios de Teleconsultas médicas y Emergencias 24/7 estarán habilitados dentro de las 24 hs hábiles de recibida la credencial digital.\nEl resto de los servicios cuentan con una carencia de 30 días. Finalizado ese período, podrás acceder a guardia odontológica y descuentos en farmacias.',
   },
   {
-    question: '¿Puedo agregar especialidades después?',
-    answer: 'Sí, totalmente. Podés sumar especialidades a la carta en cualquier momento. Solo pagás por las que uses y tenés la flexibilidad de activarlas o pausarlas cuando quieras.',
+    question: '¿Cómo uso cada servicio?',
+    answer: 'Teleconsultas médicas: Desde Previnca Nexo solicitás la consulta y un profesional te atiende en minutos, las 24 horas.\nEmergencias 24/7: Llamás a la línea de atención, indicás que sos cliente Previnca Nexo y brindás tu DNI para recibir asistencia inmediata.\nDescuentos en farmacias: Presentás tu credencial digital en cualquiera de las farmacias adheridas y el descuento se aplica en el momento.\nGuardia odontológica: Debés enviar un mensaje al WhatsApp del prestador al 341 3077912 para informar que vas a concurrir a la atención. Luego, podés acercarte a España 729, Rosario.',
   },
   {
-    question: '¿Los médicos están matriculados?',
-    answer: 'Absolutamente. Todos nuestros profesionales están matriculados y cuentan con años de experiencia en sus especialidades. Verificamos credenciales y trayectoria antes de incorporarlos a la red de Nexo.',
+    question: '¿Puedo compartir mi cuenta con otra persona?',
+    answer: 'No. Cada cuenta es personal e intransferible, y está asociada exclusivamente a la persona titular del servicio.',
   },
   {
-    question: '¿Cómo cancelo mi membresía?',
-    answer: 'Podés cancelar tu membresía en cualquier momento, sin penalidades ni costos adicionales. Tu acceso continuará hasta el final del período ya pagado.',
+    question: '¿Cuándo se cobra y qué pasa si no tengo saldo?',
+    answer: 'El cobro se realiza entre el 1 y el 10 de cada mes.\nSi al momento del vencimiento no se acredita el pago, tu cobertura entra en mora. Esto se visualizará en tu perfil mediante una señal amarilla y además recibirás una notificación por WhatsApp.\nUna vez regularizado el pago, la cobertura se reactiva automáticamente.',
+  },
+  {
+    question: '¿Qué hago si perdí acceso a mi cuenta?',
+    answer: 'Podés recuperar el acceso desde la opción "Olvidé mi contraseña". Si el inconveniente continúa, comunicate con el equipo de soporte.',
+  },
+  {
+    question: '¿Cómo contacto si necesito hacer una consulta sobre el servicio?',
+    answer: 'Podés comunicarte con nuestra línea WSP 341 5056130 y recibir asesoramiento personalizado para resolver cualquier duda o consulta sobre el servicio.',
+  },
+  {
+    question: '¿Cuántas teleconsultas puedo hacer al año?',
+    answer: 'Tenés 3 teleconsultas sin cargo por año. A partir de la cuarta, cada teleconsulta se debe abonar.',
+  },
+  {
+    question: '¿Qué diferencia hay entre una emergencia y una teleconsulta?',
+    answer: 'La teleconsulta está orientada a consultas médicas generales o situaciones de baja complejidad.\nLas emergencias están destinadas a situaciones urgentes que requieren atención inmediata.',
+  },
+  {
+    question: '¿Qué medicamentos tienen descuento?',
+    answer: 'Podés consultar el listado completo de medicamentos con cobertura y descuentos en nuestra página web.\n(Link)',
+  },
+  {
+    question: '¿Mis datos médicos y personales son privados?',
+    answer: 'Sí. Toda la información médica y personal se gestiona bajo estándares de privacidad y seguridad para proteger la confidencialidad de cada usuario.',
+  },
+  {
+    question: '¿Puedo cancelar cuando quiera?',
+    answer: 'Sí. No existe permanencia mínima ni penalidades.\nPodés solicitar la baja en cualquier momento y tu cobertura continuará activa hasta finalizar el período ya abonado.',
   },
 ];
 
