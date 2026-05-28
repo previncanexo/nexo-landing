@@ -136,7 +136,7 @@ export function Hero() {
     <section
       ref={heroRef}
       id="hero"
-      className="relative overflow-hidden sticky top-0 z-0"
+      className="relative overflow-hidden"
       style={{ minHeight: '100svh' }}
     >
       {/* ── BACKGROUND: opaque gradient base ── */}
@@ -219,7 +219,7 @@ export function Hero() {
           opacity: isDesktop ? contentOpacity : 1,
         }}
       >
-        <div className="max-w-[700px] mx-auto px-5 sm:px-8 text-center" style={{ paddingTop: '7rem', paddingBottom: '6rem' }}>
+        <div className="max-w-[700px] mx-auto px-5 sm:px-8 text-center" style={{ paddingTop: 'clamp(3.5rem,12vw,7rem)', paddingBottom: 'clamp(2.5rem,8vw,6rem)' }}>
 
           {/* Badge */}
           <motion.div
@@ -237,7 +237,7 @@ export function Hero() {
           </motion.div>
 
           {/* H1 — blur reveal */}
-          <h1 className="font-['DM_Serif_Display'] text-[42px] sm:text-[clamp(36px,5.5vw,68px)] text-white leading-tight tracking-[-1px] sm:tracking-[-2px] md:tracking-[-3px] mb-6 sm:mb-8">
+          <h1 className="font-['DM_Serif_Display'] text-[clamp(26px,7.5vw,42px)] sm:text-[clamp(36px,5.5vw,68px)] text-white leading-tight tracking-[-1px] sm:tracking-[-2px] md:tracking-[-3px] mb-6 sm:mb-8">
             <BlurRevealText text="Tu salud," delay={0.2} />
             <br />
             <BlurRevealText text="digitalmente simple" className="italic" delay={0.45} />
