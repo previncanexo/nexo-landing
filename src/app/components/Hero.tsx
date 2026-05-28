@@ -247,7 +247,7 @@ export function Hero() {
           <p className="text-[15px] sm:text-base text-white/80 leading-relaxed mb-10 sm:mb-12 mx-auto max-w-[480px] font-medium">
             <BlurRevealWords text="Contá con el respaldo que necesitas desde" delay={0.5} />{' '}
             <motion.span
-              className="inline-block bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-white font-bold border border-white/30"
+              className="inline-block whitespace-nowrap bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-white font-bold border border-white/30"
               initial={{ opacity: 0, y: 16, filter: 'blur(10px)' }}
               animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
               transition={{ delay: 0.85, duration: 0.5, ease: BLUR_EASE }}
