@@ -71,7 +71,7 @@ const faqItems = [
   },
   {
     question: '¿Qué medicamentos tienen descuento?',
-    answer: 'Podés consultar el listado completo de medicamentos con cobertura y descuentos en nuestra página web.\n(Link)',
+    answer: 'Podés consultar el listado completo de medicamentos con cobertura y descuentos en nuestra página web.\nnexo.portal.previncasalud.com.ar/vademecum',
   },
   {
     question: '¿Mis datos médicos y personales son privados?',
