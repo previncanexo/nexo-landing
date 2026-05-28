@@ -9,6 +9,11 @@ const slides = [
     label: 'Salud sin fronteras',
     sub: 'Accedé desde donde estés',
   },
+  {
+    img: banner1,
+    label: 'Tu salud, sin pausas',
+    sub: 'Para los que van siempre para adelante',
+  },
 ];
 
 const overlayStyle = {
