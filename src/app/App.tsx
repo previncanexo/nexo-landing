@@ -1,16 +1,17 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, lazy, Suspense } from 'react';
 import { Navigation } from './components/Navigation';
 import { Hero } from './components/Hero';
 import { PlanBase } from './components/PlanBase';
-import { ALaCarta } from './components/ALaCarta';
-import { ComoFunciona } from './components/ComoFunciona';
-import { BannerCarousel } from './components/BannerCarousel';
-import { Testimonios } from './components/Testimonios';
-import { FAQ } from './components/FAQ';
-import { Footer } from './components/Footer';
 import { BackToTop } from './components/BackToTop';
 import { WhatsAppButton } from './components/WhatsAppButton';
 import { IPhoneCTA } from './components/IPhoneCTA';
+
+const ALaCarta = lazy(() => import('./components/ALaCarta').then(m => ({ default: m.ALaCarta })));
+const ComoFunciona = lazy(() => import('./components/ComoFunciona').then(m => ({ default: m.ComoFunciona })));
+const BannerCarousel = lazy(() => import('./components/BannerCarousel').then(m => ({ default: m.BannerCarousel })));
+const Testimonios = lazy(() => import('./components/Testimonios').then(m => ({ default: m.Testimonios })));
+const FAQ = lazy(() => import('./components/FAQ').then(m => ({ default: m.FAQ })));
+const Footer = lazy(() => import('./components/Footer').then(m => ({ default: m.Footer })));
 
 const PORTAL_REGISTRO = 'https://nexo.portal.previncasalud.com.ar/registro';
 
@@ -141,12 +142,14 @@ export default function App() {
       <Navigation onOpenCheckout={goToRegistro} />
       <Hero />
       <PlanBase />
-      <ALaCarta onOpenCheckout={goToRegistro} />
-      <ComoFunciona onOpenCheckout={goToRegistro} />
-      <BannerCarousel />
-      <Testimonios testimonials={testimonials} />
-      <FAQ items={faqItems} />
-      <Footer />
+      <Suspense fallback={null}>
+        <ALaCarta onOpenCheckout={goToRegistro} />
+        <ComoFunciona onOpenCheckout={goToRegistro} />
+        <BannerCarousel />
+        <Testimonios testimonials={testimonials} />
+        <FAQ items={faqItems} />
+        <Footer />
+      </Suspense>
 
       <BackToTop isVisible={showBackToTop} isMobileCTAVisible={showMobileCta} />
       <WhatsAppButton isVisible={true} isMobileCTAVisible={showMobileCta} />

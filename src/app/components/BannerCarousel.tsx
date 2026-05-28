@@ -69,6 +69,8 @@ export function BannerCarousel() {
             alt={slides[prev].label}
             className="w-full h-full object-cover object-center select-none"
             draggable={false}
+            loading="lazy"
+            decoding="async"
           />
           <div className="absolute inset-0" style={overlayStyle} />
         </div>
