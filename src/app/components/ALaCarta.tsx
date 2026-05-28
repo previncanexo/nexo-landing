@@ -127,7 +127,7 @@ export function ALaCarta({ onOpenCheckout: _onOpenCheckout }: ALaCartaProps) {
 
         {/* Floating Icon Items */}
         <motion.div
-          className="grid grid-cols-2 md:grid-cols-3 gap-6 max-w-[860px] mx-auto"
+          className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-[860px] mx-auto"
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
