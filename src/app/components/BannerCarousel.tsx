@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'react';
-import { motion } from 'motion/react';
 import banner1 from '@/assets/banner-comunidad-1.webp';
 import banner2 from '@/assets/banner-comunidad-2.webp';
 
@@ -11,8 +10,8 @@ const slides = [
   },
   {
     img: banner1,
-    label: 'Tu salud, sin pausas',
-    sub: 'Para los que van siempre para adelante',
+    label: 'Para los que van siempre para adelante',
+    sub: 'Tu salud, sin pausas',
   },
 ];
 
@@ -22,31 +21,10 @@ const overlayStyle = {
 
 export function BannerCarousel() {
   const [current, setCurrent] = useState(0);
-  const [prev, setPrev] = useState<number | null>(null);
   const [paused, setPaused] = useState(false);
 
-  const next = useCallback(() => {
-    setCurrent((c) => {
-      setPrev(c);
-      return (c + 1) % slides.length;
-    });
-  }, []);
-
-  const goTo = useCallback((i: number) => {
-    setCurrent((c) => {
-      if (i === c) return c;
-      setPrev(c);
-      return i;
-    });
-  }, []);
-
-  const goPrev = useCallback(() => {
-    setCurrent((c) => {
-      const p = (c - 1 + slides.length) % slides.length;
-      setPrev(c);
-      return p;
-    });
-  }, []);
+  const next = useCallback(() => setCurrent((c) => (c + 1) % slides.length), []);
+  const goPrev = useCallback(() => setCurrent((c) => (c - 1 + slides.length) % slides.length), []);
 
   useEffect(() => {
     if (paused) return;
@@ -61,69 +39,65 @@ export function BannerCarousel() {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      {/* Slide anterior — base sólida siempre visible */}
-      {prev !== null && (
-        <div className="absolute inset-0" style={{ zIndex: 1 }}>
+      {/* Todas las slides apiladas — solo la activa tiene opacity 1 */}
+      {slides.map((slide, i) => (
+        <div
+          key={i}
+          className="absolute inset-0"
+          style={{
+            zIndex: i === current ? 2 : 1,
+            opacity: i === current ? 1 : 0,
+            transition: 'opacity 0.8s ease-in-out',
+          }}
+        >
           <img
-            src={slides[prev].img}
-            alt={slides[prev].label}
-            className="w-full h-full object-cover object-center select-none"
+            src={slide.img}
+            alt={slide.label}
+            loading={i === 0 ? 'eager' : 'lazy'}
+            decoding={i === 0 ? 'sync' : 'async'}
             draggable={false}
-            loading="lazy"
-            decoding="async"
+            className="w-full h-full object-cover object-center select-none"
           />
           <div className="absolute inset-0" style={overlayStyle} />
         </div>
-      )}
+      ))}
 
-      {/* Slide actual — entra con fade-in encima */}
-      <motion.div
-        key={current}
-        className="absolute inset-0"
-        style={{ zIndex: 2 }}
-        initial={{ opacity: prev === null ? 1 : 0, scale: prev === null ? 1 : 1.04 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-      >
-        <img
-          src={slides[current].img}
-          alt={slides[current].label}
-          className="w-full h-full object-cover object-center select-none"
-          draggable={false}
-        />
-        <div className="absolute inset-0" style={overlayStyle} />
-
-        {/* Texto */}
-        <motion.div
+      {/* Texto — transición suave al cambiar slide */}
+      {slides.map((slide, i) => (
+        <div
+          key={`text-${i}`}
           className="absolute bottom-10 left-1/2 -translate-x-1/2 text-center w-full px-6"
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
+          style={{
+            zIndex: 5,
+            opacity: i === current ? 1 : 0,
+            transform: i === current ? 'translateY(0)' : 'translateY(10px)',
+            transition: 'opacity 0.6s ease 0.2s, transform 0.6s ease 0.2s',
+            pointerEvents: i === current ? 'auto' : 'none',
+          }}
         >
           <p className="text-white/70 text-sm font-medium uppercase tracking-widest mb-1">
-            {slides[current].sub}
+            {slide.sub}
           </p>
-          <h2 className="font-['DM_Serif_Display'] text-white text-[clamp(28px,4vw,56px)] leading-tight tracking-tight">
-            {slides[current].label}
+          <h2 className="font-['DM_Serif_Display'] text-white text-[clamp(24px,3.5vw,52px)] leading-tight tracking-tight">
+            {slide.label}
           </h2>
-        </motion.div>
-      </motion.div>
+        </div>
+      ))}
 
       {/* Dots */}
       <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2" style={{ zIndex: 10 }}>
         {slides.map((_, i) => (
           <button
             key={i}
-            onClick={() => goTo(i)}
+            onClick={() => setCurrent(i)}
             aria-label={`Slide ${i + 1}`}
             className="transition-all duration-300 rounded-full"
             style={{
               width: i === current ? '28px' : '8px',
               height: '8px',
-              background:
-                i === current
-                  ? 'linear-gradient(to right, var(--purple), var(--pink))'
-                  : 'rgba(255,255,255,0.4)',
+              background: i === current
+                ? 'linear-gradient(to right, var(--purple), var(--pink))'
+                : 'rgba(255,255,255,0.4)',
             }}
           />
         ))}
