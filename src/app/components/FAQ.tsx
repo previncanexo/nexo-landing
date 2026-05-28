@@ -115,9 +115,30 @@ export function FAQ({ items }: FAQProps) {
                   </AccordionTrigger>
                   <AccordionContent className="px-6 pb-5 pt-1">
                     <div className="pl-[52px] text-white/60 leading-relaxed text-[15px] space-y-2">
-                      {item.answer.split('\n').map((line, i) => (
-                        <p key={i}>{line}</p>
-                      ))}
+                      {item.answer.split('\n').map((line, i) => {
+                        const isDomain = /^[a-z0-9.-]+\.[a-z]{2,}(\/[^\s]*)?$/i.test(line.trim())
+                        const isUrl = line.trim().startsWith('http')
+                        if (isDomain || isUrl) {
+                          const href = isUrl ? line.trim() : `https://${line.trim()}`
+                          return (
+                            <a
+                              key={i}
+                              href={href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1.5 font-semibold underline underline-offset-2 transition-opacity hover:opacity-80"
+                              style={{ color: 'var(--pink)' }}
+                            >
+                              {line.trim()}
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                                <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+                              </svg>
+                            </a>
+                          )
+                        }
+                        return <p key={i}>{line}</p>
+                      })}
                     </div>
                   </AccordionContent>
                 </AccordionItem>
