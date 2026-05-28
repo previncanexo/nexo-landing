@@ -2,7 +2,6 @@ import { motion } from 'motion/react';
 import { fadeUp, staggerContainer, staggerItem, viewportOnce, organicPatternStyle } from './motion-variants';
 import cartaTelemedicina from '@/assets/carta-telemedicina.webp';
 import cartaOdontologia from '@/assets/carta-odontologia.webp';
-import cartaMascota from '@/assets/carta-mascota.webp';
 import cartaSeguros from '@/assets/carta-seguros.webp';
 
 interface ALaCartaProps {
@@ -38,20 +37,6 @@ export function ALaCarta({ onOpenCheckout: _onOpenCheckout }: ALaCartaProps) {
         </svg>
       ),
       title: 'Odontología estética',
-    },
-    {
-      image: cartaMascota,
-      icon: (
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M10 5.172C10 3.782 8.423 2.679 6.5 3c-2.823.47-4.113 6.006-4 7 .08.703 1.725 1.722 3.656 1 1.261-.472 1.96-1.45 2.344-2.5"/>
-          <path d="M14.267 5.172c0-1.39 1.577-2.493 3.5-2.172 2.823.47 4.113 6.006 4 7-.08.703-1.725 1.722-3.656 1-1.261-.472-1.855-1.45-2.239-2.5"/>
-          <path d="M8 14v.5"/>
-          <path d="M16 14v.5"/>
-          <path d="M11.25 16.25h1.5L12 17l-.75-.75z"/>
-          <path d="M4.42 11.247A13.152 13.152 0 0 0 4 14.556C4 18.728 7.582 21 12 21s8-2.272 8-6.444a13.152 13.152 0 0 0-.42-3.309"/>
-        </svg>
-      ),
-      title: 'Cobertura para tu mascota',
     },
     {
       image: cartaSeguros,
@@ -100,16 +85,16 @@ export function ALaCarta({ onOpenCheckout: _onOpenCheckout }: ALaCartaProps) {
           </div>
 
           <h2 className="font-['DM_Serif_Display'] text-[clamp(36px,5.5vw,68px)] text-[var(--gray-900)] leading-tight tracking-[-2px] mb-5">
-            Ampliá tu{' '}
-            <span className="italic text-[var(--pink)]">cobertura</span>
+            Próximamente:{' '}
+            <span className="italic text-[var(--pink)]">más cobertura</span>
           </h2>
 
           <p className="text-base sm:text-lg text-[var(--gray-600)] leading-relaxed max-w-[560px] mx-auto mb-4">
-            Muy pronto vas a poder acceder a las prestaciones que necesitás, de manera simple y flexible.
+            Estamos trabajando para que muy pronto puedas sumar prestaciones adicionales a tu plan, de manera simple y flexible.
           </p>
 
           <p className="text-base sm:text-lg text-[var(--gray-600)] leading-relaxed max-w-[560px] mx-auto">
-            Ser parte de Nexo tiene beneficios extra: adquirí el servicio médico que necesitás y abonalo como te conviene.
+            Suscribite hoy y vas a ser el primero en acceder cuando estén disponibles.
           </p>
         </motion.div>
 

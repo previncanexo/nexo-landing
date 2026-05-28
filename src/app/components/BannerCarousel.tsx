@@ -5,11 +5,6 @@ import banner2 from '@/assets/banner-comunidad-2.webp';
 
 const slides = [
   {
-    img: banner1,
-    label: 'Compartí el bienestar',
-    sub: 'Nexo es para toda la familia',
-  },
-  {
     img: banner2,
     label: 'Salud sin fronteras',
     sub: 'Accedé desde donde estés',

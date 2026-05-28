@@ -9,7 +9,7 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
   const steps = [
     {
       number: '01',
-      title: 'Elegís tu plan',
+      title: 'Hacé clic en Quiero mi Cobertura',
       body: 'Revisás el resumen del Plan Base: las 4 prestaciones incluidas, topes, precio mensual y vigencia. Todo claro, sin letra chica.',
       tag: '1 min',
       icon: (

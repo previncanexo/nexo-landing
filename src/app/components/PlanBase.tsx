@@ -386,7 +386,7 @@ export function PlanBase() {
           whileInView="visible"
           viewport={viewportOnce}
         >
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {[
               {
                 icon: (
@@ -396,16 +396,6 @@ export function PlanBase() {
                 ),
                 stat: '100% Digital',
                 desc: 'Sin trámites presenciales'
-              },
-              {
-                icon: (
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--pink)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                    <circle cx="12" cy="7" r="4"/>
-                  </svg>
-                ),
-                stat: '65.000',
-                desc: 'Afiliados activos'
               },
               {
                 icon: (
