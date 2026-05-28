@@ -20,7 +20,7 @@ export function Navigation({ onOpenCheckout }: NavigationProps) {
   }, [mobileOpen]);
 
   const navLinks = [
-    { href: '#beneficios', label: 'Plan Base' },
+    { href: '#beneficios', label: 'Nexo by Previnca' },
     { href: '#carta', label: 'A la Carta' },
     { href: '#como', label: 'Cómo funciona' },
   ];

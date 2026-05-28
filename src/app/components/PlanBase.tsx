@@ -200,7 +200,7 @@ export function PlanBase() {
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="20 6 9 17 4 12"/>
               </svg>
-              <span className="text-xs font-bold tracking-[0.12em] uppercase text-white">Plan Base</span>
+              <span className="text-xs font-bold tracking-[0.12em] uppercase text-white">Nexo by Previnca</span>
             </div>
 
             <h2 className="font-['DM_Serif_Display'] text-[44px] sm:text-[clamp(36px,5.5vw,68px)] text-[var(--gray-900)] leading-[1.05] tracking-[-2px] mb-7">

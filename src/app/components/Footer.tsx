@@ -88,7 +88,7 @@ export function Footer() {
             <h3 className="text-white font-bold text-xs mb-4 uppercase tracking-wider">Servicios</h3>
             <ul className="space-y-3">
               {[
-                { href: '#beneficios', label: 'Plan Base' },
+                { href: '#beneficios', label: 'Nexo by Previnca' },
                 { href: '#carta', label: 'A la Carta' },
                 { href: '#como', label: 'Cómo funciona' },
               ].map((link) => (

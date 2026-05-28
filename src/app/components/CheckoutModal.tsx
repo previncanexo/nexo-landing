@@ -103,7 +103,7 @@ export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
       `*Ciudad:* ${formData.ciudad}`,
       `*Fecha de nacimiento:* ${formData.fechaNacimiento}`,
       '',
-      '*Plan elegido:* Plan Base Nexo — $19.500/mes',
+      '*Plan elegido:* Nexo by Previnca — $19.500/mes',
     ];
     if (selectedServicesList.length > 0) {
       lines.push('');
@@ -284,7 +284,7 @@ export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
                 {/* Plan Base */}
                 <div className="bg-gradient-to-br from-[var(--purple-light)] to-[var(--pink-light)] border-2 border-[var(--purple)]/40 rounded-2xl p-5 mb-4">
                   <div className="flex justify-between items-center text-sm text-[var(--gray-800)] py-1.5">
-                    <span className="font-medium">Plan Base Nexo</span>
+                    <span className="font-medium">Nexo by Previnca</span>
                     <span className="text-[var(--gray-900)] font-bold">$19.500/mes</span>
                   </div>
                   <div className="space-y-1 my-3">
@@ -406,8 +406,8 @@ export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
                   ))}
                   {/* Plan */}
                   <div className="flex items-center justify-between px-4 py-3 gap-3 bg-gradient-to-r from-[var(--purple-light)]/50 to-transparent">
-                    <span className="text-[11px] font-bold text-[var(--purple)] uppercase tracking-wide flex-shrink-0">Plan Base</span>
-                    <span className="text-[13px] text-[var(--purple)] font-bold text-right">Plan Base Nexo · $19.500/mes</span>
+                    <span className="text-[11px] font-bold text-[var(--purple)] uppercase tracking-wide flex-shrink-0">Nexo by Previnca</span>
+                    <span className="text-[13px] text-[var(--purple)] font-bold text-right">Nexo by Previnca · $19.500/mes</span>
                   </div>
                   {/* A la Carta seleccionados */}
                   {selectedServicesList.map(s => (
