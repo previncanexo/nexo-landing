@@ -53,7 +53,7 @@ export function ALaCarta({ onOpenCheckout: _onOpenCheckout }: ALaCartaProps) {
   return (
     <section
       id="carta"
-      className="pt-10 sm:pt-16 md:pt-20 pb-16 sm:pb-24 md:pb-32 relative z-[2] overflow-hidden"
+      className="pt-10 sm:pt-16 md:pt-20 pb-10 sm:pb-16 md:pb-20 relative z-[2] overflow-hidden"
       style={{
         background: 'linear-gradient(180deg, #ffffff 0%, #f5f0ff 50%, #ffffff 100%)'
       }}
@@ -68,7 +68,7 @@ export function ALaCarta({ onOpenCheckout: _onOpenCheckout }: ALaCartaProps) {
       <div className="max-w-[1200px] mx-auto px-5 sm:px-6 relative z-10">
         {/* Header */}
         <motion.div
-          className="text-center mb-12 sm:mb-16"
+          className="text-center mb-8 sm:mb-10"
           variants={fadeUp}
           initial="hidden"
           whileInView="visible"
@@ -100,7 +100,7 @@ export function ALaCarta({ onOpenCheckout: _onOpenCheckout }: ALaCartaProps) {
 
         {/* CTA capture */}
         <motion.div
-          className="flex flex-col items-center gap-5 mb-12 sm:mb-16"
+          className="flex flex-col items-center gap-4 mb-8 sm:mb-10"
           variants={fadeUp}
           initial="hidden"
           whileInView="visible"
@@ -127,7 +127,7 @@ export function ALaCarta({ onOpenCheckout: _onOpenCheckout }: ALaCartaProps) {
 
         {/* Floating Icon Items */}
         <motion.div
-          className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-[860px] mx-auto"
+          className="grid grid-cols-1 sm:grid-cols-3 gap-6"
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
