@@ -151,12 +151,12 @@ export function Footer() {
             <h3 className="text-white font-bold text-xs mb-4 uppercase tracking-wider">Información</h3>
             <ul className="space-y-3">
               {[
-                'Términos y Condiciones',
-                'Política de Privacidad',
-                'Preguntas Frecuentes'
-              ].map((label) => (
+                { label: 'Términos y Condiciones', href: '#' },
+                { label: 'Política de Privacidad', href: '#' },
+                { label: 'Preguntas Frecuentes', href: '#faq' },
+              ].map(({ label, href }) => (
                 <li key={label}>
-                  <a href="#" className="text-white/65 text-sm hover:text-white transition-colors duration-300 no-underline">
+                  <a href={href} className="text-white/65 text-sm hover:text-white transition-colors duration-300 no-underline">
                     {label}
                   </a>
                 </li>

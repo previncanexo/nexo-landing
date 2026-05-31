@@ -18,7 +18,7 @@ interface FAQProps {
 
 export function FAQ({ items }: FAQProps) {
   return (
-    <section className="relative z-[20] overflow-hidden">
+    <section id="faq" className="relative z-[20] overflow-hidden">
       {/* Fondo oscuro sólido — mismo gradiente que hero/footer */}
       <div
         className="absolute inset-0 z-0"
