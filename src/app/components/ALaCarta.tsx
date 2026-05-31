@@ -9,24 +9,17 @@ interface ALaCartaProps {
 }
 
 export function ALaCarta({ onOpenCheckout: _onOpenCheckout }: ALaCartaProps) {
-  const handleWhatsApp = () => {
-    window.open('https://wa.me/5493415056130?text=Hola%2C%20quiero%20suscribirme%20para%20acceder%20a%20los%20nuevos%20servicios%20de%20Nexo%20cuando%20est%C3%A9n%20disponibles', '_blank');
-  };
 
   const services = [
     {
       image: cartaTelemedicina,
       icon: (
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-          <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-          <path d="M8 21h8"/>
-          <path d="M12 17v4"/>
-          <path d="M7.5 10.5a1.5 1.5 0 1 0 3 0 1.5 1.5 0 1 0-3 0"/>
-          <path d="M14 9h3"/>
-          <path d="M14 12h3"/>
+          <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+          <path d="M3.22 12H9.5l1.5-3 2 4.5 2-7 1.5 5.5H20.78"/>
         </svg>
       ),
-      title: 'Telemedicina & Psicología',
+      title: 'Más opciones',
     },
     {
       image: cartaOdontologia,
@@ -36,7 +29,7 @@ export function ALaCarta({ onOpenCheckout: _onOpenCheckout }: ALaCartaProps) {
           <path d="M9.5 17l2.5-3 2.5 3"/>
         </svg>
       ),
-      title: 'Odontología estética',
+      title: 'Más bienestar para vos',
     },
     {
       image: cartaSeguros,
@@ -46,7 +39,7 @@ export function ALaCarta({ onOpenCheckout: _onOpenCheckout }: ALaCartaProps) {
           <polyline points="9 12 11 14 15 10"/>
         </svg>
       ),
-      title: 'Seguros personales',
+      title: 'Más beneficios',
     },
   ];
 
@@ -75,54 +68,18 @@ export function ALaCarta({ onOpenCheckout: _onOpenCheckout }: ALaCartaProps) {
           viewport={viewportOnce}
         >
           <div className="inline-flex items-center gap-3 bg-gradient-to-r from-[var(--purple)] to-[var(--pink)] px-5 py-2.5 rounded-full mb-8 shadow-xl">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="9" cy="21" r="1"/>
-              <circle cx="20" cy="21" r="1"/>
-              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-            </svg>
-            <span className="text-sm font-bold tracking-wide uppercase text-white">Servicios A la Carta</span>
+            <span className="text-sm font-bold tracking-wide uppercase text-white">+Bienestar</span>
             <span className="bg-white/25 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full border border-white/40">Próximamente</span>
           </div>
 
           <h2 className="font-['DM_Serif_Display'] text-[clamp(36px,5.5vw,68px)] text-[var(--gray-900)] leading-tight tracking-[-2px] mb-5">
             Próximamente:{' '}
-            <span className="italic text-[var(--pink)]">más cobertura</span>
+            <span className="italic text-[var(--pink)]">nuevas posibilidades</span>
           </h2>
 
-          <p className="text-base sm:text-lg text-[var(--gray-600)] leading-relaxed max-w-[560px] mx-auto mb-4">
-            Estamos trabajando para que muy pronto puedas sumar prestaciones adicionales a tu plan, de manera simple y flexible.
-          </p>
-
           <p className="text-base sm:text-lg text-[var(--gray-600)] leading-relaxed max-w-[560px] mx-auto">
-            Suscribite hoy y vas a ser el primero en acceder cuando estén disponibles.
+            Seguimos evolucionando para ofrecerte más opciones que se adapten a tu estilo de vida.
           </p>
-        </motion.div>
-
-        {/* CTA capture */}
-        <motion.div
-          className="flex flex-col items-center gap-4 mb-8 sm:mb-10"
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewportOnce}
-        >
-          <motion.button
-            onClick={handleWhatsApp}
-            className="bg-gradient-to-r from-[var(--purple)] to-[var(--pink)] text-white border-none px-6 sm:px-10 py-4 rounded-full text-base font-bold cursor-pointer font-['DM_Sans'] flex items-center gap-3 group shadow-xl w-full sm:w-auto justify-center"
-            whileHover={{ scale: 1.03, boxShadow: '0 20px 60px rgba(134,96,239,0.35)' }}
-            whileTap={{ scale: 0.97 }}
-            transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-            </svg>
-            Suscribite y sé el primero en acceder
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="group-hover:translate-x-1 transition-transform">
-              <line x1="5" y1="12" x2="19" y2="12"/>
-              <polyline points="12 5 19 12 12 19"/>
-            </svg>
-          </motion.button>
-          <p className="text-xs text-[var(--gray-500)] font-medium">Te avisamos cuando estén disponibles. Sin spam.</p>
         </motion.div>
 
         {/* Floating Icon Items */}

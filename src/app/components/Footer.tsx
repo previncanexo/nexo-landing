@@ -227,7 +227,7 @@ export function Footer() {
             <div className="col-span-2 md:col-span-4">
               <img src={logoImage} alt="Nexo by Previnca" className="h-10 mb-5" />
               <p className="text-sm text-white/80 leading-relaxed mb-6 max-w-[280px]">
-                Tu salud digitalmente simple. Cobertura médica esencial.
+                Tu salud y tu bienestar, sin vueltas.
               </p>
               {/* Social Icons */}
               <div className="flex gap-3">
@@ -283,8 +283,8 @@ export function Footer() {
               <h3 className="text-white font-bold text-xs mb-4 uppercase tracking-wider">Servicios</h3>
               <ul className="space-y-3">
                 {[
-                  { href: '#beneficios', label: 'Nexo by Previnca' },
-                  { href: '#carta', label: 'A la Carta' },
+                  { href: '#beneficios', label: 'Previnca Nexo' },
+                  { href: '#carta', label: '+Bienestar' },
                   { href: '#como', label: 'Cómo funciona' },
                 ].map((link) => (
                   <li key={link.label}>

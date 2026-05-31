@@ -98,11 +98,11 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
 
           <h2 className="font-['DM_Serif_Display'] text-[clamp(36px,5.5vw,68px)] text-[var(--gray-900)] leading-tight tracking-[-2px] mb-4 sm:mb-5 max-w-[760px] mx-auto">
             Pensar en tu bienestar es{' '}
-            <span className="italic text-[var(--pink)]">elegir Nexo by Previnca</span>
+            <span className="italic text-[var(--pink)]">elegir Previnca Nexo</span>
           </h2>
 
           <p className="text-[15px] sm:text-lg text-[var(--gray-600)] leading-relaxed max-w-[520px] mx-auto">
-            Obtené tu cobertura médica esencial en minutos, sin papeles ni trámites presenciales.
+            Completá los pasos que ves a continuación y obtené tu cobertura en minutos.
           </p>
         </motion.div>
 

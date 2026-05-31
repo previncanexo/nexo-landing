@@ -238,14 +238,14 @@ export function Hero() {
 
           {/* H1 — blur reveal */}
           <h1 className="font-['DM_Serif_Display'] text-[clamp(26px,7.5vw,42px)] sm:text-[clamp(36px,5.5vw,68px)] text-white leading-tight tracking-[-1px] sm:tracking-[-2px] md:tracking-[-3px] mb-6 sm:mb-8">
-            <BlurRevealText text="Tu salud," delay={0.2} />
+            <BlurRevealText text="Tu salud y tu bienestar," delay={0.2} />
             <br />
-            <BlurRevealText text="digitalmente simple" className="italic" delay={0.45} />
+            <BlurRevealText text="sin vueltas." className="italic" delay={0.45} />
           </h1>
 
           {/* Description */}
           <p className="text-[15px] sm:text-base text-white/80 leading-relaxed mb-10 sm:mb-12 mx-auto max-w-[480px] font-medium">
-            <BlurRevealWords text="Contá con el respaldo que necesitas desde" delay={0.5} />{' '}
+            <BlurRevealWords text="Desde" delay={0.5} />{' '}
             <motion.span
               className="inline-block whitespace-nowrap bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-white font-bold border border-white/30"
               initial={{ opacity: 0, y: 16, filter: 'blur(10px)' }}
@@ -254,7 +254,7 @@ export function Hero() {
             >
               $19.500 por mes
             </motion.span>
-            <BlurRevealWords text=". Obtené tu cobertura médica ambulatoria esencial en minutos, sin papeles ni trámites presenciales." delay={0.95} />
+            <BlurRevealWords text=". Teleconsultas médicas, emergencias 24/7 y beneficios para cuidarte, contratados en minutos y sin papeles." delay={0.95} />
           </p>
 
           {/* CTAs */}
