@@ -374,21 +374,6 @@ export function Footer() {
                 SSS - Superintendencia de Servicios de Salud · Órgano de control de Obras Sociales y Entidades de Medicina Prepaga
               </div>
             </div>
-            <div className="mt-4 pt-4 border-t border-white/10 text-center">
-              <p className="text-[11px] text-white/50 leading-relaxed max-w-[700px] mx-auto">
-                * Al afiliarte a Nexo by Previnca aceptás los{' '}
-                <button
-                  onClick={() => setShowTyC(true)}
-                  className="text-white/60 hover:text-white underline transition-colors bg-transparent border-none p-0 cursor-pointer"
-                  style={{ fontFamily: 'inherit', fontSize: 'inherit' }}
-                >
-                  Términos de servicio
-                </button>{' '}
-                y la{' '}
-                <a href="#" className="text-white/60 hover:text-white underline transition-colors">Política de privacidad</a>.
-                {' '}El servicio tiene alcance geográfico limitado. Próximamente disponibles las especificaciones completas de cobertura.
-              </p>
-            </div>
           </div>
         </div>
       </footer>
