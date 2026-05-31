@@ -36,11 +36,11 @@ const testimonials = [
 const faqItems = [
   {
     question: '¿Cómo me suscribo?',
-    answer: 'Hacé clic en "Lo quiero", revisá los servicios incluidos y el valor del plan, completá el formulario con tus datos y realizá el pago a través de Mercado Pago.\nTodo el proceso se hace desde el celular, sin papeles y en menos de 5 minutos.',
+    answer: 'Hacé clic en "Quiero mi cobertura", revisá los servicios incluidos y el valor del plan, completá el formulario con tus datos y realizá el pago a través de Mercado Pago.\nTodo el proceso se hace desde el celular, sin papeles y en menos de 5 minutos.',
   },
   {
     question: '¿Cuándo puedo empezar a usar los servicios?',
-    answer: 'Una vez confirmado el pago, recibirás tu credencial digital por WhatsApp y correo electrónico.\nLos servicios de Teleconsultas médicas y Emergencias 24/7 estarán habilitados dentro de las 24 hs hábiles de recibida la credencial digital.\nEl resto de los servicios cuentan con una carencia de 30 días. Finalizado ese período, podrás acceder a guardia odontológica y descuentos en farmacias.',
+    answer: 'Una vez confirmado el pago, recibirás tu credencial digital por correo electrónico.\nLos servicios de Teleconsultas médicas y Emergencias 24/7 estarán habilitados dentro de las 24 hs hábiles de recibida la credencial digital.\nEl resto de los servicios cuentan con una carencia de 30 días. Finalizado ese período, podrás acceder a guardia odontológica y descuentos en farmacias.',
   },
   {
     question: '¿Cómo uso cada servicio?',
@@ -56,15 +56,15 @@ const faqItems = [
   },
   {
     question: '¿Qué hago si perdí acceso a mi cuenta?',
-    answer: 'Podés recuperar el acceso desde la opción "Olvidé mi contraseña". Si el inconveniente continúa, comunicate con el equipo de soporte.',
+    answer: 'Podés recuperar el acceso desde la opción "Olvidé mi contraseña". Si el inconveniente continúa, comunicate con el equipo de soporte por WhatsApp al 341 5056130.',
   },
   {
     question: '¿Cómo contacto si necesito hacer una consulta sobre el servicio?',
     answer: 'Podés comunicarte con nuestra línea WSP 341 5056130 y recibir asesoramiento personalizado para resolver cualquier duda o consulta sobre el servicio.',
   },
   {
-    question: '¿Cuántas teleconsultas puedo hacer al año?',
-    answer: 'Tenés 3 teleconsultas sin cargo por año. A partir de la cuarta, cada teleconsulta se debe abonar.',
+    question: '¿Cuántas teleconsultas puedo realizar por mes?',
+    answer: 'Tu plan incluye 1 teleconsulta médica sin cargo por mes. Si necesitás realizar más consultas dentro del mismo mes, las teleconsultas adicionales podrán utilizarse abonando el valor correspondiente al momento de solicitar el servicio.',
   },
   {
     question: '¿Qué diferencia hay entre una emergencia y una teleconsulta?',

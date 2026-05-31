@@ -177,7 +177,7 @@ export function FAQ({ items }: FAQProps) {
             Nuestro equipo está disponible para ayudarte
           </p>
           <a
-            href="mailto:hola@nexo.com"
+            href="mailto:consultas@previncasalud.com.ar"
             className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full font-bold transition-all duration-300 hover:scale-105 text-white text-sm sm:text-base"
             style={{
               background: 'linear-gradient(to right, var(--purple), var(--pink))',
