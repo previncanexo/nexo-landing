@@ -10,7 +10,7 @@ interface ALaCartaProps {
 
 export function ALaCarta({ onOpenCheckout: _onOpenCheckout }: ALaCartaProps) {
   const handleWhatsApp = () => {
-    window.open('https://wa.me/5493415056130?text=Hola%2C%20quiero%20suscribirme%20para%20acceder%20a%20los%20nuevos%20servicios%20de%20Nexo', '_blank');
+    window.open('https://wa.me/5493415056130?text=Hola%2C%20quiero%20suscribirme%20para%20acceder%20a%20los%20nuevos%20servicios%20de%20Nexo%20cuando%20est%C3%A9n%20disponibles', '_blank');
   };
 
   const services = [

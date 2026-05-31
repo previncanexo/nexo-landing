@@ -254,7 +254,7 @@ export function Hero() {
             >
               $19.500 por mes
             </motion.span>
-            <BlurRevealWords text=". Obtené tu cobertura médica esencial en minutos, sin papeles ni trámites presenciales." delay={0.95} />
+            <BlurRevealWords text=". Obtené tu cobertura médica ambulatoria esencial en minutos, sin papeles ni trámites presenciales." delay={0.95} />
           </p>
 
           {/* CTAs */}

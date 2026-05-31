@@ -76,8 +76,8 @@ export function PlanBase() {
           <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
         </svg>
       ),
-      name: 'Urgencias 24/7',
-      desc: 'Asistencia inmediata ante situaciones de urgencia, estés donde estés.',
+      name: 'Emergencias 24/7',
+      desc: 'Asistencia inmediata ante situaciones de emergencia, estés donde estés.',
       color: 'from-[var(--purple)] to-[var(--pink)]',
       shadowColor: 'rgba(134,96,239,0.25)',
     },
@@ -89,8 +89,8 @@ export function PlanBase() {
           <line x1="9" y1="12" x2="15" y2="12"/>
         </svg>
       ),
-      name: 'Descuentos 50% en farmacias',
-      desc: 'Beneficios y descuentos en farmacias adheridas de todo el país.',
+      name: 'Descuentos en farmacias',
+      desc: 'Beneficios y descuentos en farmacias adheridas en Rosario y la región.',
       color: 'from-[var(--purple)] to-[var(--pink)]',
       shadowColor: 'rgba(134,96,239,0.25)',
     },
