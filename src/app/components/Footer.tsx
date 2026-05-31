@@ -126,7 +126,7 @@ export function Footer() {
                       <polyline points="22,6 12,13 2,6"/>
                     </svg>
                   ),
-                  text: 'hola@nexoprevinca.com.ar'
+                  text: 'consultas@previncasalud.com.ar'
                 },
                 {
                   icon: (
