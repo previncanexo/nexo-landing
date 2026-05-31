@@ -44,6 +44,7 @@ export function Footer() {
               {[
                 {
                   label: 'Instagram',
+                  href: 'https://www.instagram.com/previnca_salud/',
                   icon: (
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
@@ -54,6 +55,7 @@ export function Footer() {
                 },
                 {
                   label: 'Facebook',
+                  href: 'https://www.facebook.com/previnca.salud',
                   icon: (
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
@@ -62,6 +64,7 @@ export function Footer() {
                 },
                 {
                   label: 'LinkedIn',
+                  href: 'https://www.linkedin.com/company/previnca-salud/',
                   icon: (
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
@@ -73,7 +76,9 @@ export function Footer() {
               ].map((social) => (
                 <a
                   key={social.label}
-                  href="#"
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all duration-300 hover:scale-105 border border-white/10"
                   aria-label={social.label}
                 >
