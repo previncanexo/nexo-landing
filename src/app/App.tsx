@@ -40,11 +40,11 @@ const faqItems = [
   },
   {
     question: '¿Cuándo puedo empezar a usar los servicios?',
-    answer: 'Una vez confirmado el pago, recibirás tu credencial digital por correo electrónico.\nLos servicios de Teleconsultas médicas y Urgencias 24/7 estarán habilitados dentro de las 24 hs hábiles de recibida la credencial digital.\nEl resto de los servicios cuentan con una carencia de 30 días. Finalizado ese período, podrás acceder a guardia odontológica y descuentos en farmacias.',
+    answer: 'Una vez confirmado el pago, recibirás tu credencial digital por correo electrónico.\nLos servicios de Teleconsultas médicas y Emergencias médicas estarán habilitados dentro de las 24 hs hábiles de recibida la credencial digital.\nEl resto de los servicios cuentan con una carencia de 30 días. Finalizado ese período, podrás acceder a guardia odontológica y descuentos en farmacias.',
   },
   {
     question: '¿Cómo uso cada servicio?',
-    answer: 'Teleconsultas médicas: Desde Previnca Nexo solicitás la consulta y un profesional te atiende en minutos, las 24 horas.\nUrgencias 24/7: Llamás a la línea de atención, indicás que sos cliente Previnca Nexo y brindás tu DNI para recibir asistencia inmediata.\nDescuentos en farmacias: Presentás tu credencial digital y la receta en cualquiera de las farmacias adheridas y el descuento se aplica en el momento.\nGuardia odontológica: Debés enviar un mensaje al WhatsApp del prestador para informar que vas a concurrir a la atención. Luego, poder coordinar para acercarte a las instalaciones en la ciudad de Rosario. Horarios de atención: lunes a viernes de 8 a 20 hs.',
+    answer: 'Teleconsultas médicas: Desde Previnca Nexo solicitás la consulta y un profesional te atiende en minutos, las 24 horas.\nEmergencias médicas: Llamás a la línea de atención, indicás que sos cliente Previnca Nexo y brindás tu DNI para recibir asistencia inmediata.\nDescuentos en farmacias: Presentás tu credencial digital y la receta en cualquiera de las farmacias adheridas y el descuento se aplica en el momento.\nGuardia odontológica: Debés enviar un mensaje al WhatsApp del prestador para informar que vas a concurrir a la atención. Luego, poder coordinar para acercarte a las instalaciones en la ciudad de Rosario. Horarios de atención: lunes a viernes de 8 a 20 hs.',
   },
   {
     question: '¿Puedo compartir mi cuenta con otra persona?',
