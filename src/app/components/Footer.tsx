@@ -349,7 +349,6 @@ export function Footer() {
                   </button>
                 </li>
                 {[
-                  { label: 'Política de Privacidad', href: '#' },
                   { label: 'Preguntas Frecuentes', href: '#faq' },
                 ].map(({ label, href }) => (
                   <li key={label}>
