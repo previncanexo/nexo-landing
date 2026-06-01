@@ -9,7 +9,7 @@ export function WhatsAppButton({ isVisible, isMobileCTAVisible }: WhatsAppButton
   const handleWhatsAppClick = () => {
     // Número de WhatsApp (reemplazar con el número real)
     const phoneNumber = '5493415056130'; // Formato: 549 + código de área sin 0 + número
-    const message = encodeURIComponent('Hola! Me gustaría saber más sobre Nexo by Previnca.');
+    const message = encodeURIComponent('Hola! Me gustaría saber más sobre Previnca Nexo.');
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
   };
 

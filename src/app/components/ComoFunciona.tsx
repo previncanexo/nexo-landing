@@ -10,7 +10,7 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
     {
       number: '01',
       title: 'Hacé clic en Quiero mi Cobertura',
-      body: 'Revisás el resumen de Nexo by Previnca: las 4 prestaciones incluidas, topes, precio mensual y vigencia. Todo claro, sin letra chica.',
+      body: 'Revisás el resumen de Previnca Nexo: las 4 prestaciones incluidas, topes, precio mensual y vigencia. Todo claro, sin letra chica.',
       tag: '1 min',
       icon: (
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">

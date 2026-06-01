@@ -66,7 +66,7 @@ export function Navigation({ onOpenCheckout }: NavigationProps) {
             <a href="#hero" className="flex items-center justify-center">
               <img
                 src={logoImage}
-                alt="Nexo by Previnca"
+                alt="Previnca Nexo"
                 style={{
                   height: scrolled ? '38px' : '48px',
                   width: 'auto',
@@ -112,7 +112,7 @@ export function Navigation({ onOpenCheckout }: NavigationProps) {
             <a href="#hero" className="flex items-center">
               <img
                 src={logoImage}
-                alt="Nexo by Previnca"
+                alt="Previnca Nexo"
                 style={{
                   height: '40px',
                   width: 'auto',
