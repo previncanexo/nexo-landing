@@ -44,7 +44,7 @@ const faqItems = [
   },
   {
     question: '¿Cómo uso cada servicio?',
-    answer: 'Teleconsultas médicas: Desde Previnca Nexo solicitás la consulta y un profesional te atiende en minutos, las 24 horas.\nEmergencias médicas: Llamás a la línea de atención, indicás que sos cliente Previnca Nexo y brindás tu DNI para recibir asistencia inmediata.\nDescuentos en farmacias: Presentás tu credencial digital y la receta en cualquiera de las farmacias adheridas y el descuento se aplica en el momento.\nGuardia odontológica: Debés enviar un mensaje al WhatsApp del prestador para informar que vas a concurrir a la atención. Luego, poder coordinar para acercarte a las instalaciones en la ciudad de Rosario. Horarios de atención: lunes a viernes de 8 a 20 hs.',
+    answer: 'Teleconsultas médicas: Desde Previnca Nexo solicitás la consulta y un profesional te atiende en minutos, las 24 horas.\nEmergencias médicas: Llamás a la línea de atención, indicás que sos cliente Previnca Nexo y brindás tu DNI para recibir asistencia inmediata.\nDescuento en farmacias: Presentando tu receta con el número de farmacia que figura en tu credencial digital, podes acceder al 50% off en más de 6000 medicamentos seleccionados.\nGuardia odontológica: Debés enviar un mensaje al WhatsApp del prestador para informar que vas a concurrir a la atención. Luego, poder coordinar para acercarte a las instalaciones en la ciudad de Rosario. Horarios de atención: lunes a viernes de 8 a 20 hs.',
   },
   {
     question: '¿Puedo compartir mi cuenta con otra persona?',
