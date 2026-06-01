@@ -23,6 +23,7 @@ export function Navigation({ onOpenCheckout }: NavigationProps) {
     { href: '#beneficios', label: 'Previnca Nexo' },
     { href: '#carta', label: '+Bienestar' },
     { href: '#como', label: 'Cómo funciona' },
+    { href: '#faq', label: 'Preguntas frecuentes' },
   ];
 
   return (
