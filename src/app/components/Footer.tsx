@@ -370,9 +370,6 @@ export function Footer() {
               <div className="text-xs text-white/50">
                 © 2026 Previnca. Todos los derechos reservados.
               </div>
-              <div className="text-xs text-white/50 max-w-[500px]">
-                SSS - Superintendencia de Servicios de Salud · Órgano de control de Obras Sociales y Entidades de Medicina Prepaga
-              </div>
             </div>
           </div>
         </div>
