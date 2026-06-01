@@ -77,7 +77,7 @@ export function PlanBase() {
         </svg>
       ),
       name: 'Emergencias 24/7',
-      desc: 'Asistencia inmediata ante situaciones de emergencia, estés donde estés.',
+      desc: 'Asistencia inmediata ante situaciones de emergencia.',
       color: 'from-[var(--purple)] to-[var(--pink)]',
       shadowColor: 'rgba(134,96,239,0.25)',
     },
