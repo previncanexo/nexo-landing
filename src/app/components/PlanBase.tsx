@@ -17,7 +17,7 @@ import planOdontologia from '@/assets/plan-odontologia.webp';
 
 const featureItems = [
   {
-    label: 'Teleconsultas 24/7',
+    label: 'Teleconsultas médicas: DOC 24',
     icon: (
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
@@ -27,7 +27,7 @@ const featureItems = [
     ),
   },
   {
-    label: '50% Off en Farmacias',
+    label: 'Descuentos en farmacias',
     icon: (
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M10.5 1h3a1.5 1.5 0 0 1 1.5 1.5V5h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2V2.5A1.5 1.5 0 0 1 10.5 1z"/>
@@ -36,7 +36,7 @@ const featureItems = [
     ),
   },
   {
-    label: 'Urgencias médicas',
+    label: 'Emergencias 24/7',
     icon: (
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
@@ -44,7 +44,7 @@ const featureItems = [
     ),
   },
   {
-    label: 'Guardias Odontológicas',
+    label: 'Guardias odontológicas',
     icon: (
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M12 5.5c-1.5-2-4-2.5-5.5-1S4 8 4.5 10c.3 1 .5 2 .5 3 0 2 .5 4 1.5 5.5.5.8 1 1.5 1.5 1.5s1-1 1.5-2.5c.3-1 .5-2 .5-3 0 1 .2 2 .5 3 .5 1.5 1 2.5 1.5 2.5s1-.7 1.5-1.5C18.5 17 19 15 19 13c0-1 .2-2 .5-3 .5-2-.5-4.5-2-6S13.5 3.5 12 5.5Z"/>
@@ -101,7 +101,7 @@ export function PlanBase() {
           <path d="M12 5.5c-1.5-2-4-2.5-5.5-1S4 8 4.5 10c.3 1 .5 2 .5 3 0 2 .5 4 1.5 5.5.5.8 1 1.5 1.5 1.5s1-1 1.5-2.5c.3-1 .5-2 .5-3 0 1 .2 2 .5 3 .5 1.5 1 2.5 1.5 2.5s1-.7 1.5-1.5C18.5 17 19 15 19 13c0-1 .2-2 .5-3 .5-2-.5-4.5-2-6S13.5 3.5 12 5.5Z"/>
         </svg>
       ),
-      name: 'Guardias Odontológicas',
+      name: 'Guardias odontológicas',
       desc: 'Atención odontológica ante dolores agudos y/o urgencias inesperadas.',
       color: 'from-[var(--purple)] to-[var(--pink)]',
       shadowColor: 'rgba(134,96,239,0.25)',
