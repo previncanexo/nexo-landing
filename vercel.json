@@ -2,6 +2,17 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "redirects": [
     {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "nexo-landing-sigma\\.vercel\\.app"
+        }
+      ],
+      "destination": "https://nexo.previncasalud.com.ar/",
+      "permanent": true
+    },
+    {
       "source": "/:path*",
       "has": [
         {
