@@ -254,7 +254,7 @@ export function Hero() {
             >
               $19.500 por mes
             </motion.span>
-            <BlurRevealWords text=". Teleconsultas médicas, urgencias 24/7 y beneficios para cuidarte, contratados en minutos y sin papeles." delay={0.95} />
+            <BlurRevealWords text=". Teleconsultas médicas, emergencias médicas y beneficios para cuidarte, contratados en minutos y sin papeles." delay={0.95} />
           </p>
 
           {/* CTAs */}
