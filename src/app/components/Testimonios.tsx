@@ -126,7 +126,7 @@ function TestimonialCard({ testimonial, index }: { testimonial: Testimonial; ind
 export function Testimonios({ testimonials }: TestimoniosProps) {
   return (
     <section
-      className="relative py-16 sm:py-24 md:py-32 px-5 sm:px-6 lg:px-8 z-[2]"
+      className="relative py-16 sm:py-24 md:py-32 px-5 sm:px-6 lg:px-8 z-[2] overflow-hidden"
       style={{ background: 'linear-gradient(to bottom, #ffffff 0%, #faf9fc 50%, #ffffff 100%)' }}
     >
       <div className="absolute inset-0 pointer-events-none z-[1]" style={organicPatternStyle} />

@@ -164,8 +164,11 @@ export function Navigation({ onOpenCheckout }: NavigationProps) {
           mobileOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
         style={{
-          background: 'linear-gradient(135deg, color-mix(in srgb, var(--purple) 98%, transparent) 0%, color-mix(in srgb, var(--pink) 98%, transparent) 100%)',
-          backdropFilter: 'blur(30px)',
+          // rgba en vez de color-mix(): color-mix NO existe en iOS Safari < 16.2 →
+          // el fondo quedaba transparente y el menú "roto". Sin backdrop-filter:
+          // el overlay (fixed inset-0) está SIEMPRE en el DOM y su blur creaba una
+          // capa GPU permanente que trababa el scroll aun con el menú cerrado.
+          background: 'linear-gradient(135deg, rgba(134, 96, 239, 0.98) 0%, rgba(238, 92, 208, 0.98) 100%)',
         }}
       >
         <div className="absolute top-20 right-10 w-64 h-64 rounded-full bg-white/10 blur-[80px]" />

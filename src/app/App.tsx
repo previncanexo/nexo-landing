@@ -117,10 +117,18 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    // Cacheamos el offset de #beneficios: leer offsetTop en CADA evento de scroll
+    // fuerza un reflow del layout y traba el scroll en iOS Safari. Lo medimos una
+    // vez (y en resize/load), y el handler de scroll solo lee window.scrollY.
+    let planBaseTop = Infinity;
+    const measure = () => {
+      const el = document.getElementById('beneficios');
+      planBaseTop = el ? el.offsetTop - 200 : Infinity;
+    };
+    measure();
+
     const onScroll = () => {
       const y = window.scrollY;
-      const planBaseEl = document.getElementById('beneficios');
-      const planBaseTop = planBaseEl ? planBaseEl.offsetTop - 200 : Infinity;
       const nextMobile = y > 600 && y < planBaseTop;
       const nextBack = y > 800;
 
@@ -133,12 +141,19 @@ export default function App() {
         setShowBackToTop(nextBack);
       }
     };
+
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    window.addEventListener('resize', measure);
+    window.addEventListener('load', measure);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', measure);
+      window.removeEventListener('load', measure);
+    };
   }, []);
 
   return (
-    <div className="overflow-x-clip">
+    <div className="overflow-x-hidden">
       <Navigation onOpenCheckout={goToRegistro} />
       <Hero />
       <PlanBase />

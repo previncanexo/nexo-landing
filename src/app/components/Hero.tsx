@@ -160,20 +160,30 @@ export function Hero() {
   const content = (
     <div className="max-w-[700px] mx-auto px-5 sm:px-8 text-center" style={{ paddingTop: 'clamp(3.5rem,12vw,7rem)', paddingBottom: 'clamp(2.5rem,8vw,6rem)' }}>
 
-      {/* Badge */}
-      <motion.div
-        variants={fadeUpSubtle}
-        initial="hidden"
-        animate="visible"
-        className="inline-flex items-center gap-2.5 rounded-full px-5 py-2 text-[10px] sm:text-[11px] text-white/50 font-medium tracking-[0.20em] uppercase mb-8 sm:mb-10 border border-white/12 backdrop-blur-sm"
-        style={{ backgroundColor: 'rgba(255,255,255,0.06)' }}
-      >
+      {/* Badge — animado + backdrop-blur en desktop; estático y sin blur en mobile */}
+      {animate ? (
+        <motion.div
+          variants={fadeUpSubtle}
+          initial="hidden"
+          animate="visible"
+          className="inline-flex items-center gap-2.5 rounded-full px-5 py-2 text-[10px] sm:text-[11px] text-white/50 font-medium tracking-[0.20em] uppercase mb-8 sm:mb-10 border border-white/12 backdrop-blur-sm"
+          style={{ backgroundColor: 'rgba(255,255,255,0.06)' }}
+        >
+          <div
+            className="w-1.5 h-1.5 rounded-full bg-[var(--pink)]"
+            style={{ animation: 'pulse-dot 2s ease-in-out infinite' }}
+          />
+          100% pensado para vos
+        </motion.div>
+      ) : (
         <div
-          className="w-1.5 h-1.5 rounded-full bg-[var(--pink)]"
-          style={{ animation: 'pulse-dot 2s ease-in-out infinite' }}
-        />
-        100% pensado para vos
-      </motion.div>
+          className="inline-flex items-center gap-2.5 rounded-full px-5 py-2 text-[10px] sm:text-[11px] text-white/50 font-medium tracking-[0.20em] uppercase mb-8 sm:mb-10 border border-white/12"
+          style={{ backgroundColor: 'rgba(255,255,255,0.10)' }}
+        >
+          <div className="w-1.5 h-1.5 rounded-full bg-[var(--pink)]" />
+          100% pensado para vos
+        </div>
+      )}
 
       {/* H1 — blur reveal (desktop) / plain (mobile) */}
       <h1 className="font-['DM_Serif_Display'] text-[clamp(26px,7.5vw,42px)] sm:text-[clamp(36px,5.5vw,68px)] text-white leading-tight tracking-[-1px] sm:tracking-[-2px] md:tracking-[-3px] mb-6 sm:mb-8">
@@ -195,7 +205,7 @@ export function Hero() {
             $19.500 por mes
           </motion.span>
         ) : (
-          <span className="inline-block whitespace-nowrap bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-white font-bold border border-white/30">
+          <span className="inline-block whitespace-nowrap bg-white/25 px-3 py-1 rounded-full text-white font-bold border border-white/30">
             $19.500 por mes
           </span>
         )}
@@ -211,11 +221,11 @@ export function Hero() {
             animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
             transition={{ delay: 1.3, duration: 0.5, ease: BLUR_EASE }}
           >
-            <HeroCtaButton />
+            <HeroCtaButton animate={animate} />
           </motion.div>
         ) : (
           <div className="w-full sm:w-auto">
-            <HeroCtaButton />
+            <HeroCtaButton animate={animate} />
           </div>
         )}
       </div>
@@ -318,7 +328,7 @@ export function Hero() {
   );
 }
 
-function HeroCtaButton() {
+function HeroCtaButton({ animate = true }: { animate?: boolean }) {
   return (
     <motion.button
       onClick={() =>
@@ -329,7 +339,7 @@ function HeroCtaButton() {
         )
       }
       className="bg-white text-[var(--purple)] border-none px-8 sm:px-10 py-4 rounded-full text-[15px] sm:text-base font-bold cursor-pointer font-['DM_Sans'] whitespace-nowrap group flex items-center gap-2 w-full justify-center"
-      whileHover={{ scale: 1.03, boxShadow: '0 20px 60px rgba(255,255,255,0.25)' }}
+      whileHover={animate ? { scale: 1.03, boxShadow: '0 20px 60px rgba(255,255,255,0.25)' } : undefined}
       whileTap={{ scale: 0.97 }}
       transition={{ type: 'spring', stiffness: 400, damping: 25 }}
     >
