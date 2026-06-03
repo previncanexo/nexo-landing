@@ -151,11 +151,14 @@ export function Hero() {
   const heroRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
+    // Mobile: una sola foto estática (sin crossfade) → no se descargan las otras
+    // 2 fotos (~240KB menos) y no hay re-render por intervalo. Desktop conserva el crossfade.
+    if (isMobile) return;
     const id = setInterval(() => {
       setCurrent((c) => (c + 1) % heroImages.length);
     }, 3500);
     return () => clearInterval(id);
-  }, []);
+  }, [isMobile]);
 
   const content = (
     <div className="max-w-[700px] mx-auto px-5 sm:px-8 text-center" style={{ paddingTop: 'clamp(3.5rem,12vw,7rem)', paddingBottom: 'clamp(2.5rem,8vw,6rem)' }}>
@@ -276,7 +279,7 @@ export function Hero() {
 
       {/* ── HERO PHOTOS — CSS crossfade, sin remount ── */}
       <div className="absolute inset-0 z-[3]">
-        {heroImages.map((img, i) => (
+        {(isMobile ? heroImages.slice(0, 1) : heroImages).map((img, i) => (
           <img
             key={i}
             src={img}
