@@ -1,47 +1,57 @@
 import type React from 'react';
 import type { Variants } from 'motion/react';
 
+// ─── Mobile guard ───────────────────────────────────────────
+// En mobile NO escondemos el contenido en el estado "hidden". Si por cualquier
+// motivo el whileInView/IntersectionObserver no dispara (scroll rápido, iOS
+// Safari, un ancestro con overflow, etc.), el contenido NUNCA puede quedar
+// invisible: arranca visible y la animación de entrada simplemente no aplica.
+// Desktop conserva las animaciones de revelado completas.
+const isMobileInit =
+  typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches;
+
+// hidden helper: en mobile devuelve {} (sin opacity:0 ni offset) → visible.
+const hiddenState = (desktopHidden: Record<string, unknown>) =>
+  isMobileInit ? {} : desktopHidden;
+
 // ─── Spring Presets ─────────────────────────────────────────
-// stiffness=72, damping=20 → ratio ≈ 1.08 (barely overdamped, zero bounce, ~0.9s settle)
 const springPremium       = { type: 'spring' as const, stiffness: 72,  damping: 20, mass: 1.2 };
-// stiffness=90, damping=22 → ratio ≈ 1.16 (overdamped, ~0.75s settle)
 const springPremiumSubtle = { type: 'spring' as const, stiffness: 90,  damping: 22, mass: 1.0 };
-// kept for interactive hover/tap — fast response is intentional there
 export const springSnappy = { type: 'spring' as const, stiffness: 400, damping: 28 };
 
 // ─── Fade Up (default entrance) ─────────────────────────────
 export const fadeUp: Variants = {
-  hidden:  { opacity: 0, y: 52 },
+  hidden:  hiddenState({ opacity: 0, y: 52 }),
   visible: { opacity: 1, y: 0, transition: springPremium },
 };
 
 // ─── Fade Up Subtle (smaller movement) ──────────────────────
 export const fadeUpSubtle: Variants = {
-  hidden:  { opacity: 0, y: 24 },
+  hidden:  hiddenState({ opacity: 0, y: 24 }),
   visible: { opacity: 1, y: 0, transition: springPremiumSubtle },
 };
 
 // ─── Fade In (opacity only) ──────────────────────────────────
 export const fadeIn: Variants = {
-  hidden:  { opacity: 0 },
+  hidden:  hiddenState({ opacity: 0 }),
   visible: { opacity: 1, transition: { duration: 0.75, ease: [0.16, 1, 0.3, 1] } },
 };
 
 // ─── Scale Up ───────────────────────────────────────────────
 export const scaleUp: Variants = {
-  hidden:  { opacity: 0, scale: 0.91 },
+  hidden:  hiddenState({ opacity: 0, scale: 0.91 }),
   visible: { opacity: 1, scale: 1, transition: springPremium },
 };
 
 // ─── Slide From Left ────────────────────────────────────────
 export const slideFromLeft: Variants = {
-  hidden:  { opacity: 0, x: -64 },
+  hidden:  hiddenState({ opacity: 0, x: -64 }),
   visible: { opacity: 1, x: 0, transition: springPremium },
 };
 
 // ─── Slide From Right ───────────────────────────────────────
 export const slideFromRight: Variants = {
-  hidden:  { opacity: 0, x: 64 },
+  hidden:  hiddenState({ opacity: 0, x: 64 }),
   visible: { opacity: 1, x: 0, transition: springPremium },
 };
 
@@ -63,7 +73,7 @@ export const staggerContainerSlow: Variants = {
 
 // ─── Stagger Item ───────────────────────────────────────────
 export const staggerItem: Variants = {
-  hidden:  { opacity: 0, y: 42 },
+  hidden:  hiddenState({ opacity: 0, y: 42 }),
   visible: { opacity: 1, y: 0, transition: springPremium },
 };
 
@@ -75,14 +85,14 @@ export const cardHover = {
 
 // ─── Line Draw (timeline connectors) ────────────────────────
 export const lineDraw: Variants = {
-  hidden:  { scaleY: 0 },
+  hidden:  hiddenState({ scaleY: 0 }),
   visible: { scaleY: 1, transition: { duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 0.3 } },
 };
 
 // ─── Viewport settings ──────────────────────────────────────
-// Positive bottom margin = the reveal PRE-FIRES before the element scrolls into view,
-// so content is already on-screen by the time you reach it. Prevents the
-// "blank section that pops in late" effect when scrolling on mobile.
+// Margen inferior positivo = el reveal PRE-dispara antes de que el elemento entre
+// al viewport (en desktop). En mobile el contenido ya arranca visible (ver arriba),
+// así que esto es solo un refuerzo.
 export const viewportOnce      = { once: true, margin: '0px 0px 200px 0px' as const };
 export const viewportOnceEarly = { once: true, margin: '0px 0px 300px 0px' as const };
 

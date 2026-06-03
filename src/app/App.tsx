@@ -153,7 +153,7 @@ export default function App() {
   }, []);
 
   return (
-    <div className="overflow-x-hidden">
+    <div className="overflow-x-clip">
       <Navigation onOpenCheckout={goToRegistro} />
       <Hero />
       <PlanBase />
