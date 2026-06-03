@@ -60,7 +60,6 @@ export function BackToTop({ isVisible, isMobileCTAVisible }: BackToTopProps) {
               left: '1rem',
               bottom: 'calc(72px + env(safe-area-inset-bottom, 0px))',
               background: 'linear-gradient(135deg, rgba(134, 96, 239, 0.95) 0%, rgba(238, 92, 208, 0.95) 100%)',
-              backdropFilter: 'blur(16px)',
             }}
             aria-label="Volver arriba"
           >

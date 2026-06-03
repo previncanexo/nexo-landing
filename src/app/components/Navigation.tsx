@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import logoImage from "@/assets/logo.png";
+import { useIsMobile } from '../hooks/useIsMobile';
 
 interface NavigationProps {
   onOpenCheckout: () => void;
@@ -8,6 +9,7 @@ interface NavigationProps {
 export function Navigation({ onOpenCheckout }: NavigationProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -33,11 +35,11 @@ export function Navigation({ onOpenCheckout }: NavigationProps) {
         <nav
           className="w-full max-w-[1200px] rounded-full pointer-events-auto transition-all duration-300"
           style={{
-            background: scrolled
-              ? 'rgba(18, 5, 61, 0.84)'
-              : 'rgba(255, 255, 255, 0.08)',
-            backdropFilter: 'blur(24px) saturate(1.4)',
-            WebkitBackdropFilter: 'blur(24px) saturate(1.4)',
+            background: isMobile
+              ? (scrolled ? 'rgba(18, 5, 61, 0.92)' : 'rgba(18, 5, 61, 0.78)')
+              : (scrolled ? 'rgba(18, 5, 61, 0.84)' : 'rgba(255, 255, 255, 0.08)'),
+            backdropFilter: isMobile ? 'none' : 'blur(24px) saturate(1.4)',
+            WebkitBackdropFilter: isMobile ? 'none' : 'blur(24px) saturate(1.4)',
             border: `1px solid ${scrolled ? 'rgba(255,255,255,0.14)' : 'rgba(255,255,255,0.20)'}`,
             boxShadow: scrolled
               ? '0 8px 40px rgba(0,0,0,0.28), 0 2px 8px rgba(0,0,0,0.12)'

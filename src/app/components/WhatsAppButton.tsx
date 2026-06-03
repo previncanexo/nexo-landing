@@ -100,7 +100,6 @@ export function WhatsAppButton({ isVisible, isMobileCTAVisible }: WhatsAppButton
           className="absolute bottom-0 left-[60px] mb-2 px-3 py-2 rounded-xl shadow-lg whitespace-nowrap pointer-events-none"
           style={{
             background: 'linear-gradient(135deg, rgba(134, 96, 239, 0.98) 0%, rgba(238, 92, 208, 0.98) 100%)',
-            backdropFilter: 'blur(16px)',
           }}
         >
           <div className="text-white text-xs font-semibold">
@@ -127,7 +126,6 @@ export function WhatsAppButton({ isVisible, isMobileCTAVisible }: WhatsAppButton
           className="w-12 h-12 rounded-xl border-2 border-white/20 cursor-pointer flex items-center justify-center shadow-lg"
           style={{
             background: '#25D366',
-            backdropFilter: 'blur(16px)',
           }}
           aria-label="Contactar por WhatsApp"
         >

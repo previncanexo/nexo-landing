@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { fadeUpSubtle } from './motion-variants';
+import { useIsMobile } from '../hooks/useIsMobile';
 import heroWoman from '@/assets/hero-woman.webp';
 import heroWoman2 from '@/assets/hero-woman-2.webp';
 import heroWoman3 from '@/assets/hero-woman-3.webp';
@@ -13,10 +14,16 @@ const BLUR_EASE: [number, number, number, number] = [0.2, 0.65, 0.3, 0.9];
 function BlurRevealWords({
   text,
   delay = 0,
+  enabled = true,
 }: {
   text: string;
   delay?: number;
+  enabled?: boolean;
 }) {
+  // Mobile: render plain text. The per-word motion.spans below each carry a
+  // permanent will-change + animated blur() filter, which is GPU-murder on iPhone.
+  if (!enabled) return <span>{text}</span>;
+
   const words = text.trim().split(' ').filter(Boolean);
   // Spaces go OUTSIDE inline-block spans — dentro de inline-block los colapsa el browser
   const elements: React.ReactNode[] = [];
@@ -60,11 +67,16 @@ function BlurRevealText({
   text,
   className,
   delay = 0,
+  enabled = true,
 }: {
   text: string;
   className?: string;
   delay?: number;
+  enabled?: boolean;
 }) {
+  // Mobile: plain text — see note in BlurRevealWords.
+  if (!enabled) return <span className={className}>{text}</span>;
+
   // Spaces go OUTSIDE inline-block spans para que el browser pueda hacer word-wrap
   const chars = text.split('');
   return (
@@ -104,26 +116,39 @@ function BlurRevealText({
   );
 }
 
-export function Hero() {
-  const [current, setCurrent] = useState(0);
-  const [isDesktop, setIsDesktop] = useState(false);
-  const heroRef = useRef<HTMLElement>(null);
-
+// Desktop-only wrapper: scroll-linked scale + fade. The useScroll/useTransform
+// hooks live HERE (not in Hero) so they are NEVER instantiated on mobile —
+// on a phone the scroll listener would run every frame for an effect that is
+// disabled anyway.
+function HeroScrollContent({
+  heroRef,
+  children,
+}: {
+  heroRef: React.RefObject<HTMLElement>;
+  children: React.ReactNode;
+}) {
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ['start start', 'end start'],
   });
-
   const contentScale = useTransform(scrollYProgress, [0, 1], [1, 0.88]);
   const contentOpacity = useTransform(scrollYProgress, [0, 0.65], [1, 0]);
 
-  useEffect(() => {
-    const mq = window.matchMedia('(min-width: 768px)');
-    setIsDesktop(mq.matches);
-    const handler = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
-    mq.addEventListener('change', handler);
-    return () => mq.removeEventListener('change', handler);
-  }, []);
+  return (
+    <motion.div
+      className="hero-content relative z-[10] w-full flex flex-col items-center justify-center"
+      style={{ minHeight: '100svh', scale: contentScale, opacity: contentOpacity }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+export function Hero() {
+  const [current, setCurrent] = useState(0);
+  const isMobile = useIsMobile();
+  const animate = !isMobile;
+  const heroRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -131,6 +156,72 @@ export function Hero() {
     }, 3500);
     return () => clearInterval(id);
   }, []);
+
+  const content = (
+    <div className="max-w-[700px] mx-auto px-5 sm:px-8 text-center" style={{ paddingTop: 'clamp(3.5rem,12vw,7rem)', paddingBottom: 'clamp(2.5rem,8vw,6rem)' }}>
+
+      {/* Badge */}
+      <motion.div
+        variants={fadeUpSubtle}
+        initial="hidden"
+        animate="visible"
+        className="inline-flex items-center gap-2.5 rounded-full px-5 py-2 text-[10px] sm:text-[11px] text-white/50 font-medium tracking-[0.20em] uppercase mb-8 sm:mb-10 border border-white/12 backdrop-blur-sm"
+        style={{ backgroundColor: 'rgba(255,255,255,0.06)' }}
+      >
+        <div
+          className="w-1.5 h-1.5 rounded-full bg-[var(--pink)]"
+          style={{ animation: 'pulse-dot 2s ease-in-out infinite' }}
+        />
+        100% pensado para vos
+      </motion.div>
+
+      {/* H1 — blur reveal (desktop) / plain (mobile) */}
+      <h1 className="font-['DM_Serif_Display'] text-[clamp(26px,7.5vw,42px)] sm:text-[clamp(36px,5.5vw,68px)] text-white leading-tight tracking-[-1px] sm:tracking-[-2px] md:tracking-[-3px] mb-6 sm:mb-8">
+        <BlurRevealText text="Tu salud y tu bienestar" delay={0.2} enabled={animate} />
+        <br />
+        <BlurRevealText text="sin vueltas." className="italic" delay={0.45} enabled={animate} />
+      </h1>
+
+      {/* Description */}
+      <p className="text-[15px] sm:text-base text-white/80 leading-relaxed mb-10 sm:mb-12 mx-auto max-w-[480px] font-medium">
+        <BlurRevealWords text="Desde" delay={0.5} enabled={animate} />{' '}
+        {animate ? (
+          <motion.span
+            className="inline-block whitespace-nowrap bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-white font-bold border border-white/30"
+            initial={{ opacity: 0, y: 16, filter: 'blur(10px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            transition={{ delay: 0.85, duration: 0.5, ease: BLUR_EASE }}
+          >
+            $19.500 por mes
+          </motion.span>
+        ) : (
+          <span className="inline-block whitespace-nowrap bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-white font-bold border border-white/30">
+            $19.500 por mes
+          </span>
+        )}
+        <BlurRevealWords text=". Teleconsultas médicas, emergencias médicas y beneficios para cuidarte, contratados en minutos y sin papeles." delay={0.95} enabled={animate} />
+      </p>
+
+      {/* CTAs */}
+      <div className="flex gap-3 flex-col sm:flex-row justify-center items-center">
+        {animate ? (
+          <motion.div
+            className="w-full sm:w-auto"
+            initial={{ opacity: 0, y: 16, filter: 'blur(10px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            transition={{ delay: 1.3, duration: 0.5, ease: BLUR_EASE }}
+          >
+            <HeroCtaButton />
+          </motion.div>
+        ) : (
+          <div className="w-full sm:w-auto">
+            <HeroCtaButton />
+          </div>
+        )}
+      </div>
+
+    </div>
+  );
 
   return (
     <section
@@ -148,15 +239,17 @@ export function Hero() {
         }}
       />
 
-      {/* Grain texture */}
-      <div
-        className="absolute inset-0 z-[1] opacity-20 pointer-events-none"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' /%3E%3C/svg%3E")`,
-          backgroundRepeat: 'repeat',
-          mixBlendMode: 'overlay',
-        }}
-      />
+      {/* Grain texture — desktop only (feTurbulence + mix-blend is expensive to paint on mobile) */}
+      {!isMobile && (
+        <div
+          className="absolute inset-0 z-[1] opacity-20 pointer-events-none"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' /%3E%3C/svg%3E")`,
+            backgroundRepeat: 'repeat',
+            mixBlendMode: 'overlay',
+          }}
+        />
+      )}
 
       {/* Decorative arcs */}
       <svg
@@ -211,95 +304,50 @@ export function Hero() {
       </div>
 
       {/* ── CONTENT — scroll-linked scale + fade (desktop only) ── */}
-      <motion.div
-        className="hero-content relative z-[10] w-full flex flex-col items-center justify-center"
-        style={{
-          minHeight: '100svh',
-          scale: isDesktop ? contentScale : 1,
-          opacity: isDesktop ? contentOpacity : 1,
-        }}
-      >
-        <div className="max-w-[700px] mx-auto px-5 sm:px-8 text-center" style={{ paddingTop: 'clamp(3.5rem,12vw,7rem)', paddingBottom: 'clamp(2.5rem,8vw,6rem)' }}>
-
-          {/* Badge */}
-          <motion.div
-            variants={fadeUpSubtle}
-            initial="hidden"
-            animate="visible"
-            className="inline-flex items-center gap-2.5 rounded-full px-5 py-2 text-[10px] sm:text-[11px] text-white/50 font-medium tracking-[0.20em] uppercase mb-8 sm:mb-10 border border-white/12 backdrop-blur-sm"
-            style={{ backgroundColor: 'rgba(255,255,255,0.06)' }}
-          >
-            <div
-              className="w-1.5 h-1.5 rounded-full bg-[var(--pink)]"
-              style={{ animation: 'pulse-dot 2s ease-in-out infinite' }}
-            />
-            100% pensado para vos
-          </motion.div>
-
-          {/* H1 — blur reveal */}
-          <h1 className="font-['DM_Serif_Display'] text-[clamp(26px,7.5vw,42px)] sm:text-[clamp(36px,5.5vw,68px)] text-white leading-tight tracking-[-1px] sm:tracking-[-2px] md:tracking-[-3px] mb-6 sm:mb-8">
-            <BlurRevealText text="Tu salud y tu bienestar" delay={0.2} />
-            <br />
-            <BlurRevealText text="sin vueltas." className="italic" delay={0.45} />
-          </h1>
-
-          {/* Description */}
-          <p className="text-[15px] sm:text-base text-white/80 leading-relaxed mb-10 sm:mb-12 mx-auto max-w-[480px] font-medium">
-            <BlurRevealWords text="Desde" delay={0.5} />{' '}
-            <motion.span
-              className="inline-block whitespace-nowrap bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-white font-bold border border-white/30"
-              initial={{ opacity: 0, y: 16, filter: 'blur(10px)' }}
-              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-              transition={{ delay: 0.85, duration: 0.5, ease: BLUR_EASE }}
-            >
-              $19.500 por mes
-            </motion.span>
-            <BlurRevealWords text=". Teleconsultas médicas, emergencias médicas y beneficios para cuidarte, contratados en minutos y sin papeles." delay={0.95} />
-          </p>
-
-          {/* CTAs */}
-          <div className="flex gap-3 flex-col sm:flex-row justify-center items-center">
-            <motion.div
-              className="w-full sm:w-auto"
-              initial={{ opacity: 0, y: 16, filter: 'blur(10px)' }}
-              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-              transition={{ delay: 1.3, duration: 0.5, ease: BLUR_EASE }}
-            >
-              <motion.button
-                onClick={() =>
-                  window.open(
-                    'https://nexo.portal.previncasalud.com.ar/registro',
-                    '_blank',
-                    'noopener,noreferrer',
-                  )
-                }
-                className="bg-white text-[var(--purple)] border-none px-8 sm:px-10 py-4 rounded-full text-[15px] sm:text-base font-bold cursor-pointer font-['DM_Sans'] whitespace-nowrap group flex items-center gap-2 w-full justify-center"
-                whileHover={{ scale: 1.03, boxShadow: '0 20px 60px rgba(255,255,255,0.25)' }}
-                whileTap={{ scale: 0.97 }}
-                transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-              >
-                Quiero mi cobertura
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="group-hover:translate-x-1 transition-transform"
-                >
-                  <line x1="5" y1="12" x2="19" y2="12" />
-                  <polyline points="12 5 19 12 12 19" />
-                </svg>
-              </motion.button>
-            </motion.div>
-
-          </div>
-
+      {isMobile ? (
+        <div
+          className="hero-content relative z-[10] w-full flex flex-col items-center justify-center"
+          style={{ minHeight: '100svh' }}
+        >
+          {content}
         </div>
-      </motion.div>
+      ) : (
+        <HeroScrollContent heroRef={heroRef}>{content}</HeroScrollContent>
+      )}
     </section>
+  );
+}
+
+function HeroCtaButton() {
+  return (
+    <motion.button
+      onClick={() =>
+        window.open(
+          'https://nexo.portal.previncasalud.com.ar/registro',
+          '_blank',
+          'noopener,noreferrer',
+        )
+      }
+      className="bg-white text-[var(--purple)] border-none px-8 sm:px-10 py-4 rounded-full text-[15px] sm:text-base font-bold cursor-pointer font-['DM_Sans'] whitespace-nowrap group flex items-center gap-2 w-full justify-center"
+      whileHover={{ scale: 1.03, boxShadow: '0 20px 60px rgba(255,255,255,0.25)' }}
+      whileTap={{ scale: 0.97 }}
+      transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+    >
+      Quiero mi cobertura
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="group-hover:translate-x-1 transition-transform"
+      >
+        <line x1="5" y1="12" x2="19" y2="12" />
+        <polyline points="12 5 19 12 12 19" />
+      </svg>
+    </motion.button>
   );
 }

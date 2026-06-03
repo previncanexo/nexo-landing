@@ -1,4 +1,5 @@
 import { motion, AnimatePresence } from 'motion/react';
+import { useIsMobile } from '../hooks/useIsMobile';
 
 interface IPhoneCTAProps {
   isVisible: boolean;
@@ -6,6 +7,7 @@ interface IPhoneCTAProps {
 }
 
 export function IPhoneCTA({ isVisible, onOpenCheckout }: IPhoneCTAProps) {
+  const isMobile = useIsMobile();
   return (
     <AnimatePresence>
       {isVisible && (
@@ -21,8 +23,8 @@ export function IPhoneCTA({ isVisible, onOpenCheckout }: IPhoneCTAProps) {
             className="flex items-center justify-between gap-3 px-4 py-3 rounded-2xl"
             style={{
               background: 'rgba(255,255,255,0.97)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
+              backdropFilter: isMobile ? 'none' : 'blur(20px)',
+              WebkitBackdropFilter: isMobile ? 'none' : 'blur(20px)',
               border: '1px solid rgba(0,0,0,0.07)',
               boxShadow: '0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(134,96,239,0.18)',
             }}
