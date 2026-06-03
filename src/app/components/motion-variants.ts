@@ -80,9 +80,11 @@ export const lineDraw: Variants = {
 };
 
 // ─── Viewport settings ──────────────────────────────────────
-// -100px: animation fires when element is well inside the viewport (deliberate, premium feel)
-export const viewportOnce      = { once: true, margin: '-100px' as const };
-export const viewportOnceEarly = { once: true, margin: '-50px'  as const };
+// Positive bottom margin = the reveal PRE-FIRES before the element scrolls into view,
+// so content is already on-screen by the time you reach it. Prevents the
+// "blank section that pops in late" effect when scrolling on mobile.
+export const viewportOnce      = { once: true, margin: '0px 0px 200px 0px' as const };
+export const viewportOnceEarly = { once: true, margin: '0px 0px 300px 0px' as const };
 
 // ─── Organic background pattern ─────────────────────────────
 export const organicPatternStyle: React.CSSProperties = {

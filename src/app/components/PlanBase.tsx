@@ -281,10 +281,12 @@ export function PlanBase() {
                   style={{ boxShadow: '0 2px 24px rgba(0,0,0,0.04)' }}
                 >
                   {/* Foto */}
-                  <div className="w-full overflow-hidden" style={{ aspectRatio: '3/4' }}>
+                  <div className="w-full overflow-hidden bg-[var(--gray-100)]" style={{ aspectRatio: '3/4' }}>
                     <img
                       src={benefit.image}
                       alt={benefit.name}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>
