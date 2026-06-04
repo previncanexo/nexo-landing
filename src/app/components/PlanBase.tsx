@@ -18,6 +18,11 @@ import planTeleconsultaSet from '@/assets/plan-teleconsulta.webp?w=360;540;720&f
 import planUrgenciasSet from '@/assets/plan-urgencias.webp?w=360;540;720&format=webp&as=srcset';
 import planFarmaciaSet from '@/assets/plan-farmacia.webp?w=360;540;720&format=webp&as=srcset';
 import planOdontologiaSet from '@/assets/plan-odontologia.webp?w=360;540;720&format=webp&as=srcset';
+// Placeholders blur-up (24px → Vite los inlinea como base64 en el HTML, ~1KB, se ven al instante)
+import planTeleconsultaPh from '@/assets/plan-teleconsulta.webp?w=24&format=webp';
+import planUrgenciasPh from '@/assets/plan-urgencias.webp?w=24&format=webp';
+import planFarmaciaPh from '@/assets/plan-farmacia.webp?w=24&format=webp';
+import planOdontologiaPh from '@/assets/plan-odontologia.webp?w=24&format=webp';
 
 const featureItems = [
   {
@@ -62,6 +67,7 @@ export function PlanBase() {
     {
       image: planTeleconsulta,
       imageSet: planTeleconsultaSet,
+      imagePh: planTeleconsultaPh,
       icon: (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
@@ -77,6 +83,7 @@ export function PlanBase() {
     {
       image: planUrgencias,
       imageSet: planUrgenciasSet,
+      imagePh: planUrgenciasPh,
       icon: (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
@@ -90,6 +97,7 @@ export function PlanBase() {
     {
       image: planFarmacia,
       imageSet: planFarmaciaSet,
+      imagePh: planFarmaciaPh,
       icon: (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M10.5 1h3a1.5 1.5 0 0 1 1.5 1.5V5h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2V2.5A1.5 1.5 0 0 1 10.5 1z"/>
@@ -104,6 +112,7 @@ export function PlanBase() {
     {
       image: planOdontologia,
       imageSet: planOdontologiaSet,
+      imagePh: planOdontologiaPh,
       icon: (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M12 5.5c-1.5-2-4-2.5-5.5-1S4 8 4.5 10c.3 1 .5 2 .5 3 0 2 .5 4 1.5 5.5.5.8 1 1.5 1.5 1.5s1-1 1.5-2.5c.3-1 .5-2 .5-3 0 1 .2 2 .5 3 .5 1.5 1 2.5 1.5 2.5s1-.7 1.5-1.5C18.5 17 19 15 19 13c0-1 .2-2 .5-3 .5-2-.5-4.5-2-6S13.5 3.5 12 5.5Z"/>
@@ -289,7 +298,7 @@ export function PlanBase() {
                   style={{ boxShadow: '0 2px 24px rgba(0,0,0,0.04)' }}
                 >
                   {/* Foto */}
-                  <div className="w-full overflow-hidden bg-[var(--gray-100)]" style={{ aspectRatio: '3/4' }}>
+                  <div className="w-full overflow-hidden" style={{ aspectRatio: '3/4', backgroundImage: `url(${benefit.imagePh})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
                     <img
                       src={benefit.image}
                       srcSet={benefit.imageSet}

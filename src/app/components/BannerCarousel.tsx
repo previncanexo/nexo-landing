@@ -3,17 +3,22 @@ import banner1 from '@/assets/banner-comunidad-1.webp';
 import banner2 from '@/assets/banner-comunidad-2.webp';
 import banner1Set from '@/assets/banner-comunidad-1.webp?w=480;768;1080;1672&format=webp&as=srcset';
 import banner2Set from '@/assets/banner-comunidad-2.webp?w=480;768;1080;1672&format=webp&as=srcset';
+// Placeholders blur-up (24px) — preview instantáneo mientras carga el banner real
+import banner1Ph from '@/assets/banner-comunidad-1.webp?w=24&format=webp';
+import banner2Ph from '@/assets/banner-comunidad-2.webp?w=24&format=webp';
 
 const slides = [
   {
     img: banner2,
     imgSet: banner2Set,
+    imgPh: banner2Ph,
     label: 'Salud sin fronteras',
     sub: 'Accedé desde donde estés',
   },
   {
     img: banner1,
     imgSet: banner1Set,
+    imgPh: banner1Ph,
     label: 'Para los que van siempre para adelante',
     sub: 'Tu salud, sin pausas',
   },
@@ -52,6 +57,9 @@ export function BannerCarousel() {
             zIndex: i === current ? 2 : 1,
             opacity: i === current ? 1 : 0,
             transition: 'opacity 0.8s ease-in-out',
+            backgroundImage: `url(${slide.imgPh})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
           }}
         >
           <img
