@@ -45,10 +45,10 @@
 
       <style>html, body { height: 100%; margin: 0; } #root { height: 100%; }</style>
 
-      <!-- Tracking DIFERIDO (GA + Meta Pixel): cargan tras la primera interacción o a los 4s.
-           Eran ~388KB de scripts de terceros que competían por ancho de banda/CPU en la carga
-           inicial y hacían que las fotos (LCP) tardaran. Diferirlos libera la carga; el tracking
-           sigue registrando el PageView (apenas unos segundos más tarde). -->
+      <!-- Tracking DIFERIDO (GA + Meta Pixel): cargan cuando el navegador está ocioso.
+           Eran ~388KB de terceros que competían por ancho de banda/CPU en la carga inicial.
+           Se cargan vía requestIdleCallback (no atado a la interacción, para no trabar el
+           primer tap); el PageView se registra igual, unos segundos más tarde. -->
       <script>
         (function () {
           var loaded = false;
@@ -76,10 +76,12 @@
             fbq('init', '2187028668714954');
             fbq('track', 'PageView');
           }
-          var evts = ['scroll','touchstart','mousedown','keydown'];
-          function onFirst(){ loadTracking(); evts.forEach(function(e){ window.removeEventListener(e, onFirst); }); }
-          evts.forEach(function(e){ window.addEventListener(e, onFirst, { passive: true }); });
-          setTimeout(loadTracking, 4000);
+          // Cargar cuando el navegador esté OCIOSO, NO atado a la interacción del usuario.
+          // (Antes se disparaba en el primer tap → el primer toque, ej. abrir el menú, se
+          //  trababa al cargar ~100KB de tracking en ese instante.) requestIdleCallback no
+          // existe en Safari < 16.4 → fallback a setTimeout.
+          if ('requestIdleCallback' in window) { requestIdleCallback(loadTracking, { timeout: 3500 }); }
+          else { setTimeout(loadTracking, 2500); }
         })();
       </script>
     </head>
