@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { LazyMotion, domAnimation, MotionConfig } from 'motion/react';
+import { LazyMotion, domAnimation, MotionConfig } from './lib/motion-shim';
 import { useIsMobile } from './hooks/useIsMobile';
 import { Navigation } from './components/Navigation';
 import { Hero } from './components/Hero';

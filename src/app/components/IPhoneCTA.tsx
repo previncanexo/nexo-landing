@@ -1,4 +1,4 @@
-import { m, AnimatePresence } from 'motion/react';
+import { m, AnimatePresence } from '../lib/motion-shim';
 import { useIsMobile } from '../hooks/useIsMobile';
 
 interface IPhoneCTAProps {

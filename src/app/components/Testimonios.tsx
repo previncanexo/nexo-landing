@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { m, AnimatePresence } from 'motion/react';
+import { m, AnimatePresence } from '../lib/motion-shim';
 import { fadeUp, staggerContainer, staggerItem, viewportOnce, organicPatternStyle } from './motion-variants';
 
 interface Testimonial {

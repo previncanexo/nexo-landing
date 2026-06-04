@@ -1,4 +1,4 @@
-import { m, AnimatePresence } from 'motion/react';
+import { m, AnimatePresence } from '../lib/motion-shim';
 
 interface BackToTopProps {
   isVisible: boolean;

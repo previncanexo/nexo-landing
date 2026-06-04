@@ -1,5 +1,5 @@
 import { Fragment } from 'react';
-import { m } from 'motion/react';
+import { m } from '../lib/motion-shim';
 import {
   fadeUp,
   slideFromLeft,

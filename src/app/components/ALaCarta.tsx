@@ -1,4 +1,4 @@
-import { m } from 'motion/react';
+import { m } from '../lib/motion-shim';
 import { fadeUp, staggerContainer, staggerItem, viewportOnce, organicPatternStyle } from './motion-variants';
 import cartaTelemedicina from '@/assets/carta-telemedicina.webp';
 import cartaOdontologia from '@/assets/carta-odontologia.webp';

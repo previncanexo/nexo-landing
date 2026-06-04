@@ -1,5 +1,5 @@
 import type React from 'react';
-import type { Variants } from 'motion/react';
+import type { Variants } from '../lib/motion-shim';
 
 // ─── Contenido siempre visible ──────────────────────────────
 // El estado "hidden" NO esconde el contenido (sin opacity:0 ni offset). Es

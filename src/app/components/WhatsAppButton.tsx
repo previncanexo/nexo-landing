@@ -1,4 +1,4 @@
-import { m } from 'motion/react';
+import { m } from '../lib/motion-shim';
 
 interface WhatsAppButtonProps {
   isVisible: boolean;

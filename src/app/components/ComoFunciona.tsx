@@ -1,4 +1,4 @@
-import { m } from 'motion/react';
+import { m } from '../lib/motion-shim';
 import { fadeUp, staggerContainerSlow, staggerItem, viewportOnce, organicPatternStyle } from './motion-variants';
 
 interface ComoFuncionaProps {

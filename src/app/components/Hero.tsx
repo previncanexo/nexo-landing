@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { m, useScroll, useTransform } from 'motion/react';
+import { m, useScroll, useTransform } from '../lib/motion-shim';
 import { fadeUpSubtle } from './motion-variants';
 import { useIsMobile } from '../hooks/useIsMobile';
 import heroWoman from '@/assets/hero-woman.webp';

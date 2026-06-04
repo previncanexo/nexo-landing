@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import logoImage from "@/assets/logo.png";
-import { m } from 'motion/react';
+import { m } from '../lib/motion-shim';
 import { fadeUp, viewportOnce } from './motion-variants';
 
 const TYC_TEXT = `TÉRMINOS Y CONDICIONES
