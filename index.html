@@ -45,30 +45,43 @@
 
       <style>html, body { height: 100%; margin: 0; } #root { height: 100%; }</style>
 
-      <!-- Google Analytics -->
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-7FEV504KNB"></script>
+      <!-- Tracking DIFERIDO (GA + Meta Pixel): cargan tras la primera interacción o a los 4s.
+           Eran ~388KB de scripts de terceros que competían por ancho de banda/CPU en la carga
+           inicial y hacían que las fotos (LCP) tardaran. Diferirlos libera la carga; el tracking
+           sigue registrando el PageView (apenas unos segundos más tarde). -->
       <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-7FEV504KNB');
+        (function () {
+          var loaded = false;
+          function loadTracking() {
+            if (loaded) return; loaded = true;
+            // Google Analytics
+            var ga = document.createElement('script');
+            ga.async = true;
+            ga.src = 'https://www.googletagmanager.com/gtag/js?id=G-7FEV504KNB';
+            document.head.appendChild(ga);
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){ dataLayer.push(arguments); }
+            window.gtag = gtag;
+            gtag('js', new Date());
+            gtag('config', 'G-7FEV504KNB');
+            // Meta Pixel
+            !function(f,b,e,v,n,t,s)
+            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+            n.queue=[];t=b.createElement(e);t.async=!0;
+            t.src=v;s=b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t,s)}(window, document,'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+            fbq('init', '2187028668714954');
+            fbq('track', 'PageView');
+          }
+          var evts = ['scroll','touchstart','mousedown','keydown'];
+          function onFirst(){ loadTracking(); evts.forEach(function(e){ window.removeEventListener(e, onFirst); }); }
+          evts.forEach(function(e){ window.addEventListener(e, onFirst, { passive: true }); });
+          setTimeout(loadTracking, 4000);
+        })();
       </script>
-      <!-- End Google Analytics -->
-
-      <!-- Meta Pixel -->
-      <script>
-        !function(f,b,e,v,n,t,s)
-        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-        n.queue=[];t=b.createElement(e);t.async=!0;
-        t.src=v;s=b.getElementsByTagName(e)[0];
-        s.parentNode.insertBefore(t,s)}(window, document,'script',
-        'https://connect.facebook.net/en_US/fbevents.js');
-        fbq('init', '2187028668714954');
-        fbq('track', 'PageView');
-      </script>
-      <!-- End Meta Pixel -->
     </head>
 
     <body>
