@@ -62,8 +62,11 @@
   
   body {
     font-family: 'DM Sans', sans-serif;
-    background: #0D0520;
-    color: #fff;
+    /* Fondo claro: durante la carga (mientras el JS arma las secciones de abajo)
+       lo que asoma es blanco neutro, NO el azul oscuro que se veía como "pantalla azul".
+       El Hero y el Footer (oscuros) definen su propio fondo, así que no se ven afectados. */
+    background: #ffffff;
+    color: #111111;
     overflow-x: hidden;
     line-height: 1.65;
   }
