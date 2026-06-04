@@ -11,10 +11,12 @@
       <meta name="keywords" content="nexo, previnca, plan de salud, teleconsulta, doc24, emergencias, farmacia, odontología, argentina">
       <meta name="author" content="Previnca">
 
-      <!-- Preconnect + fuentes (display=swap → el texto se ve enseguida con fuente de sistema y luego cambia) -->
+      <!-- Fuentes NO-bloqueantes: la página se pinta al instante con fuente de sistema
+           y la tipografía de marca entra cuando carga (clave en conexiones lentas). -->
       <link rel="preconnect" href="https://fonts.googleapis.com">
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap">
+      <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+      <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap"></noscript>
 
       <!-- Favicon -->
       <link rel="icon" type="image/svg+xml" href="/favicon.svg">

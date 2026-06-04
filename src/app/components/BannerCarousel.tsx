@@ -3,9 +3,8 @@ import banner1 from '@/assets/banner-comunidad-1.webp';
 import banner2 from '@/assets/banner-comunidad-2.webp';
 import banner1Set from '@/assets/banner-comunidad-1.webp?w=480;768;1080;1672&format=webp&quality=70&as=srcset';
 import banner2Set from '@/assets/banner-comunidad-2.webp?w=480;768;1080;1672&format=webp&quality=70&as=srcset';
-// Placeholders blur-up (24px) — preview instantáneo mientras carga el banner real
-import banner1Ph from '@/assets/banner-comunidad-1.webp?w=24&format=webp';
-import banner2Ph from '@/assets/banner-comunidad-2.webp?w=24&format=webp';
+// Placeholders blur-up en base64 (inline en el HTML → preview instantáneo, sin requests)
+import { banner1Ph, banner2Ph } from './placeholders';
 
 const slides = [
   {

@@ -18,11 +18,8 @@ import planTeleconsultaSet from '@/assets/plan-teleconsulta.webp?w=360;540&forma
 import planUrgenciasSet from '@/assets/plan-urgencias.webp?w=360;540&format=webp&quality=70&as=srcset';
 import planFarmaciaSet from '@/assets/plan-farmacia.webp?w=360;540&format=webp&quality=70&as=srcset';
 import planOdontologiaSet from '@/assets/plan-odontologia.webp?w=360;540&format=webp&quality=70&as=srcset';
-// Placeholders blur-up (24px → Vite los inlinea como base64 en el HTML, ~1KB, se ven al instante)
-import planTeleconsultaPh from '@/assets/plan-teleconsulta.webp?w=24&format=webp';
-import planUrgenciasPh from '@/assets/plan-urgencias.webp?w=24&format=webp';
-import planFarmaciaPh from '@/assets/plan-farmacia.webp?w=24&format=webp';
-import planOdontologiaPh from '@/assets/plan-odontologia.webp?w=24&format=webp';
+// Placeholders blur-up en base64 (inline en el HTML → blur instantáneo, sin requests)
+import { planTeleconsultaPh, planUrgenciasPh, planFarmaciaPh, planOdontologiaPh } from './placeholders';
 
 const featureItems = [
   {

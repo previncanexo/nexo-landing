@@ -6,10 +6,8 @@ import cartaSeguros from '@/assets/carta-seguros.webp';
 import cartaTelemedicinaSet from '@/assets/carta-telemedicina.webp?w=360;540&format=webp&quality=70&as=srcset';
 import cartaOdontologiaSet from '@/assets/carta-odontologia.webp?w=360;540&format=webp&quality=70&as=srcset';
 import cartaSegurosSet from '@/assets/carta-seguros.webp?w=360;540&format=webp&quality=70&as=srcset';
-// Placeholders blur-up (24px, ~1KB) — se ven al instante mientras carga la foto real
-import cartaTelemedicinaPh from '@/assets/carta-telemedicina.webp?w=24&format=webp';
-import cartaOdontologiaPh from '@/assets/carta-odontologia.webp?w=24&format=webp';
-import cartaSegurosPh from '@/assets/carta-seguros.webp?w=24&format=webp';
+// Placeholders blur-up en base64 (inline en el HTML → blur instantáneo, sin requests)
+import { cartaTelemedicinaPh, cartaOdontologiaPh, cartaSegurosPh } from './placeholders';
 
 interface ALaCartaProps {
   onOpenCheckout: () => void;
