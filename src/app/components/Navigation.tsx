@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import logoImage from "@/assets/logo.png";
-import { useIsMobile } from '../hooks/useIsMobile';
 
 interface NavigationProps {
   onOpenCheckout: () => void;
@@ -9,7 +8,6 @@ interface NavigationProps {
 export function Navigation({ onOpenCheckout }: NavigationProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const isMobile = useIsMobile();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -33,13 +31,9 @@ export function Navigation({ onOpenCheckout }: NavigationProps) {
       {/* Floating pill wrapper — pointer-events-none so the transparent area never blocks clicks */}
       <div className="fixed top-0 left-0 right-0 z-[100] flex justify-center pt-3 px-3 sm:px-5 pointer-events-none">
         <nav
-          className="w-full max-w-[1200px] rounded-full pointer-events-auto transition-all duration-300"
+          className="nav-pill w-full max-w-[1200px] rounded-full pointer-events-auto transition-all duration-300"
+          data-scrolled={scrolled}
           style={{
-            background: isMobile
-              ? (scrolled ? 'rgba(18, 5, 61, 0.92)' : 'rgba(18, 5, 61, 0.78)')
-              : (scrolled ? 'rgba(18, 5, 61, 0.84)' : 'rgba(255, 255, 255, 0.08)'),
-            backdropFilter: isMobile ? 'none' : 'blur(24px) saturate(1.4)',
-            WebkitBackdropFilter: isMobile ? 'none' : 'blur(24px) saturate(1.4)',
             border: `1px solid ${scrolled ? 'rgba(255,255,255,0.14)' : 'rgba(255,255,255,0.20)'}`,
             boxShadow: scrolled
               ? '0 8px 40px rgba(0,0,0,0.28), 0 2px 8px rgba(0,0,0,0.12)'

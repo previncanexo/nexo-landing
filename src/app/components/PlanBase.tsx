@@ -301,7 +301,7 @@ export function PlanBase() {
                       srcSet={benefit.imageSet}
                       sizes="(max-width: 640px) 90vw, 320px"
                       alt={benefit.name}
-                      loading="eager"
+                      loading="lazy"
                       decoding="async"
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />

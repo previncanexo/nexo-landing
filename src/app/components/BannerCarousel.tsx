@@ -66,7 +66,7 @@ export function BannerCarousel() {
             srcSet={slide.imgSet}
             sizes="100vw"
             alt={slide.label}
-            loading="eager"
+            loading="lazy"
             decoding={i === 0 ? 'sync' : 'async'}
             draggable={false}
             className="w-full h-full object-cover object-center select-none"

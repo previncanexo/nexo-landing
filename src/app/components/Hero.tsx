@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { m, useScroll, useTransform } from '../lib/motion-shim';
 import { fadeUpSubtle } from './motion-variants';
-import { useIsMobile } from '../hooks/useIsMobile';
 import heroWoman from '@/assets/hero-woman.webp';
 import heroWoman2 from '@/assets/hero-woman-2.webp';
 import heroWoman3 from '@/assets/hero-woman-3.webp';
@@ -153,24 +152,26 @@ function HeroScrollContent({
 
 export function Hero() {
   const [current, setCurrent] = useState(0);
-  const [mounted, setMounted] = useState(false);
-  const isMobile = useIsMobile();
-  // SSR / primer render: estático (mounted=false) → NO corre useScroll de Framer y
-  // coincide con la hidratación. Desktop "sube" a la versión animada tras montar.
-  const animate = mounted && !isMobile;
+  // desktopReady = false en SSR + primer render del cliente + SIEMPRE en mobile.
+  // Solo pasa a true en DESKTOP, tras montar (matchMedia). Clave anti-glitch: el HTML
+  // del SSG, el primer render del cliente y el render en mobile son IDÉNTICOS (1 foto
+  // estática, sin animación). Al hidratar en el celu, el effect ve mobile y NO llama a
+  // setDesktopReady → React no re-renderiza → cero flash/trabón. Solo el desktop "sube"
+  // a la versión animada con crossfade de 3 fotos.
+  const [desktopReady, setDesktopReady] = useState(false);
+  const animate = desktopReady;
   const heroRef = useRef<HTMLElement>(null);
 
-  useEffect(() => { setMounted(true); }, []);
-
   useEffect(() => {
-    // Mobile: una sola foto estática (sin crossfade) → no se descargan las otras
-    // 2 fotos (~240KB menos) y no hay re-render por intervalo. Desktop conserva el crossfade.
-    if (isMobile) return;
+    // Mobile: queda estático (1 foto, sin crossfade, sin grano, sin scroll-linked) →
+    // no se re-renderiza al hidratar y no se descargan las otras 2 fotos (~240KB menos).
+    if (!window.matchMedia('(min-width: 768px)').matches) return;
+    setDesktopReady(true);
     const id = setInterval(() => {
       setCurrent((c) => (c + 1) % heroImages.length);
     }, 3500);
     return () => clearInterval(id);
-  }, [isMobile]);
+  }, []);
 
   const content = (
     <div className="max-w-[700px] mx-auto px-5 sm:px-8 text-center" style={{ paddingTop: 'clamp(3.5rem,12vw,7rem)', paddingBottom: 'clamp(2.5rem,8vw,6rem)' }}>
@@ -265,7 +266,7 @@ export function Hero() {
       />
 
       {/* Grain texture — desktop only (feTurbulence + mix-blend is expensive to paint on mobile) */}
-      {!isMobile && (
+      {desktopReady && (
         <div
           className="absolute inset-0 z-[1] opacity-20 pointer-events-none"
           style={{
@@ -291,7 +292,7 @@ export function Hero() {
 
       {/* ── HERO PHOTOS — CSS crossfade, sin remount ── */}
       <div className="absolute inset-0 z-[3]">
-        {(isMobile ? heroImages.slice(0, 1) : heroImages).map((img, i) => (
+        {(desktopReady ? heroImages : heroImages.slice(0, 1)).map((img, i) => (
           <img
             key={i}
             src={img.src}
@@ -332,7 +333,7 @@ export function Hero() {
       </div>
 
       {/* ── CONTENT — scroll-linked scale + fade (desktop, post-mount) ── */}
-      {(!mounted || isMobile) ? (
+      {!desktopReady ? (
         <div
           className="hero-content relative z-[10] w-full flex flex-col items-center justify-center"
           style={{ minHeight: '100svh' }}

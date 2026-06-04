@@ -151,3 +151,30 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ── Nav pill: fondo + backdrop por CSS (no por JS isMobile) ──
+   Antes el fondo/blur del nav dependían de useIsMobile(), que arranca en false (SSR
+   = desktop) y al hidratar en el celu cambiaba a púrpura oscuro → flash visible en
+   cada carga. Resolviéndolo con media query NO hay re-render: el navegador aplica el
+   estilo correcto desde el primer pintado. El estado `scrolled` (JS) solo togglea
+   data-scrolled; en scroll 0 coincide SSR y cliente, así que no hay flash. */
+.nav-pill {
+  /* Desktop, sin scroll: vidrio translúcido sobre el Hero */
+  background: rgba(255, 255, 255, 0.08);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  backdrop-filter: blur(24px) saturate(1.4);
+}
+.nav-pill[data-scrolled="true"] {
+  background: rgba(18, 5, 61, 0.84);
+}
+@media (max-width: 767px) {
+  /* Mobile: sin backdrop-filter (capa GPU cara) y fondo púrpura sólido siempre */
+  .nav-pill {
+    background: rgba(18, 5, 61, 0.78);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .nav-pill[data-scrolled="true"] {
+    background: rgba(18, 5, 61, 0.92);
+  }
+}

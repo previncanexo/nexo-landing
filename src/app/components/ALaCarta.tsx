@@ -116,7 +116,7 @@ export function ALaCarta({ onOpenCheckout: _onOpenCheckout }: ALaCartaProps) {
                   srcSet={service.imageSet}
                   sizes="(max-width: 640px) 90vw, 360px"
                   alt={service.title}
-                  loading="eager"
+                  loading="lazy"
                   decoding="async"
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />

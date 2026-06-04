@@ -1,6 +1,4 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { LazyMotion, domAnimation, MotionConfig } from './lib/motion-shim';
-import { useIsMobile } from './hooks/useIsMobile';
 import { Navigation } from './components/Navigation';
 import { Hero } from './components/Hero';
 import { PlanBase } from './components/PlanBase';
@@ -90,7 +88,6 @@ const faqItems = [
 export default function App() {
   const [showMobileCta, setShowMobileCta] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
-  const isMobile = useIsMobile();
 
   const showMobileCtaRef = useRef(false);
   const showBackToTopRef = useRef(false);
@@ -157,8 +154,6 @@ export default function App() {
   }, []);
 
   return (
-    <LazyMotion features={domAnimation}>
-    <MotionConfig reducedMotion={isMobile ? 'always' : 'never'}>
     <div className="overflow-x-clip">
       <Navigation onOpenCheckout={goToRegistro} />
       <Hero />
@@ -174,7 +169,5 @@ export default function App() {
       <WhatsAppButton isVisible={true} isMobileCTAVisible={showMobileCta} />
       <IPhoneCTA isVisible={showMobileCta} onOpenCheckout={goToRegistro} />
     </div>
-    </MotionConfig>
-    </LazyMotion>
   );
 }
