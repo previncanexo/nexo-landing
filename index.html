@@ -71,7 +71,23 @@
 
     <body>
       <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=2187028668714954&ev=PageView&noscript=1"/></noscript>
-      <div id="root"></div>
+      <div id="root">
+        <!-- PRERENDER del above-the-fold (Hero): se pinta AL INSTANTE, sin esperar el JS.
+             React lo reemplaza al montar (createRoot, sin hydration → sin mismatch).
+             Mantener título / precio / CTA en sync con src/app/components/Hero.tsx. -->
+        <div style="min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:clamp(3.5rem,12vw,7rem) 1.25rem;background:linear-gradient(135deg,#12053d 0%,#2d1266 30%,#6535cc 65%,#c94fb5 100%);font-family:'DM Sans',sans-serif;">
+          <div style="display:inline-flex;align-items:center;gap:10px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.10);color:rgba(255,255,255,0.55);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;font-weight:500;padding:8px 20px;border-radius:9999px;margin-bottom:2rem;">
+            <span style="width:6px;height:6px;border-radius:50%;background:#ee5cd0;display:inline-block;"></span>100% pensado para vos
+          </div>
+          <h1 style="font-family:'DM Serif Display',serif;color:#fff;font-size:clamp(26px,7.5vw,42px);line-height:1.15;letter-spacing:-1px;max-width:700px;margin:0 0 1.5rem;">
+            Tu salud y tu bienestar<br><span style="font-style:italic;">sin vueltas.</span>
+          </h1>
+          <p style="color:rgba(255,255,255,0.82);font-size:15px;line-height:1.6;max-width:480px;margin:0 0 2.5rem;font-weight:500;">
+            Desde <span style="white-space:nowrap;background:rgba(255,255,255,0.25);color:#fff;font-weight:700;border:1px solid rgba(255,255,255,0.3);padding:4px 12px;border-radius:9999px;">$19.500 por mes</span>. Teleconsultas médicas, emergencias médicas y beneficios para cuidarte, contratados en minutos y sin papeles.
+          </p>
+          <a href="https://nexo.portal.previncasalud.com.ar/registro" style="background:#fff;color:#6535cc;font-weight:700;font-size:15px;padding:16px 40px;border-radius:9999px;text-decoration:none;font-family:'DM Sans',sans-serif;">Quiero mi cobertura</a>
+        </div>
+      </div>
       <script type="module" src="/src/main.tsx"></script>
     </body>
   </html>
