@@ -1,7 +1,9 @@
 
-  import { createRoot } from "react-dom/client";
-  import App from "./app/App.tsx";
-  import "./styles/index.css";
+import { ViteReactSSG } from 'vite-react-ssg/single-page';
+import App from './app/App.tsx';
+import './styles/index.css';
 
-  createRoot(document.getElementById("root")!).render(<App />);
+// SSG single-page: vite-react-ssg renderiza <App /> a HTML en el build y luego
+// hidrata en el cliente. El contenido sale ya en el HTML → carga instantánea.
+export const createRoot = ViteReactSSG(<App />);
   

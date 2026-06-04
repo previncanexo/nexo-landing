@@ -153,9 +153,14 @@ function HeroScrollContent({
 
 export function Hero() {
   const [current, setCurrent] = useState(0);
+  const [mounted, setMounted] = useState(false);
   const isMobile = useIsMobile();
-  const animate = !isMobile;
+  // SSR / primer render: estático (mounted=false) → NO corre useScroll de Framer y
+  // coincide con la hidratación. Desktop "sube" a la versión animada tras montar.
+  const animate = mounted && !isMobile;
   const heroRef = useRef<HTMLElement>(null);
+
+  useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
     // Mobile: una sola foto estática (sin crossfade) → no se descargan las otras
@@ -296,7 +301,8 @@ export function Hero() {
             aria-hidden="true"
             draggable={false}
             loading={i === 0 ? 'eager' : 'lazy'}
-            fetchPriority={i === 0 ? 'high' : 'low'}
+            // @ts-expect-error atributo DOM en minúscula para evitar warning/mismatch en SSR
+            fetchpriority={i === 0 ? 'high' : 'low'}
             decoding={i === 0 ? 'sync' : 'async'}
             className="absolute inset-0 w-full h-full object-cover select-none"
             style={{
@@ -325,8 +331,8 @@ export function Hero() {
         />
       </div>
 
-      {/* ── CONTENT — scroll-linked scale + fade (desktop only) ── */}
-      {isMobile ? (
+      {/* ── CONTENT — scroll-linked scale + fade (desktop, post-mount) ── */}
+      {(!mounted || isMobile) ? (
         <div
           className="hero-content relative z-[10] w-full flex flex-col items-center justify-center"
           style={{ minHeight: '100svh' }}

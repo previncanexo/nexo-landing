@@ -4,8 +4,8 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "build": "vite build",
-    "dev": "vite"
+    "build": "vite-react-ssg build",
+    "dev": "vite-react-ssg dev"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",
@@ -63,7 +63,8 @@
     "@vitejs/plugin-react": "4.7.0",
     "tailwindcss": "4.1.12",
     "vite": "6.3.5",
-    "vite-imagetools": "^9.0.3"
+    "vite-imagetools": "^9.0.3",
+    "vite-react-ssg": "^0.8.7"
   },
   "peerDependencies": {
     "react": "18.3.1",

@@ -1,18 +1,12 @@
 import type React from 'react';
 import type { Variants } from 'motion/react';
 
-// ─── Mobile guard ───────────────────────────────────────────
-// En mobile NO escondemos el contenido en el estado "hidden". Si por cualquier
-// motivo el whileInView/IntersectionObserver no dispara (scroll rápido, iOS
-// Safari, un ancestro con overflow, etc.), el contenido NUNCA puede quedar
-// invisible: arranca visible y la animación de entrada simplemente no aplica.
-// Desktop conserva las animaciones de revelado completas.
-const isMobileInit =
-  typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches;
-
-// hidden helper: en mobile devuelve {} (sin opacity:0 ni offset) → visible.
-const hiddenState = (desktopHidden: Record<string, unknown>) =>
-  isMobileInit ? {} : desktopHidden;
+// ─── Contenido siempre visible ──────────────────────────────
+// El estado "hidden" NO esconde el contenido (sin opacity:0 ni offset). Es
+// obligatorio para el prerender/SSG: el HTML se genera con el contenido YA
+// visible, no escondido esperando a que el JS dispare el whileInView. Las
+// animaciones de entrada se simplifican a cambio de que cargue fluido e instantáneo.
+const hiddenState = (_desktopHidden: Record<string, unknown>) => ({});
 
 // ─── Spring Presets ─────────────────────────────────────────
 const springPremium       = { type: 'spring' as const, stiffness: 72,  damping: 20, mass: 1.2 };

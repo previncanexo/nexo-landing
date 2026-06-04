@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef, lazy, Suspense } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { MotionConfig } from 'motion/react';
 import { useIsMobile } from './hooks/useIsMobile';
 import { Navigation } from './components/Navigation';
@@ -7,13 +7,14 @@ import { PlanBase } from './components/PlanBase';
 import { BackToTop } from './components/BackToTop';
 import { WhatsAppButton } from './components/WhatsAppButton';
 import { IPhoneCTA } from './components/IPhoneCTA';
-
-const ALaCarta = lazy(() => import('./components/ALaCarta').then(m => ({ default: m.ALaCarta })));
-const ComoFunciona = lazy(() => import('./components/ComoFunciona').then(m => ({ default: m.ComoFunciona })));
-const BannerCarousel = lazy(() => import('./components/BannerCarousel').then(m => ({ default: m.BannerCarousel })));
-const Testimonios = lazy(() => import('./components/Testimonios').then(m => ({ default: m.Testimonios })));
-const FAQ = lazy(() => import('./components/FAQ').then(m => ({ default: m.FAQ })));
-const Footer = lazy(() => import('./components/Footer').then(m => ({ default: m.Footer })));
+// Eager imports (no lazy): para el prerender/SSG el contenido tiene que renderizarse
+// en el HTML. React.lazy + Suspense renderizan null en SSR → no saldrían las secciones.
+import { ALaCarta } from './components/ALaCarta';
+import { ComoFunciona } from './components/ComoFunciona';
+import { BannerCarousel } from './components/BannerCarousel';
+import { Testimonios } from './components/Testimonios';
+import { FAQ } from './components/FAQ';
+import { Footer } from './components/Footer';
 
 const PORTAL_REGISTRO = 'https://nexo.portal.previncasalud.com.ar/registro';
 
@@ -155,32 +156,18 @@ export default function App() {
     };
   }, []);
 
-  useEffect(() => {
-    // Precargar los chunks de las secciones de abajo apenas monta (en segundo plano,
-    // sin frenar el Hero), para que estén listos antes de scrollear. Evita que la
-    // mitad de abajo quede en blanco/azul mientras cargan los chunks lazy.
-    void import('./components/ALaCarta');
-    void import('./components/ComoFunciona');
-    void import('./components/BannerCarousel');
-    void import('./components/Testimonios');
-    void import('./components/FAQ');
-    void import('./components/Footer');
-  }, []);
-
   return (
     <MotionConfig reducedMotion={isMobile ? 'always' : 'never'}>
     <div className="overflow-x-clip">
       <Navigation onOpenCheckout={goToRegistro} />
       <Hero />
       <PlanBase />
-      <Suspense fallback={null}>
-        <ALaCarta onOpenCheckout={goToRegistro} />
-        <ComoFunciona onOpenCheckout={goToRegistro} />
-        <BannerCarousel />
-        <Testimonios testimonials={testimonials} />
-        <FAQ items={faqItems} />
-        <Footer />
-      </Suspense>
+      <ALaCarta onOpenCheckout={goToRegistro} />
+      <ComoFunciona onOpenCheckout={goToRegistro} />
+      <BannerCarousel />
+      <Testimonios testimonials={testimonials} />
+      <FAQ items={faqItems} />
+      <Footer />
 
       <BackToTop isVisible={showBackToTop} isMobileCTAVisible={showMobileCta} />
       <WhatsAppButton isVisible={true} isMobileCTAVisible={showMobileCta} />

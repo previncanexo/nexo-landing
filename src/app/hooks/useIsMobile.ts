@@ -11,9 +11,9 @@ import { useState, useEffect } from 'react';
  */
 export function useIsMobile(breakpointPx = 768): boolean {
   const query = `(max-width: ${breakpointPx - 1}px)`;
-  const [isMobile, setIsMobile] = useState(() =>
-    typeof window !== 'undefined' ? window.matchMedia(query).matches : false,
-  );
+  // SSR-safe: arranca en false (igual que el render del servidor) para que la
+  // hidratación coincida; el valor real se setea en el effect (tras montar).
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const mq = window.matchMedia(query);
