@@ -160,7 +160,7 @@ export function Navigation({ onOpenCheckout }: NavigationProps) {
 
       {/* ── MOBILE MENU OVERLAY ── */}
       <div
-        className={`fixed inset-0 z-[99] lg:hidden transition-all duration-400 ${
+        className={`fixed inset-0 z-[99] lg:hidden transition-opacity duration-150 ${
           mobileOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
         style={{
@@ -171,9 +171,6 @@ export function Navigation({ onOpenCheckout }: NavigationProps) {
           background: 'linear-gradient(135deg, rgba(134, 96, 239, 0.98) 0%, rgba(238, 92, 208, 0.98) 100%)',
         }}
       >
-        <div className="absolute top-20 right-10 w-64 h-64 rounded-full bg-white/10 blur-[80px]" />
-        <div className="absolute bottom-40 left-10 w-48 h-48 rounded-full bg-white/10 blur-[60px]" />
-
         <button
           onClick={() => setMobileOpen(false)}
           className="absolute top-5 right-4 z-10 w-10 h-10 flex items-center justify-center rounded-xl border border-white/20 bg-white/10 cursor-pointer hover:bg-white/20 active:scale-95 transition-all"
@@ -192,7 +189,6 @@ export function Navigation({ onOpenCheckout }: NavigationProps) {
               <li
                 key={link.href}
                 className="w-full"
-                style={{ animation: mobileOpen ? `fadeInUp 0.35s ease-out ${i * 0.07}s backwards` : 'none' }}
               >
                 <a
                   href={link.href}
@@ -205,10 +201,7 @@ export function Navigation({ onOpenCheckout }: NavigationProps) {
             ))}
           </ul>
 
-          <div
-            className="w-full max-w-xs flex flex-col gap-3"
-            style={{ animation: mobileOpen ? 'fadeInUp 0.35s ease-out 0.28s backwards' : 'none' }}
-          >
+          <div className="w-full max-w-xs flex flex-col gap-3">
             <button
               onClick={() => { setMobileOpen(false); onOpenCheckout(); }}
               className="w-full bg-white text-[var(--purple)] border-none px-8 py-4 rounded-full text-base cursor-pointer transition-all hover:shadow-2xl font-['DM_Sans'] font-bold flex items-center justify-center gap-2 group"
@@ -236,12 +229,6 @@ export function Navigation({ onOpenCheckout }: NavigationProps) {
         </div>
       </div>
 
-      <style>{`
-        @keyframes fadeInUp {
-          from { opacity: 0; transform: translateY(14px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
     </>
   );
 }
