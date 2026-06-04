@@ -1,4 +1,4 @@
-import { motion } from 'motion/react';
+import { m } from 'motion/react';
 
 interface WhatsAppButtonProps {
   isVisible: boolean;
@@ -20,7 +20,7 @@ export function WhatsAppButton({ isVisible, isMobileCTAVisible }: WhatsAppButton
       {/* Desktop version - bottom right */}
       <div className="hidden lg:block fixed bottom-8 right-8 z-[95]">
         {/* Tooltip/Dialog Bubble */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, x: 10, scale: 0.9 }}
           animate={{ opacity: 1, x: 0, scale: 1 }}
           transition={{ 
@@ -47,10 +47,10 @@ export function WhatsAppButton({ isVisible, isMobileCTAVisible }: WhatsAppButton
               borderLeft: '6px solid rgba(238, 92, 208, 0.98)',
             }}
           />
-        </motion.div>
+        </m.div>
 
         {/* WhatsApp Button */}
-        <motion.button
+        <m.button
           initial={{ opacity: 0, scale: 0.8, x: 20 }}
           animate={{ opacity: 1, scale: 1, x: 0 }}
           transition={{ type: 'spring', stiffness: 300, damping: 25 }}
@@ -77,7 +77,7 @@ export function WhatsAppButton({ isVisible, isMobileCTAVisible }: WhatsAppButton
           >
             <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
           </svg>
-        </motion.button>
+        </m.button>
       </div>
 
       {/* Mobile version - hidden when iPhone CTA is visible to avoid overlap */}
@@ -88,7 +88,7 @@ export function WhatsAppButton({ isVisible, isMobileCTAVisible }: WhatsAppButton
         style={{ bottom: 'calc(24px + env(safe-area-inset-bottom, 0px))' }}
       >
         {/* Tooltip/Dialog Bubble for Mobile */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, x: -10, scale: 0.9 }}
           animate={{ opacity: 1, x: 0, scale: 1 }}
           transition={{ 
@@ -114,10 +114,10 @@ export function WhatsAppButton({ isVisible, isMobileCTAVisible }: WhatsAppButton
               borderRight: '5px solid rgba(134, 96, 239, 0.98)',
             }}
           />
-        </motion.div>
+        </m.div>
 
         {/* WhatsApp Button */}
-        <motion.button
+        <m.button
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ type: 'spring', stiffness: 300, damping: 25 }}
@@ -141,7 +141,7 @@ export function WhatsAppButton({ isVisible, isMobileCTAVisible }: WhatsAppButton
           >
             <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
           </svg>
-        </motion.button>
+        </m.button>
       </div>
     </>
   );

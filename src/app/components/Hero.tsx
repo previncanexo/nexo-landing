@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { motion, useScroll, useTransform } from 'motion/react';
+import { m, useScroll, useTransform } from 'motion/react';
 import { fadeUpSubtle } from './motion-variants';
 import { useIsMobile } from '../hooks/useIsMobile';
 import heroWoman from '@/assets/hero-woman.webp';
@@ -27,7 +27,7 @@ function BlurRevealWords({
   delay?: number;
   enabled?: boolean;
 }) {
-  // Mobile: render plain text. The per-word motion.spans below each carry a
+  // Mobile: render plain text. The per-word m.spans below each carry a
   // permanent will-change + animated blur() filter, which is GPU-murder on iPhone.
   if (!enabled) return <span>{text}</span>;
 
@@ -36,7 +36,7 @@ function BlurRevealWords({
   const elements: React.ReactNode[] = [];
   words.forEach((word, i) => {
     elements.push(
-      <motion.span
+      <m.span
         key={i}
         style={{ display: 'inline-block', willChange: 'transform, opacity, filter' }}
         variants={{
@@ -50,12 +50,12 @@ function BlurRevealWords({
         }}
       >
         {word}
-      </motion.span>
+      </m.span>
     );
     if (i < words.length - 1) elements.push(' ');
   });
   return (
-    <motion.span
+    <m.span
       initial="hidden"
       animate="visible"
       variants={{
@@ -66,7 +66,7 @@ function BlurRevealWords({
       }}
     >
       {elements}
-    </motion.span>
+    </m.span>
   );
 }
 
@@ -87,7 +87,7 @@ function BlurRevealText({
   // Spaces go OUTSIDE inline-block spans para que el browser pueda hacer word-wrap
   const chars = text.split('');
   return (
-    <motion.span
+    <m.span
       className={className}
       initial="hidden"
       animate="visible"
@@ -102,7 +102,7 @@ function BlurRevealText({
         char === ' ' ? (
           ' '
         ) : (
-          <motion.span
+          <m.span
             key={i}
             style={{ display: 'inline-block', willChange: 'transform, opacity, filter' }}
             variants={{
@@ -116,10 +116,10 @@ function BlurRevealText({
             }}
           >
             {char}
-          </motion.span>
+          </m.span>
         )
       )}
-    </motion.span>
+    </m.span>
   );
 }
 
@@ -142,12 +142,12 @@ function HeroScrollContent({
   const contentOpacity = useTransform(scrollYProgress, [0, 0.65], [1, 0]);
 
   return (
-    <motion.div
+    <m.div
       className="hero-content relative z-[10] w-full flex flex-col items-center justify-center"
       style={{ minHeight: '100svh', scale: contentScale, opacity: contentOpacity }}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 }
 
@@ -177,7 +177,7 @@ export function Hero() {
 
       {/* Badge — animado + backdrop-blur en desktop; estático y sin blur en mobile */}
       {animate ? (
-        <motion.div
+        <m.div
           variants={fadeUpSubtle}
           initial="hidden"
           animate="visible"
@@ -189,7 +189,7 @@ export function Hero() {
             style={{ animation: 'pulse-dot 2s ease-in-out infinite' }}
           />
           100% pensado para vos
-        </motion.div>
+        </m.div>
       ) : (
         <div
           className="inline-flex items-center gap-2.5 rounded-full px-5 py-2 text-[10px] sm:text-[11px] text-white/50 font-medium tracking-[0.20em] uppercase mb-8 sm:mb-10 border border-white/12"
@@ -211,14 +211,14 @@ export function Hero() {
       <p className="text-[15px] sm:text-base text-white/80 leading-relaxed mb-10 sm:mb-12 mx-auto max-w-[480px] font-medium">
         <BlurRevealWords text="Desde" delay={0.5} enabled={animate} />{' '}
         {animate ? (
-          <motion.span
+          <m.span
             className="inline-block whitespace-nowrap bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-white font-bold border border-white/30"
             initial={{ opacity: 0, y: 16, filter: 'blur(10px)' }}
             animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
             transition={{ delay: 0.85, duration: 0.5, ease: BLUR_EASE }}
           >
             $19.500 por mes
-          </motion.span>
+          </m.span>
         ) : (
           <span className="inline-block whitespace-nowrap bg-white/25 px-3 py-1 rounded-full text-white font-bold border border-white/30">
             $19.500 por mes
@@ -230,14 +230,14 @@ export function Hero() {
       {/* CTAs */}
       <div className="flex gap-3 flex-col sm:flex-row justify-center items-center">
         {animate ? (
-          <motion.div
+          <m.div
             className="w-full sm:w-auto"
             initial={{ opacity: 0, y: 16, filter: 'blur(10px)' }}
             animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
             transition={{ delay: 1.3, duration: 0.5, ease: BLUR_EASE }}
           >
             <HeroCtaButton animate={animate} />
-          </motion.div>
+          </m.div>
         ) : (
           <div className="w-full sm:w-auto">
             <HeroCtaButton animate={animate} />
@@ -348,7 +348,7 @@ export function Hero() {
 
 function HeroCtaButton({ animate = true }: { animate?: boolean }) {
   return (
-    <motion.button
+    <m.button
       onClick={() =>
         window.open(
           'https://nexo.portal.previncasalud.com.ar/registro',
@@ -376,6 +376,6 @@ function HeroCtaButton({ animate = true }: { animate?: boolean }) {
         <line x1="5" y1="12" x2="19" y2="12" />
         <polyline points="12 5 19 12 12 19" />
       </svg>
-    </motion.button>
+    </m.button>
   );
 }

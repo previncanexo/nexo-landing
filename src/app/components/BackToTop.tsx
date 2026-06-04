@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from 'motion/react';
+import { m, AnimatePresence } from 'motion/react';
 
 interface BackToTopProps {
   isVisible: boolean;
@@ -17,7 +17,7 @@ export function BackToTop({ isVisible, isMobileCTAVisible }: BackToTopProps) {
   return (
     <AnimatePresence>
       {isVisible && (
-        <motion.button
+        <m.button
           key="backtotop-desktop"
           initial={{ opacity: 0, scale: 0.8, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -46,11 +46,11 @@ export function BackToTop({ isVisible, isMobileCTAVisible }: BackToTopProps) {
           >
             <polyline points="18 15 12 9 6 15" />
           </svg>
-        </motion.button>
+        </m.button>
       )}
 
       {isVisible && (
-        <motion.button
+        <m.button
           key="backtotop-mobile"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -80,7 +80,7 @@ export function BackToTop({ isVisible, isMobileCTAVisible }: BackToTopProps) {
           >
             <polyline points="18 15 12 9 6 15" />
           </svg>
-        </motion.button>
+        </m.button>
       )}
     </AnimatePresence>
   );

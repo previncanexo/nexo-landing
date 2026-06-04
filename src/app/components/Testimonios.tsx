@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { m, AnimatePresence } from 'motion/react';
 import { fadeUp, staggerContainer, staggerItem, viewportOnce, organicPatternStyle } from './motion-variants';
 
 interface Testimonial {
@@ -37,7 +37,7 @@ function TestimonialCard({ testimonial, index }: { testimonial: Testimonial; ind
     : testimonial.content;
 
   return (
-    <motion.div
+    <m.div
       variants={staggerItem}
       whileHover={{ y: -6, transition: { type: 'spring', stiffness: 400, damping: 28 } }}
       className="bg-white rounded-[28px] p-8 sm:p-10 border border-[var(--gray-100)] group cursor-default flex flex-col transition-all duration-500 hover:border-[var(--purple)]/15"
@@ -57,7 +57,7 @@ function TestimonialCard({ testimonial, index }: { testimonial: Testimonial; ind
       {/* Content */}
       <div className="flex-1 mb-4">
         <AnimatePresence initial={false} mode="wait">
-          <motion.p
+          <m.p
             key={expanded ? 'expanded' : 'collapsed'}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -66,7 +66,7 @@ function TestimonialCard({ testimonial, index }: { testimonial: Testimonial; ind
             className="text-[var(--gray-600)] leading-relaxed text-[15px] lg:text-base"
           >
             "{displayText}"
-          </motion.p>
+          </m.p>
         </AnimatePresence>
 
         {isLong && (
@@ -80,7 +80,7 @@ function TestimonialCard({ testimonial, index }: { testimonial: Testimonial; ind
             >
               {expanded ? 'Ver menos' : 'Ver más'}
             </span>
-            <motion.svg
+            <m.svg
               width="14"
               height="14"
               viewBox="0 0 24 24"
@@ -95,7 +95,7 @@ function TestimonialCard({ testimonial, index }: { testimonial: Testimonial; ind
               }}
             >
               <polyline points="6 9 12 15 18 9"/>
-            </motion.svg>
+            </m.svg>
           </button>
         )}
       </div>
@@ -119,7 +119,7 @@ function TestimonialCard({ testimonial, index }: { testimonial: Testimonial; ind
           <div className="text-sm text-[var(--gray-500)]">{testimonial.role}</div>
         </div>
       </div>
-    </motion.div>
+    </m.div>
   );
 }
 
@@ -135,7 +135,7 @@ export function Testimonios({ testimonials }: TestimoniosProps) {
 
       <div className="max-w-[1200px] mx-auto relative z-10">
         {/* Header */}
-        <motion.div
+        <m.div
           initial="hidden"
           whileInView="visible"
           viewport={viewportOnce}
@@ -149,10 +149,10 @@ export function Testimonios({ testimonials }: TestimoniosProps) {
           <p className="text-[var(--gray-600)] text-base sm:text-lg max-w-2xl mx-auto">
             Historias reales de personas que confían en Previnca
           </p>
-        </motion.div>
+        </m.div>
 
         {/* Testimonials Grid */}
-        <motion.div
+        <m.div
           initial="hidden"
           whileInView="visible"
           viewport={viewportOnce}
@@ -162,7 +162,7 @@ export function Testimonios({ testimonials }: TestimoniosProps) {
           {testimonials.map((testimonial, index) => (
             <TestimonialCard key={index} testimonial={testimonial} index={index} />
           ))}
-        </motion.div>
+        </m.div>
       </div>
     </section>
   );

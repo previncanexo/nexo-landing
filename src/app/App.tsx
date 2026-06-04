@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { MotionConfig } from 'motion/react';
+import { LazyMotion, domAnimation, MotionConfig } from 'motion/react';
 import { useIsMobile } from './hooks/useIsMobile';
 import { Navigation } from './components/Navigation';
 import { Hero } from './components/Hero';
@@ -157,6 +157,7 @@ export default function App() {
   }, []);
 
   return (
+    <LazyMotion features={domAnimation}>
     <MotionConfig reducedMotion={isMobile ? 'always' : 'never'}>
     <div className="overflow-x-clip">
       <Navigation onOpenCheckout={goToRegistro} />
@@ -174,5 +175,6 @@ export default function App() {
       <IPhoneCTA isVisible={showMobileCta} onOpenCheckout={goToRegistro} />
     </div>
     </MotionConfig>
+    </LazyMotion>
   );
 }

@@ -1,4 +1,4 @@
-import { motion } from 'motion/react';
+import { m } from 'motion/react';
 import {
   Accordion,
   AccordionContent,
@@ -49,7 +49,7 @@ export function FAQ({ items }: FAQProps) {
       <div className="relative z-[3] max-w-4xl mx-auto px-5 sm:px-6 lg:px-8 pt-24 sm:pt-32 md:pt-40 pb-16 sm:pb-24 md:pb-32">
 
         {/* Header */}
-        <motion.div
+        <m.div
           initial="hidden"
           whileInView="visible"
           viewport={viewportOnce}
@@ -63,10 +63,10 @@ export function FAQ({ items }: FAQProps) {
           <p className="text-white/60 text-base sm:text-lg max-w-2xl mx-auto">
             Todo lo que necesitás saber sobre Nexo
           </p>
-        </motion.div>
+        </m.div>
 
         {/* Accordion */}
-        <motion.div
+        <m.div
           initial="hidden"
           whileInView="visible"
           viewport={viewportOnce}
@@ -74,7 +74,7 @@ export function FAQ({ items }: FAQProps) {
         >
           <Accordion type="single" collapsible className="space-y-3">
             {items.map((item, index) => (
-              <motion.div key={index} variants={staggerItem}>
+              <m.div key={index} variants={staggerItem}>
                 <AccordionItem
                   value={`item-${index}`}
                   className="rounded-2xl overflow-hidden border"
@@ -142,13 +142,13 @@ export function FAQ({ items }: FAQProps) {
                     </div>
                   </AccordionContent>
                 </AccordionItem>
-              </motion.div>
+              </m.div>
             ))}
           </Accordion>
-        </motion.div>
+        </m.div>
 
         {/* CTA Card */}
-        <motion.div
+        <m.div
           initial="hidden"
           whileInView="visible"
           viewport={viewportOnce}
@@ -190,7 +190,7 @@ export function FAQ({ items }: FAQProps) {
               <polyline points="12 5 19 12 12 19" />
             </svg>
           </a>
-        </motion.div>
+        </m.div>
 
       </div>
     </section>

@@ -1,4 +1,4 @@
-import { motion } from 'motion/react';
+import { m } from 'motion/react';
 import { fadeUp, staggerContainer, staggerItem, viewportOnce, organicPatternStyle } from './motion-variants';
 import cartaTelemedicina from '@/assets/carta-telemedicina.webp';
 import cartaOdontologia from '@/assets/carta-odontologia.webp';
@@ -73,7 +73,7 @@ export function ALaCarta({ onOpenCheckout: _onOpenCheckout }: ALaCartaProps) {
 
       <div className="max-w-[1200px] mx-auto px-5 sm:px-6 relative z-10">
         {/* Header */}
-        <motion.div
+        <m.div
           className="text-center mb-8 sm:mb-10"
           variants={fadeUp}
           initial="hidden"
@@ -93,10 +93,10 @@ export function ALaCarta({ onOpenCheckout: _onOpenCheckout }: ALaCartaProps) {
           <p className="text-base sm:text-lg text-[var(--gray-600)] leading-relaxed max-w-[560px] mx-auto">
             Seguimos evolucionando para ofrecerte más opciones que se adapten a tu estilo de vida.
           </p>
-        </motion.div>
+        </m.div>
 
         {/* Floating Icon Items */}
-        <motion.div
+        <m.div
           className="grid grid-cols-1 sm:grid-cols-3 gap-6"
           variants={staggerContainer}
           initial="hidden"
@@ -104,7 +104,7 @@ export function ALaCarta({ onOpenCheckout: _onOpenCheckout }: ALaCartaProps) {
           viewport={viewportOnce}
         >
           {services.map((service) => (
-            <motion.div
+            <m.div
               key={service.title}
               variants={staggerItem}
               whileHover={{ y: -5, transition: { type: 'spring', stiffness: 400, damping: 28 } }}
@@ -137,9 +137,9 @@ export function ALaCarta({ onOpenCheckout: _onOpenCheckout }: ALaCartaProps) {
                 </div>
                 <p className="text-[13px] font-semibold text-[var(--gray-700)] leading-snug">{service.title}</p>
               </div>
-            </motion.div>
+            </m.div>
           ))}
-        </motion.div>
+        </m.div>
       </div>
     </section>
   );

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import logoImage from "@/assets/logo.png";
-import { motion } from 'motion/react';
+import { m } from 'motion/react';
 import { fadeUp, viewportOnce } from './motion-variants';
 
 const TYC_TEXT = `TÉRMINOS Y CONDICIONES
@@ -216,7 +216,7 @@ export function Footer() {
 
         <div className="max-w-[1200px] mx-auto px-5 sm:px-6 relative z-10">
           {/* Main Footer Content */}
-          <motion.div
+          <m.div
             className="py-12 sm:py-16 grid grid-cols-2 md:grid-cols-12 gap-8 md:gap-8"
             variants={fadeUp}
             initial="hidden"
@@ -359,7 +359,7 @@ export function Footer() {
                 ))}
               </ul>
             </div>
-          </motion.div>
+          </m.div>
         </div>
 
         {/* Copyright */}

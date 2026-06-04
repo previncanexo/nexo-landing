@@ -1,5 +1,5 @@
 import { Fragment } from 'react';
-import { motion } from 'motion/react';
+import { m } from 'motion/react';
 import {
   fadeUp,
   slideFromLeft,
@@ -147,7 +147,7 @@ export function PlanBase() {
       <div className="max-w-[1200px] mx-auto px-5 sm:px-6 relative z-10">
 
         {/* ── FEATURE STRIP ── */}
-        <motion.div
+        <m.div
           className="mb-16 sm:mb-24 pb-8 border-b border-[var(--gray-100)]"
           variants={fadeUp}
           initial="hidden"
@@ -202,12 +202,12 @@ export function PlanBase() {
               </Fragment>
             ))}
           </div>
-        </motion.div>
+        </m.div>
 
         {/* ── ASYMMETRIC HEADER ── */}
         <div className="grid md:grid-cols-[1fr_1.2fr] gap-10 md:gap-20 mb-12 sm:mb-16 items-end">
 
-          <motion.div
+          <m.div
             variants={slideFromLeft}
             initial="hidden"
             whileInView="visible"
@@ -237,9 +237,9 @@ export function PlanBase() {
             <p className="text-base sm:text-lg text-[var(--gray-500)] leading-relaxed max-w-[460px] font-light">
               Cuatro coberturas esenciales incluidas desde el primer día. Sin trámites, sin espera, sin excusas.
             </p>
-          </motion.div>
+          </m.div>
 
-          <motion.div
+          <m.div
             variants={scaleUp}
             initial="hidden"
             whileInView="visible"
@@ -274,11 +274,11 @@ export function PlanBase() {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </m.div>
         </div>
 
         {/* ── BENEFITS GRID — circular icons, minimal cards ── */}
-        <motion.div
+        <m.div
           className="relative mb-12 sm:mb-16"
           variants={staggerContainerSlow}
           initial="hidden"
@@ -287,7 +287,7 @@ export function PlanBase() {
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {benefits.map((benefit) => (
-              <motion.div
+              <m.div
                 key={benefit.name}
                 className="group"
                 variants={staggerItem}
@@ -328,13 +328,13 @@ export function PlanBase() {
                     </div>
                   </div>
                 </div>
-              </motion.div>
+              </m.div>
             ))}
           </div>
-        </motion.div>
+        </m.div>
 
         {/* ── TRUST INDICATORS ── */}
-        <motion.div
+        <m.div
           className="mt-12 sm:mt-16 relative"
           variants={staggerContainer}
           initial="hidden"
@@ -362,7 +362,7 @@ export function PlanBase() {
                 desc: 'Experiencia en el sector salud'
               }
             ].map((item) => (
-              <motion.div
+              <m.div
                 key={item.stat}
                 className="bg-white rounded-[24px] px-7 sm:px-8 py-6 border border-[var(--gray-100)] flex items-center gap-5 hover:border-[var(--purple)]/15 transition-all duration-300"
                 style={{ boxShadow: '0 2px 20px rgba(0,0,0,0.04)' }}
@@ -376,10 +376,10 @@ export function PlanBase() {
                   <div className="text-2xl font-['DM_Serif_Display'] text-[var(--gray-900)] mb-0.5 tracking-tight">{item.stat}</div>
                   <div className="text-sm text-[var(--gray-500)] font-light">{item.desc}</div>
                 </div>
-              </motion.div>
+              </m.div>
             ))}
           </div>
-        </motion.div>
+        </m.div>
 
       </div>
     </section>

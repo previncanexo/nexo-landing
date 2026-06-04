@@ -1,4 +1,4 @@
-import { motion } from 'motion/react';
+import { m } from 'motion/react';
 import { fadeUp, staggerContainerSlow, staggerItem, viewportOnce, organicPatternStyle } from './motion-variants';
 
 interface ComoFuncionaProps {
@@ -82,7 +82,7 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
 
       <div className="max-w-[1200px] mx-auto px-5 sm:px-6 relative z-10">
         {/* Header */}
-        <motion.div
+        <m.div
           className="text-center mb-12 sm:mb-16"
           variants={fadeUp}
           initial="hidden"
@@ -104,10 +104,10 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
           <p className="text-[15px] sm:text-lg text-[var(--gray-600)] leading-relaxed max-w-[520px] mx-auto">
             Completá los pasos que ves a continuación y obtené tu cobertura en minutos.
           </p>
-        </motion.div>
+        </m.div>
 
         {/* Steps Grid — 2×2 */}
-        <motion.div
+        <m.div
           className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 max-w-[960px] mx-auto mb-12 sm:mb-16"
           variants={staggerContainerSlow}
           initial="hidden"
@@ -116,8 +116,8 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
         >
           {steps.map((step) => (
             /* Outer: solo entrada stagger. Inner: solo hover. Sin conflicto. */
-            <motion.div key={step.number} variants={staggerItem}>
-              <motion.div
+            <m.div key={step.number} variants={staggerItem}>
+              <m.div
                 className="group bg-white rounded-[24px] border border-[var(--gray-100)] hover:border-[var(--purple)]/15 transition-colors duration-500 p-5 sm:p-6 flex flex-col h-full relative overflow-hidden"
                 style={{ boxShadow: '0 2px 24px rgba(0,0,0,0.04)' }}
                 whileHover={{ y: -4, boxShadow: '0 8px 40px rgba(134,96,239,0.10)' }}
@@ -147,13 +147,13 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
                 <p className="relative text-[13px] text-[var(--gray-500)] leading-relaxed flex-1">
                   {step.body}
                 </p>
-              </motion.div>
-            </motion.div>
+              </m.div>
+            </m.div>
           ))}
-        </motion.div>
+        </m.div>
 
         {/* Bottom CTA */}
-        <motion.div
+        <m.div
           className="relative"
           variants={fadeUp}
           initial="hidden"
@@ -199,7 +199,7 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center">
-                <motion.button
+                <m.button
                   onClick={onOpenCheckout}
                   className="bg-white text-[var(--purple)] border-none px-8 sm:px-10 py-4 rounded-full text-base font-bold cursor-pointer font-['DM_Sans'] flex items-center gap-3 group w-full sm:w-auto justify-center"
                   whileHover={{ scale: 1.03, boxShadow: '0 20px 60px rgba(255,255,255,0.3)' }}
@@ -211,7 +211,7 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
                     <line x1="5" y1="12" x2="19" y2="12"/>
                     <polyline points="12 5 19 12 12 19"/>
                   </svg>
-                </motion.button>
+                </m.button>
 
                 <div className="flex items-center gap-2 text-white/90">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -223,7 +223,7 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
               </div>
             </div>
           </div>
-        </motion.div>
+        </m.div>
       </div>
     </section>
   );

@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from 'motion/react';
+import { m, AnimatePresence } from 'motion/react';
 import { useIsMobile } from '../hooks/useIsMobile';
 
 interface IPhoneCTAProps {
@@ -11,7 +11,7 @@ export function IPhoneCTA({ isVisible, onOpenCheckout }: IPhoneCTAProps) {
   return (
     <AnimatePresence>
       {isVisible && (
-        <motion.div
+        <m.div
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 100, opacity: 0 }}
@@ -44,7 +44,7 @@ export function IPhoneCTA({ isVisible, onOpenCheckout }: IPhoneCTAProps) {
               Quiero mi cobertura
             </button>
           </div>
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>
   );
