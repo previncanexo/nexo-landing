@@ -155,6 +155,18 @@ export default function App() {
     };
   }, []);
 
+  useEffect(() => {
+    // Precargar los chunks de las secciones de abajo apenas monta (en segundo plano,
+    // sin frenar el Hero), para que estén listos antes de scrollear. Evita que la
+    // mitad de abajo quede en blanco/azul mientras cargan los chunks lazy.
+    void import('./components/ALaCarta');
+    void import('./components/ComoFunciona');
+    void import('./components/BannerCarousel');
+    void import('./components/Testimonios');
+    void import('./components/FAQ');
+    void import('./components/Footer');
+  }, []);
+
   return (
     <MotionConfig reducedMotion={isMobile ? 'always' : 'never'}>
     <div className="overflow-x-clip">
