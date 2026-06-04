@@ -1,15 +1,19 @@
 import { useState, useEffect, useCallback } from 'react';
 import banner1 from '@/assets/banner-comunidad-1.webp';
 import banner2 from '@/assets/banner-comunidad-2.webp';
+import banner1Set from '@/assets/banner-comunidad-1.webp?w=480;768;1080;1672&format=webp&as=srcset';
+import banner2Set from '@/assets/banner-comunidad-2.webp?w=480;768;1080;1672&format=webp&as=srcset';
 
 const slides = [
   {
     img: banner2,
+    imgSet: banner2Set,
     label: 'Salud sin fronteras',
     sub: 'Accedé desde donde estés',
   },
   {
     img: banner1,
+    imgSet: banner1Set,
     label: 'Para los que van siempre para adelante',
     sub: 'Tu salud, sin pausas',
   },
@@ -52,6 +56,8 @@ export function BannerCarousel() {
         >
           <img
             src={slide.img}
+            srcSet={slide.imgSet}
+            sizes="100vw"
             alt={slide.label}
             loading={i === 0 ? 'eager' : 'lazy'}
             decoding={i === 0 ? 'sync' : 'async'}

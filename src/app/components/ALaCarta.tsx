@@ -3,6 +3,9 @@ import { fadeUp, staggerContainer, staggerItem, viewportOnce, organicPatternStyl
 import cartaTelemedicina from '@/assets/carta-telemedicina.webp';
 import cartaOdontologia from '@/assets/carta-odontologia.webp';
 import cartaSeguros from '@/assets/carta-seguros.webp';
+import cartaTelemedicinaSet from '@/assets/carta-telemedicina.webp?w=360;540;720&format=webp&as=srcset';
+import cartaOdontologiaSet from '@/assets/carta-odontologia.webp?w=360;540;720&format=webp&as=srcset';
+import cartaSegurosSet from '@/assets/carta-seguros.webp?w=360;540;720&format=webp&as=srcset';
 
 interface ALaCartaProps {
   onOpenCheckout: () => void;
@@ -13,6 +16,7 @@ export function ALaCarta({ onOpenCheckout: _onOpenCheckout }: ALaCartaProps) {
   const services = [
     {
       image: cartaTelemedicina,
+      imageSet: cartaTelemedicinaSet,
       icon: (
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
@@ -23,6 +27,7 @@ export function ALaCarta({ onOpenCheckout: _onOpenCheckout }: ALaCartaProps) {
     },
     {
       image: cartaOdontologia,
+      imageSet: cartaOdontologiaSet,
       icon: (
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M12 2c-1.7 0-3 1.5-3 3.5 0 1.2.5 2.3 1.2 3C9 9.3 7 11 7 13.5 7 17 9 22 12 22s5-5 5-8.5c0-2.5-2-4.2-3.2-5 .7-.7 1.2-1.8 1.2-3C15 3.5 13.7 2 12 2z"/>
@@ -33,6 +38,7 @@ export function ALaCarta({ onOpenCheckout: _onOpenCheckout }: ALaCartaProps) {
     },
     {
       image: cartaSeguros,
+      imageSet: cartaSegurosSet,
       icon: (
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
@@ -102,6 +108,8 @@ export function ALaCarta({ onOpenCheckout: _onOpenCheckout }: ALaCartaProps) {
               <div className="w-full overflow-hidden" style={{ aspectRatio: '4/3' }}>
                 <img
                   src={service.image}
+                  srcSet={service.imageSet}
+                  sizes="(max-width: 640px) 90vw, 360px"
                   alt={service.title}
                   loading="lazy"
                   decoding="async"

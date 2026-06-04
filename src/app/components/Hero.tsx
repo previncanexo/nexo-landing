@@ -5,8 +5,15 @@ import { useIsMobile } from '../hooks/useIsMobile';
 import heroWoman from '@/assets/hero-woman.webp';
 import heroWoman2 from '@/assets/hero-woman-2.webp';
 import heroWoman3 from '@/assets/hero-woman-3.webp';
+import heroWomanSet from '@/assets/hero-woman.webp?w=480;768;1080;1672&format=webp&as=srcset';
+import heroWoman2Set from '@/assets/hero-woman-2.webp?w=480;768;1080;1672&format=webp&as=srcset';
+import heroWoman3Set from '@/assets/hero-woman-3.webp?w=480;768;1080;1672&format=webp&as=srcset';
 
-const heroImages = [heroWoman, heroWoman2, heroWoman3];
+const heroImages = [
+  { src: heroWoman, srcSet: heroWomanSet },
+  { src: heroWoman2, srcSet: heroWoman2Set },
+  { src: heroWoman3, srcSet: heroWoman3Set },
+];
 
 const BLUR_STAGGER = 0.025;
 const BLUR_EASE: [number, number, number, number] = [0.2, 0.65, 0.3, 0.9];
@@ -282,7 +289,9 @@ export function Hero() {
         {(isMobile ? heroImages.slice(0, 1) : heroImages).map((img, i) => (
           <img
             key={i}
-            src={img}
+            src={img.src}
+            srcSet={img.srcSet}
+            sizes="100vw"
             alt=""
             aria-hidden="true"
             draggable={false}
