@@ -14,10 +14,10 @@ import planTeleconsulta from '@/assets/plan-teleconsulta.webp';
 import planUrgencias from '@/assets/plan-urgencias.webp';
 import planFarmacia from '@/assets/plan-farmacia.webp';
 import planOdontologia from '@/assets/plan-odontologia.webp';
-import planTeleconsultaSet from '@/assets/plan-teleconsulta.webp?w=360;540;720&format=webp&as=srcset';
-import planUrgenciasSet from '@/assets/plan-urgencias.webp?w=360;540;720&format=webp&as=srcset';
-import planFarmaciaSet from '@/assets/plan-farmacia.webp?w=360;540;720&format=webp&as=srcset';
-import planOdontologiaSet from '@/assets/plan-odontologia.webp?w=360;540;720&format=webp&as=srcset';
+import planTeleconsultaSet from '@/assets/plan-teleconsulta.webp?w=360;540&format=webp&quality=70&as=srcset';
+import planUrgenciasSet from '@/assets/plan-urgencias.webp?w=360;540&format=webp&quality=70&as=srcset';
+import planFarmaciaSet from '@/assets/plan-farmacia.webp?w=360;540&format=webp&quality=70&as=srcset';
+import planOdontologiaSet from '@/assets/plan-odontologia.webp?w=360;540&format=webp&quality=70&as=srcset';
 // Placeholders blur-up (24px → Vite los inlinea como base64 en el HTML, ~1KB, se ven al instante)
 import planTeleconsultaPh from '@/assets/plan-teleconsulta.webp?w=24&format=webp';
 import planUrgenciasPh from '@/assets/plan-urgencias.webp?w=24&format=webp';
@@ -304,7 +304,7 @@ export function PlanBase() {
                       srcSet={benefit.imageSet}
                       sizes="(max-width: 640px) 90vw, 320px"
                       alt={benefit.name}
-                      loading="lazy"
+                      loading="eager"
                       decoding="async"
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />

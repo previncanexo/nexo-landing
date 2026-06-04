@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import banner1 from '@/assets/banner-comunidad-1.webp';
 import banner2 from '@/assets/banner-comunidad-2.webp';
-import banner1Set from '@/assets/banner-comunidad-1.webp?w=480;768;1080;1672&format=webp&as=srcset';
-import banner2Set from '@/assets/banner-comunidad-2.webp?w=480;768;1080;1672&format=webp&as=srcset';
+import banner1Set from '@/assets/banner-comunidad-1.webp?w=480;768;1080;1672&format=webp&quality=70&as=srcset';
+import banner2Set from '@/assets/banner-comunidad-2.webp?w=480;768;1080;1672&format=webp&quality=70&as=srcset';
 // Placeholders blur-up (24px) — preview instantáneo mientras carga el banner real
 import banner1Ph from '@/assets/banner-comunidad-1.webp?w=24&format=webp';
 import banner2Ph from '@/assets/banner-comunidad-2.webp?w=24&format=webp';
@@ -67,7 +67,7 @@ export function BannerCarousel() {
             srcSet={slide.imgSet}
             sizes="100vw"
             alt={slide.label}
-            loading={i === 0 ? 'eager' : 'lazy'}
+            loading="eager"
             decoding={i === 0 ? 'sync' : 'async'}
             draggable={false}
             className="w-full h-full object-cover object-center select-none"

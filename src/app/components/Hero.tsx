@@ -5,9 +5,9 @@ import { useIsMobile } from '../hooks/useIsMobile';
 import heroWoman from '@/assets/hero-woman.webp';
 import heroWoman2 from '@/assets/hero-woman-2.webp';
 import heroWoman3 from '@/assets/hero-woman-3.webp';
-import heroWomanSet from '@/assets/hero-woman.webp?w=480;768;1080;1672&format=webp&as=srcset';
-import heroWoman2Set from '@/assets/hero-woman-2.webp?w=480;768;1080;1672&format=webp&as=srcset';
-import heroWoman3Set from '@/assets/hero-woman-3.webp?w=480;768;1080;1672&format=webp&as=srcset';
+import heroWomanSet from '@/assets/hero-woman.webp?w=480;768;1080;1672&format=webp&quality=70&as=srcset';
+import heroWoman2Set from '@/assets/hero-woman-2.webp?w=480;768;1080;1672&format=webp&quality=70&as=srcset';
+import heroWoman3Set from '@/assets/hero-woman-3.webp?w=480;768;1080;1672&format=webp&quality=70&as=srcset';
 
 const heroImages = [
   { src: heroWoman, srcSet: heroWomanSet },

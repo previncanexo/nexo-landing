@@ -3,9 +3,9 @@ import { fadeUp, staggerContainer, staggerItem, viewportOnce, organicPatternStyl
 import cartaTelemedicina from '@/assets/carta-telemedicina.webp';
 import cartaOdontologia from '@/assets/carta-odontologia.webp';
 import cartaSeguros from '@/assets/carta-seguros.webp';
-import cartaTelemedicinaSet from '@/assets/carta-telemedicina.webp?w=360;540;720&format=webp&as=srcset';
-import cartaOdontologiaSet from '@/assets/carta-odontologia.webp?w=360;540;720&format=webp&as=srcset';
-import cartaSegurosSet from '@/assets/carta-seguros.webp?w=360;540;720&format=webp&as=srcset';
+import cartaTelemedicinaSet from '@/assets/carta-telemedicina.webp?w=360;540&format=webp&quality=70&as=srcset';
+import cartaOdontologiaSet from '@/assets/carta-odontologia.webp?w=360;540&format=webp&quality=70&as=srcset';
+import cartaSegurosSet from '@/assets/carta-seguros.webp?w=360;540&format=webp&quality=70&as=srcset';
 // Placeholders blur-up (24px, ~1KB) — se ven al instante mientras carga la foto real
 import cartaTelemedicinaPh from '@/assets/carta-telemedicina.webp?w=24&format=webp';
 import cartaOdontologiaPh from '@/assets/carta-odontologia.webp?w=24&format=webp';
@@ -118,7 +118,7 @@ export function ALaCarta({ onOpenCheckout: _onOpenCheckout }: ALaCartaProps) {
                   srcSet={service.imageSet}
                   sizes="(max-width: 640px) 90vw, 360px"
                   alt={service.title}
-                  loading="lazy"
+                  loading="eager"
                   decoding="async"
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
