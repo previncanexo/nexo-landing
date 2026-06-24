@@ -77,7 +77,7 @@ function trackStepView(n: number) {
 
 // API base URL (override con VITE_NEXO_API_URL en .env de Vite)
 const API_URL = (import.meta as { env?: Record<string, string> }).env?.VITE_NEXO_API_URL
-  ?? 'https://nexo-portal-staging-gamma.vercel.app';
+  ?? 'https://nexo.portal.previncasalud.com.ar';
 
 // localStorage keys
 const LS_LEAD = 'nexo_lead_id';

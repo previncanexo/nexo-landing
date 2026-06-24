@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react';
 import logoImage from "@/assets/logo.png";
 
+// URL del portal (login del afiliado). Override por env var en staging.
+const PORTAL_URL = ((import.meta as { env?: Record<string, string> }).env?.VITE_PORTAL_URL
+  ?? 'https://nexo.portal.previncasalud.com.ar') + '/login';
+
 interface NavigationProps {
   onOpenCheckout: () => void;
 }
@@ -79,7 +83,7 @@ export function Navigation({ onOpenCheckout }: NavigationProps) {
             {/* Right: CTAs */}
             <div className="flex items-center gap-2 justify-end">
               <a
-                href="https://nexo-portal-staging-gamma.vercel.app/login"
+                href={PORTAL_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1.5 text-[13px] font-semibold text-white/80 no-underline px-3.5 py-2 rounded-full border border-white/25 transition-all duration-200 hover:bg-white/10 hover:text-white hover:border-white/40 active:scale-95 whitespace-nowrap"
@@ -122,7 +126,7 @@ export function Navigation({ onOpenCheckout }: NavigationProps) {
             </a>
             <div className="flex items-center gap-2">
               <a
-                href="https://nexo-portal-staging-gamma.vercel.app/login"
+                href={PORTAL_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1 text-[11px] font-semibold text-white no-underline px-3 py-2 rounded-full border border-white/30 transition-all hover:bg-white/20 active:scale-95"
@@ -207,7 +211,7 @@ export function Navigation({ onOpenCheckout }: NavigationProps) {
               </svg>
             </button>
             <a
-              href="https://nexo-portal-staging-gamma.vercel.app/login"
+              href={PORTAL_URL}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setMobileOpen(false)}
