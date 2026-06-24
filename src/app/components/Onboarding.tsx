@@ -398,8 +398,10 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
       if (!newLeadId) return;
     }
 
-    // Step 5 → 6: finalizar lead, crear affiliate + suscripción MP
-    if (step === 5) {
+    // Step 5 → 6: finalizar lead, crear affiliate + suscripción MP.
+    // Si ya tenemos affiliateId guardado (el usuario volvió atrás post-PATCH),
+    // no re-llamamos a la API, vamos directo al resumen.
+    if (step === 5 && !affiliateId) {
       if (!leadId) {
         setError('La sesión expiró. Recargá para empezar de nuevo.');
         return;
