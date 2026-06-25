@@ -11,12 +11,12 @@
       <meta name="keywords" content="nexo, previnca, plan de salud, teleconsulta, doc24, emergencias, farmacia, odontología, argentina">
       <meta name="author" content="Previnca">
 
-      <!-- Fuentes NO-bloqueantes: la página se pinta al instante con fuente de sistema
-           y la tipografía de marca entra cuando carga (clave en conexiones lentas). -->
-      <link rel="preconnect" href="https://fonts.googleapis.com">
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-      <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-      <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap"></noscript>
+      <!-- Fuentes AUTO-HOSPEDADAS (mismo origen) — @font-face en src/styles/fonts.css.
+           Antes se traían de Google Fonts y causaban FOIT en mobile (texto invisible hasta
+           que cargaba la fuente). Ahora con font-display:swap el texto sale al instante en
+           fuente de sistema. Precargamos las 2 críticas para que la de marca entre rápido. -->
+      <link rel="preload" as="font" type="font/woff2" href="/fonts/dm-sans-latin.woff2" crossorigin>
+      <link rel="preload" as="font" type="font/woff2" href="/fonts/dm-serif-display-latin.woff2" crossorigin>
 
       <!-- Favicon -->
       <link rel="icon" type="image/svg+xml" href="/favicon.svg">
