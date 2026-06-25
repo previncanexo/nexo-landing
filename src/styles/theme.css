@@ -178,3 +178,16 @@
     background: rgba(18, 5, 61, 0.92);
   }
 }
+
+/* ── Orbes decorativos: ocultos en MOBILE ──
+   Hay ~14 divs decorativos con filter: blur() enorme (blur-[80px] a blur-[130px] en
+   círculos de 250–500px). En iOS Safari un filter:blur de ese tamaño es el efecto más
+   caro en GPU; con tantos en una página larga, Safari agota la memoria de composición y
+   DESCARTA tiles → secciones en blanco al scrollear que reaparecen al volver. Están a
+   opacity 0.03–0.10 (invisibles en la práctica), así que ocultarlos en mobile no cambia
+   nada visual y elimina el cuello de GPU. En desktop se conservan. */
+@media (max-width: 767px) {
+  [class*="blur-["] {
+    display: none !important;
+  }
+}
