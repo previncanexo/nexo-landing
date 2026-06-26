@@ -343,6 +343,12 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
           event_id_complete_registration: eventIdCR,
           event_id_initiate_checkout: eventIdIC,
           event_source_url: typeof window !== 'undefined' ? window.location.href : undefined,
+          // GA4 client_id parseado del cookie _ga (formato GA1.1.X.Y → X.Y).
+          // El backend lo guarda en el affiliate y lo usa para mandar el
+          // Purchase server-side desde el webhook MP atribuido al mismo usuario.
+          ga_client_id: typeof document !== 'undefined'
+            ? (document.cookie.split('; ').find(c => c.startsWith('_ga='))?.split('=')[1] || '').split('.').slice(-2).join('.')
+            : undefined,
         }),
       });
       const data = await res.json();
