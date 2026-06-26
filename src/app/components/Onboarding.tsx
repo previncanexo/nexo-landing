@@ -52,6 +52,8 @@ declare global {
   interface Window {
     gtag?: (...args: unknown[]) => void;
     fbq?: (...args: unknown[]) => void;
+    /** Inyectado por index.html — fuerza la carga del tracking sin esperar al idle. */
+    loadNexoTrackingNow?: () => void;
   }
 }
 
@@ -138,6 +140,10 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
     if (stored) {
       try { setForm({ ...initialForm, ...JSON.parse(stored) }); } catch { /* ignore */ }
     }
+    // Forzar carga de GA + Meta Pixel ahora (no esperar al idle) para que los
+    // cookies `_ga` y `_fbp` existan cuando el usuario complete el PATCH.
+    // El helper en index.html es idempotente (si ya cargó, no hace nada).
+    window.loadNexoTrackingNow?.();
   }, []);
 
   // Validar el lead guardado: si existe, GET al backend; si está partial → saltar a step 3,

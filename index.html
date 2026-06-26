@@ -76,6 +76,10 @@
             fbq('init', '2187028668714954');
             fbq('track', 'PageView');
           }
+          // Expuesto para que el Onboarding fuerce la carga al abrir la modal
+          // (sin esperar al idle). Asegura que `_ga` y `_fbp` existan cuando el
+          // usuario completa el PATCH y se manda al backend.
+          window.loadNexoTrackingNow = loadTracking;
           // Cargar cuando el navegador esté OCIOSO, NO atado a la interacción del usuario.
           // (Antes se disparaba en el primer tap → el primer toque, ej. abrir el menú, se
           //  trababa al cargar ~100KB de tracking en ese instante.) requestIdleCallback no
