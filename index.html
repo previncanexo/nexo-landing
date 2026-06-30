@@ -45,6 +45,17 @@
 
       <style>html, body { height: 100%; margin: 0; } #root { height: 100%; }</style>
 
+      <!-- Limpiar caches legacy del onboarding ANTES de que monte React.
+           Si quedaron de una sesion vieja, el step 5 → 6 reusaba la URL de MP
+           del usuario anterior y los pagos quedaban mal atribuidos. -->
+      <script>
+        try {
+          localStorage.removeItem('nexo_affiliate_id');
+          localStorage.removeItem('nexo_checkout_url');
+          localStorage.removeItem('nexo_event_id_ic');
+        } catch (e) { /* ignore */ }
+      </script>
+
       <!-- Tracking DIFERIDO (GA + Meta Pixel): cargan cuando el navegador está ocioso.
            Eran ~388KB de terceros que competían por ancho de banda/CPU en la carga inicial.
            Se cargan vía requestIdleCallback (no atado a la interacción, para no trabar el
