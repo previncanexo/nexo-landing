@@ -82,10 +82,17 @@ const API_URL = (import.meta as { env?: Record<string, string> }).env?.VITE_NEXO
   ?? 'https://nexo.portal.previncasalud.com.ar';
 
 // localStorage keys
+// LS_LEAD y LS_FORM se persisten para que el usuario pueda reanudar el onboarding
+// si cierra y vuelve. affiliateId, checkoutUrl y eventIdIC NO se persisten: si
+// quedan cacheados, otros usuarios que abran el flow en el mismo browser podrían
+// pagar usando la URL de MP del usuario original (bug histórico — un payer cargó
+// 3 pagos al affiliate de Matias por este motivo).
 const LS_LEAD = 'nexo_lead_id';
-const LS_AFFILIATE = 'nexo_affiliate_id';
-const LS_CHECKOUT = 'nexo_checkout_url';
 const LS_FORM = 'nexo_form_data';
+// Caches legacy que se limpian al montar (ver useEffect de cleanup):
+const LS_LEGACY_AFFILIATE = 'nexo_affiliate_id';
+const LS_LEGACY_CHECKOUT = 'nexo_checkout_url';
+const LS_LEGACY_EVENT_ID_IC = 'nexo_event_id_ic';
 
 // Mapeo bidireccional entre step y subruta
 const STEP_TO_PATH: Record<string, string> = {
@@ -126,20 +133,23 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
   const [leadId, setLeadId] = useState<string | null>(
     typeof window !== 'undefined' ? localStorage.getItem(LS_LEAD) : null
   );
-  const [affiliateId, setAffiliateId] = useState<string | null>(
-    typeof window !== 'undefined' ? localStorage.getItem(LS_AFFILIATE) : null
-  );
-  const [checkoutUrl, setCheckoutUrl] = useState<string | null>(
-    typeof window !== 'undefined' ? localStorage.getItem(LS_CHECKOUT) : null
-  );
+  // affiliateId, checkoutUrl y eventIdIC viven SOLO en memoria — nunca en localStorage.
+  // Si el browser se reinicia, el usuario empieza de cero (a propósito).
+  const [affiliateId, setAffiliateId] = useState<string | null>(null);
+  const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
+  const [eventIdIC, setEventIdIC] = useState<string | null>(null);
 
-  // Restaurar form data del localStorage al montar
+  // Restaurar form data del localStorage al montar + limpiar caches legacy
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const stored = localStorage.getItem(LS_FORM);
     if (stored) {
       try { setForm({ ...initialForm, ...JSON.parse(stored) }); } catch { /* ignore */ }
     }
+    // Limpiar caches viejos que podían provocar URL hijacking entre sesiones.
+    localStorage.removeItem(LS_LEGACY_AFFILIATE);
+    localStorage.removeItem(LS_LEGACY_CHECKOUT);
+    localStorage.removeItem(LS_LEGACY_EVENT_ID_IC);
     // Forzar carga de GA + Meta Pixel ahora (no esperar al idle) para que los
     // cookies `_ga` y `_fbp` existan cuando el usuario complete el PATCH.
     // El helper en index.html es idempotente (si ya cargó, no hace nada).
@@ -368,12 +378,10 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
         return null;
       }
       localStorage.removeItem(LS_LEAD);
-      localStorage.setItem(LS_AFFILIATE, data.affiliateId);
-      localStorage.setItem(LS_CHECKOUT, data.checkoutUrl);
-      localStorage.setItem('nexo_event_id_ic', eventIdIC);
       setLeadId(null);
       setAffiliateId(data.affiliateId);
       setCheckoutUrl(data.checkoutUrl);
+      setEventIdIC(eventIdIC);
 
       // Pixel CompleteRegistration + GA4 sign_up (dedup CAPI vía eventID compartido)
       const planName = 'Previnca Nexo';
@@ -411,9 +419,10 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
     }
 
     // Step 5 → 6: finalizar lead, crear affiliate + suscripción MP.
-    // Si ya tenemos affiliateId guardado (el usuario volvió atrás post-PATCH),
-    // no re-llamamos a la API, vamos directo al resumen.
-    if (step === 5 && !affiliateId) {
+    // SIEMPRE llamamos a la API (no cacheamos affiliateId entre re-clicks).
+    // El backend es idempotente: si el lead ya está convertido, devuelve la
+    // checkoutUrl existente del affiliate ya creado, sin crear uno nuevo.
+    if (step === 5) {
       if (!leadId) {
         setError('La sesión expiró. Recargá para empezar de nuevo.');
         return;
@@ -445,9 +454,9 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
     // Dispara InitiateCheckout client-side justo antes del redirect.
     // Usa el mismo event_id que el server-side ya envió a CAPI → dedup.
     if (typeof window !== 'undefined') {
-      const eventIdIC = localStorage.getItem('nexo_event_id_ic') || newEventId();
+      const ic = eventIdIC ?? newEventId();
       try {
-        window.fbq?.('track', 'InitiateCheckout', { content_name: 'Previnca Nexo', currency: 'ARS', value: 19500 }, { eventID: eventIdIC });
+        window.fbq?.('track', 'InitiateCheckout', { content_name: 'Previnca Nexo', currency: 'ARS', value: 19500 }, { eventID: ic });
       } catch {}
       try {
         window.gtag?.('event', 'begin_checkout', { currency: 'ARS', value: 19500, items: [{ item_name: 'Previnca Nexo', price: 19500, quantity: 1 }] });
