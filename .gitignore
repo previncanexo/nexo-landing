@@ -11,3 +11,4 @@ PDF/
 
 errores/
 .env*
+.supabase.json
