@@ -10,3 +10,4 @@ PDF/
 .atl/
 
 errores/
+.env*

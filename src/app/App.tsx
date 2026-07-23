@@ -14,6 +14,7 @@ import { Testimonios } from './components/Testimonios';
 import { FAQ } from './components/FAQ';
 import { Footer } from './components/Footer';
 import { Onboarding } from './components/Onboarding';
+import { captureAttribution } from './lib/attribution';
 
 const testimonials = [
   {
@@ -100,6 +101,9 @@ export default function App() {
     window.addEventListener('popstate', onPopState);
     // Asegurar sync inicial post-hydration (SSG renderiza con / por defecto)
     setPathname(window.location.pathname);
+    // First-touch attribution: capturamos UTM/click IDs + referrer + landing_url
+    // ANTES de que las CTAs limpien la query navegando a /onboarding.
+    captureAttribution();
     return () => window.removeEventListener('popstate', onPopState);
   }, []);
 

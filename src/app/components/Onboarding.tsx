@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import logoImage from '@/assets/logo.png';
+import { getAttribution } from '../lib/attribution';
 
 type Step = 1 | 2 | 3 | 4 | 5 | 6 | 'success';
 
@@ -298,6 +299,7 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
 
   async function callCreateLead(): Promise<string | null> {
     const event_id = newEventId();
+    const attr = getAttribution();
     try {
       const res = await fetch(`${API_URL}/api/leads`, {
         method: 'POST',
@@ -310,6 +312,15 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
           whatsapp: form.whatsapp.trim(),
           event_id,
           event_source_url: typeof window !== 'undefined' ? window.location.href : undefined,
+          utm_source: attr.utm_source ?? undefined,
+          utm_medium: attr.utm_medium ?? undefined,
+          utm_campaign: attr.utm_campaign ?? undefined,
+          utm_term: attr.utm_term ?? undefined,
+          utm_content: attr.utm_content ?? undefined,
+          fbclid: attr.fbclid ?? undefined,
+          gclid: attr.gclid ?? undefined,
+          referer: attr.referer ?? undefined,
+          landing_url: attr.landing_url ?? undefined,
         }),
       });
       const data = await res.json();
@@ -343,6 +354,7 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
   async function callFinalizeLead(currentLeadId: string): Promise<{ affiliateId: string; checkoutUrl: string } | null> {
     const eventIdCR = newEventId();
     const eventIdIC = newEventId();
+    const attr = getAttribution();
     try {
       const res = await fetch(`${API_URL}/api/leads/${currentLeadId}`, {
         method: 'PATCH',
@@ -365,6 +377,17 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
           ga_client_id: typeof document !== 'undefined'
             ? (document.cookie.split('; ').find(c => c.startsWith('_ga='))?.split('=')[1] || '').split('.').slice(-2).join('.')
             : undefined,
+          // Atribución (por si el POST inicial no la capturó — el backend
+          // solo escribe estos campos si vienen truthy, no pisa first-touch).
+          utm_source: attr.utm_source ?? undefined,
+          utm_medium: attr.utm_medium ?? undefined,
+          utm_campaign: attr.utm_campaign ?? undefined,
+          utm_term: attr.utm_term ?? undefined,
+          utm_content: attr.utm_content ?? undefined,
+          fbclid: attr.fbclid ?? undefined,
+          gclid: attr.gclid ?? undefined,
+          referer: attr.referer ?? undefined,
+          landing_url: attr.landing_url ?? undefined,
         }),
       });
       const data = await res.json();
