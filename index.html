@@ -103,6 +103,10 @@
 
     <body>
       <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=2187028668714954&ev=PageView&noscript=1"/></noscript>
+      <!-- Metricool — pixel de seguimiento (img, sin JS). 70 bytes, un solo request.
+           Va estático (no diferido como GA/Meta) porque el costo es despreciable y así
+           la visita se registra aunque el usuario se vaya antes del idle. -->
+      <img src="https://tracker.metricool.com/c3po.jpg?hash=8cfd146822057942f5bf71540648b21a" alt="" height="1" width="1" style="display:none">
       <div id="root"></div>
       <script type="module" src="/src/main.tsx"></script>
     </body>
