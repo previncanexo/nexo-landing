@@ -5,6 +5,16 @@ import { Button } from './ui/button';
 const NEXO_PURPLE = '#8660ef';
 const NEXO_PINK = '#ee5cd0';
 const NEXO_GRADIENT = 'linear-gradient(135deg, #8660ef, #ee5cd0)';
+/**
+ * Los colores de marca como TEXTO chico sobre blanco no llegan a 4.5:1
+ * (violeta 4.26, rosa 2.97). Estas variantes son los mismos tonos oscurecidos
+ * lo justo para cumplir, sin cambiar la identidad. Se usan SOLO para texto:
+ * los fondos y gradientes siguen con los colores de marca originales.
+ */
+const VIOLETA_TEXTO = '#6d43e0';
+const ROSA_TEXTO = '#c2359f';
+/** El violeta sólido del CTA: blanco sobre #8660ef da 4.26. Este llega a 4.6. */
+const VIOLETA_BOTON = '#7a51e6';
 /** Rojo de revisión: marca datos que el cliente todavía no confirmó. */
 const PENDIENTE_ROJO = '#dc2626';
 
@@ -115,7 +125,7 @@ function PlanCard({ plan, onElegirPlan }: { plan: PlanComercial; onElegirPlan: (
             onClick={() => onElegirPlan(plan.slug)}
             aria-label={`Afiliarme a ${plan.nombre}`}
             className="w-full rounded-full text-white hover:opacity-90"
-            style={{ background: plan.recomendado ? NEXO_GRADIENT : NEXO_PURPLE }}
+            style={{ background: plan.recomendado ? NEXO_GRADIENT : VIOLETA_BOTON }}
           >
             Afiliarme
           </Button>
@@ -128,13 +138,21 @@ function PlanCard({ plan, onElegirPlan }: { plan: PlanComercial; onElegirPlan: (
 export function Planes({ onElegirPlan }: { onElegirPlan: (slug: string) => void }) {
   return (
     <section id="beneficios" className="mx-auto max-w-6xl scroll-mt-24 px-5 pt-16 pb-6 sm:pt-20">
-      <p className="text-center text-[11px] font-semibold uppercase tracking-[0.22em] text-[var(--purple)]">
+      <p className="text-center text-[11px] font-semibold uppercase tracking-[0.22em]"
+        style={{ color: VIOLETA_TEXTO }}>
         Nuestros planes
       </p>
       <h2 className="mx-auto mt-3 max-w-[600px] text-center text-[clamp(26px,5vw,42px)] leading-tight tracking-[-1px]">
         Elegí la cobertura que necesitás
       </h2>
-      <div className="mt-10 grid grid-cols-1 items-start gap-5 md:grid-cols-3">
+      {/*
+        Sin `items-start`: con esa clase cada card se encogía a su contenido y las
+        tres quedaban de alturas distintas, con los botones "Afiliarme" a tres
+        alturas diferentes. Estirándolas (el default del grid) el `mt-auto` que ya
+        tiene el CTA lo empuja al pie y los tres quedan alineados, que es lo que
+        hace comparable una tabla de precios.
+      */}
+      <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-3">
         {PLANES.map((p) => <PlanCard key={p.slug} plan={p} onElegirPlan={onElegirPlan} />)}
       </div>
     </section>
@@ -147,41 +165,128 @@ export function Planes({ onElegirPlan }: { onElegirPlan: (slug: string) => void 
  * ya se contratan HOY en el portal — listar precios vigentes bajo un cartel de
  * "próximamente" es una contradicción comercial, no solo un desprolijidad visual.
  */
+/**
+ * Ícono por servicio. Los datos no traen ícono a propósito (`planes.ts` es copy
+ * comercial, no presentación), así que el mapeo vive acá, junto al render.
+ */
+function IconoServicio({ id }: { id: string }) {
+  const comun = {
+    width: 20,
+    height: 20,
+    viewBox: '0 0 24 24',
+    fill: 'none',
+    stroke: 'currentColor',
+    strokeWidth: 1.7,
+    strokeLinecap: 'round' as const,
+    strokeLinejoin: 'round' as const,
+    'aria-hidden': true,
+  };
+  if (id.startsWith('hogar')) {
+    return (
+      <svg {...comun}>
+        <path d="M3 10.5 12 3l9 7.5" />
+        <path d="M5 9.5V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9.5" />
+        <path d="M9.5 21v-6h5v6" />
+      </svg>
+    );
+  }
+  if (id === 'arbol-de-vida') {
+    return (
+      <svg {...comun}>
+        <path d="M12 22v-6" />
+        <path d="M12 17a7 7 0 1 0 0-14 7 7 0 0 0 0 14Z" />
+        <path d="m12 15-2.5-2.5" />
+        <path d="m12 12 2.5-2.5" />
+      </svg>
+    );
+  }
+  if (id === 'vida') {
+    return (
+      <svg {...comun}>
+        <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21.2l7.8-7.7 1-1.1a5.5 5.5 0 0 0 0-7.8Z" />
+      </svg>
+    );
+  }
+  // Seguro de Salud
+  return (
+    <svg {...comun}>
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      <path d="M12 8v6M9 11h6" />
+    </svg>
+  );
+}
+
 export function ServiciosOnDemand() {
   return (
-    <section id="on-demand" className="mx-auto max-w-2xl scroll-mt-24 px-5 pt-12 pb-6">
-      <p className="text-center text-[11px] font-semibold uppercase tracking-[0.22em] text-[var(--purple)]">
+    <section id="on-demand" className="mx-auto max-w-6xl scroll-mt-24 px-5 pt-14 pb-6">
+      {/* Misma estructura de encabezado que la sección de planes (volanta +
+          titular + bajada) para que las dos se lean como partes de lo mismo. */}
+      <p className="text-center text-[11px] font-semibold uppercase tracking-[0.22em]"
+        style={{ color: ROSA_TEXTO }}>
         Servicios on demand
       </p>
-      {/* var(--gray-500) resuelve a #8c8c8c, el mismo gris de bajo contraste (~3.4:1)
-          que se corrigió en PrestacionItem. Mismo tamaño de texto, mismo problema. */}
-      <p className="mx-auto mt-3 max-w-[440px] text-center text-sm text-[#6b6b6b]">
-        Se contratan aparte y se suman a tu cuota solo si los querés.
+      <h2 className="mx-auto mt-3 max-w-[600px] text-center text-[clamp(26px,5vw,42px)] leading-tight tracking-[-1px]">
+        Sumá solo lo que necesites
+      </h2>
+      <p className="mx-auto mt-3 max-w-[460px] text-center text-sm text-[#6b6b6b]">
+        No están incluidos en los planes. Se contratan aparte y se suman a tu cuota únicamente si los querés.
       </p>
-      <ul className="m-0 mt-6 flex list-none flex-col gap-0 p-0">
-        {ON_DEMAND.map((s) => (
-          <li
-            key={s.id}
-            className="flex items-baseline justify-between gap-4 border-b border-[var(--gray-100)] py-3.5 last:border-b-0"
-          >
-            <span>
-              <span
-                className="text-sm font-semibold"
-                style={{ color: s.pendiente ? PENDIENTE_ROJO : 'var(--gray-700)' }}
+
+      <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {ON_DEMAND.map((s) => {
+          const rojo = !!s.pendiente;
+          return (
+            <div
+              key={s.id}
+              className="flex flex-col rounded-3xl bg-white p-6 transition-all hover:-translate-y-1"
+              style={{
+                border: `1.5px solid ${rojo ? `${PENDIENTE_ROJO}33` : '#f0eaf9'}`,
+                boxShadow: 'var(--shadow-card)',
+              }}
+            >
+              <div
+                className="flex h-11 w-11 items-center justify-center rounded-2xl text-white"
+                style={{
+                  background: rojo ? PENDIENTE_ROJO : NEXO_GRADIENT,
+                  boxShadow: `0 4px 14px ${rojo ? `${PENDIENTE_ROJO}40` : 'rgba(134,96,239,0.30)'}`,
+                }}
+              >
+                <IconoServicio id={s.id} />
+              </div>
+
+              <h3
+                className="mt-4 text-lg leading-snug"
+                style={{ color: rojo ? PENDIENTE_ROJO : '#111111' }}
               >
                 {s.nombre}
-              </span>
-              <span className="block text-[13px] text-[#6b6b6b]">{s.detalle}</span>
-            </span>
-            <span
-              className="shrink-0 whitespace-nowrap text-sm font-bold"
-              style={{ color: s.pendiente ? PENDIENTE_ROJO : 'var(--gray-900)' }}
-            >
-              ${formatearMiles(s.precio)}/mes
-            </span>
-          </li>
-        ))}
-      </ul>
+              </h3>
+              <p className="mt-1.5 text-[13px] leading-relaxed text-[#6b6b6b]">{s.detalle}</p>
+
+              {/* mt-auto: los precios quedan alineados al pie aunque los detalles
+                  ocupen una o dos líneas. */}
+              <div className="mt-auto flex items-baseline gap-1.5 pt-5">
+                <span
+                  className="font-['DM_Serif_Display'] text-[30px] leading-none"
+                  style={
+                    rojo
+                      ? { color: PENDIENTE_ROJO }
+                      : {
+                          background: NEXO_GRADIENT,
+                          WebkitBackgroundClip: 'text',
+                          backgroundClip: 'text',
+                          WebkitTextFillColor: 'transparent',
+                          color: 'transparent',
+                        }
+                  }
+                >
+                  ${formatearMiles(s.precio)}
+                </span>
+                <span className="text-sm font-semibold text-[#6b6b6b]">/mes</span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </section>
   );
 }
