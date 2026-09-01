@@ -189,7 +189,28 @@ function TerminosModal({ onClose }: { onClose: () => void }) {
   )
 }
 
-export function Footer() {
+interface FooterLink {
+  href: string;
+  label: string;
+}
+
+interface FooterProps {
+  /**
+   * Links de la columna "Servicios". Por defecto lista las secciones de esta
+   * landing; `App.tsx` pasa los tres planes (Nexo I/II/III) más "+Bienestar" y
+   * "Cómo funciona", porque el link único "Previnca Nexo" del default ya queda
+   * cubierto por los planes (todos apuntan a la misma sección).
+   */
+  servicios?: FooterLink[];
+}
+
+const SERVICIOS_POR_DEFECTO: FooterLink[] = [
+  { href: '#beneficios', label: 'Previnca Nexo' },
+  { href: '#carta', label: '+Bienestar' },
+  { href: '#como', label: 'Cómo funciona' },
+];
+
+export function Footer({ servicios = SERVICIOS_POR_DEFECTO }: FooterProps = {}) {
   const [showTyC, setShowTyC] = useState(false)
   return (
     <>
@@ -282,11 +303,7 @@ export function Footer() {
             <div className="col-span-1 md:col-span-2">
               <h3 className="text-white font-bold text-xs mb-4 uppercase tracking-wider">Servicios</h3>
               <ul className="space-y-3">
-                {[
-                  { href: '#beneficios', label: 'Previnca Nexo' },
-                  { href: '#carta', label: '+Bienestar' },
-                  { href: '#como', label: 'Cómo funciona' },
-                ].map((link) => (
+                {servicios.map((link) => (
                   <li key={link.label}>
                     <a href={link.href} className="text-white/65 text-sm hover:text-white transition-colors duration-300 no-underline">
                       {link.label}

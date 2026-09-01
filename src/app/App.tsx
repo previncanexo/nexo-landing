@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Navigation } from './components/Navigation';
 import { Hero } from './components/Hero';
-import { PlanBase } from './components/PlanBase';
+import { Planes, ServiciosOnDemand } from './components/Planes';
 import { BackToTop } from './components/BackToTop';
 import { WhatsAppButton } from './components/WhatsAppButton';
 import { IPhoneCTA } from './components/IPhoneCTA';
@@ -15,6 +15,7 @@ import { FAQ } from './components/FAQ';
 import { Footer } from './components/Footer';
 import { Onboarding } from './components/Onboarding';
 import { captureAttribution } from './lib/attribution';
+import { PLANES } from './data/planes';
 
 const testimonials = [
   {
@@ -110,12 +111,42 @@ export default function App() {
   const showMobileCtaRef = useRef(false);
   const showBackToTopRef = useRef(false);
 
+  // Plan elegido en la card. Viaja hasta el PATCH del onboarding para que MP cobre
+  // el precio correcto. Si alguien entra por /onboarding directo (deep link, sin
+  // pasar por una card), queda 'nexo-1': el backend, sin plan, cae al MÁS BARATO,
+  // y cobrarle $7.000 a quien quiso el de $20.000 es peor que asumir el principal.
+  const [planSlug, setPlanSlug] = useState<string>('nexo-1');
+
+  // goToRegistro queda SIN parámetros a propósito. Navigation.tsx:99,
+  // IPhoneCTA.tsx:37 y ComoFunciona.tsx:203 la pasan como `onClick={onOpenCheckout}`
+  // sin envolver, así que React le inyecta el MouseEvent como primer argumento.
+  // Si aceptara un slug opcional, esas tres CTAs guardarían un evento del DOM como
+  // plan, ningún plan matchearía, y el cobro caería al más barato: justo el bug que
+  // esta entrega viene a cerrar.
   const goToRegistro = useCallback(() => {
     if (typeof window === 'undefined') return;
     window.history.pushState({}, '', '/onboarding/afiliado');
     setPathname('/onboarding/afiliado');
     window.scrollTo({ top: 0, behavior: 'auto' });
   }, []);
+
+  /**
+   * Entrada desde una card de plan: fija el plan y arranca el alta.
+   *
+   * También lo persiste en localStorage (misma key que `Onboarding.tsx`: LS_PLAN =
+   * 'nexo_plan_slug'). Onboarding YA está diseñado para sobrevivir un reload a
+   * mitad del wizard (retoma LS_LEAD/LS_FORM); si `planSlug` viviera solo acá, ese
+   * mismo reload remontaría App con el default y cobraría el plan equivocado. Se
+   * escribe en cada clic para que nunca quede desactualizado respecto de la
+   * última decisión del usuario.
+   */
+  const elegirPlan = useCallback((slug: string) => {
+    setPlanSlug(slug);
+    if (typeof window !== 'undefined') {
+      try { localStorage.setItem('nexo_plan_slug', slug); } catch { /* ignore */ }
+    }
+    goToRegistro();
+  }, [goToRegistro]);
 
   const goToLanding = useCallback(() => {
     if (typeof window === 'undefined') return;
@@ -183,20 +214,30 @@ export default function App() {
   }, []);
 
   if (isOnboarding) {
-    return <Onboarding onClose={goToLanding} />;
+    return <Onboarding onClose={goToLanding} planSlug={planSlug} />;
   }
 
   return (
     <div className="overflow-x-clip">
       <Navigation onOpenCheckout={goToRegistro} />
       <Hero onOpenCheckout={goToRegistro} />
-      <PlanBase />
+      <Planes onElegirPlan={elegirPlan} />
+      <ServiciosOnDemand />
       <ALaCarta onOpenCheckout={goToRegistro} />
       <ComoFunciona onOpenCheckout={goToRegistro} />
       <BannerCarousel />
       <Testimonios testimonials={testimonials} />
       <FAQ items={faqItems} />
-      <Footer />
+      {/* Los tres planes reemplazan el viejo link único "Previnca Nexo → #beneficios"
+          (ya apuntan a esa sección), pero "+Bienestar" y "Cómo funciona" son
+          navegación real de esta landing y no tienen por qué desaparecer. */}
+      <Footer
+        servicios={[
+          ...PLANES.map((p) => ({ href: `#plan-${p.slug}`, label: p.nombre })),
+          { href: '#carta', label: '+Bienestar' },
+          { href: '#como', label: 'Cómo funciona' },
+        ]}
+      />
 
       <BackToTop isVisible={showBackToTop} isMobileCTAVisible={showMobileCta} />
       <WhatsAppButton isVisible={true} isMobileCTAVisible={showMobileCta} />

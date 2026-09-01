@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import logoImage from '@/assets/logo.png';
 import { getAttribution } from '../lib/attribution';
+import { PLANES, formatearMiles, type PlanComercial } from '@/app/data/planes';
 
 type Step = 1 | 2 | 3 | 4 | 5 | 6 | 'success';
 
@@ -90,6 +91,12 @@ const API_URL = (import.meta as { env?: Record<string, string> }).env?.VITE_NEXO
 // 3 pagos al affiliate de Matias por este motivo).
 const LS_LEAD = 'nexo_lead_id';
 const LS_FORM = 'nexo_form_data';
+// El plan viaja en memoria desde App (prop `planSlug`), pero el flujo YA está
+// diseñado para sobrevivir un reload a mitad del wizard (por eso existen LS_LEAD
+// y LS_FORM arriba) — si recargás en el step 4 habiendo elegido Nexo III, App se
+// remonta con su default y el resumen/PATCH terminarían cobrando $20.000 en vez
+// de $7.000. Se persiste acá, con la misma convención.
+const LS_PLAN = 'nexo_plan_slug';
 // Caches legacy que se limpian al montar (ver useEffect de cleanup):
 const LS_LEGACY_AFFILIATE = 'nexo_affiliate_id';
 const LS_LEGACY_CHECKOUT = 'nexo_checkout_url';
@@ -122,7 +129,29 @@ function stepFromPath(path: string): Step {
   return PATH_TO_STEP[path.replace(/\/$/, '') || '/onboarding'] ?? 1;
 }
 
-export function Onboarding({ onClose }: { onClose: () => void }) {
+export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlug?: string }) {
+  // El wizard tenía el producto único hardcodeado en cinco lugares. Con tres planes
+  // eso mostraba un precio y cobraba otro. El plan se resuelve una vez y de acá salen
+  // tanto la UI del resumen como los eventos de tracking. Fallback explícito a
+  // 'nexo-1' (no a PLANES[0]) para que un cambio de orden en el array de datos no
+  // termine cayendo silenciosamente al plan más barato.
+  // El plan se congela al montar el wizard. Recalcularlo en cada render lo hacía
+  // depender del localStorage vivo, y el removeItem(LS_PLAN) del cierre del alta
+  // lo dejaba caer al prop stale en el re-render intermedio: el resumen y el
+  // InitiateCheckout mostraban otro plan que el que se mandó a cobrar. Mismo
+  // patrón que ya usa este archivo para `step` y `leadId`: useState perezoso.
+  //
+  // Precedencia: localStorage primero (sobrevive un reload a mitad del wizard,
+  // que App no sobrevive porque su estado vuelve a 'nexo-1'), después el prop
+  // `planSlug` de App, después el plan principal como último resort.
+  const [plan] = useState<PlanComercial>(() => {
+    const guardado = typeof window !== 'undefined' ? localStorage.getItem(LS_PLAN) : null;
+    return PLANES.find((p) => p.slug === guardado)
+      ?? PLANES.find((p) => p.slug === planSlug)
+      ?? PLANES.find((p) => p.slug === 'nexo-1')
+      ?? PLANES[0];
+  });
+
   const [step, setStep] = useState<Step>(
     typeof window !== 'undefined' ? stepFromPath(window.location.pathname) : 1
   );
@@ -170,6 +199,9 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
         const data = await res.json();
         if (!data.success || data.lead.status !== 'partial') {
           localStorage.removeItem(LS_LEAD);
+          // El plan guardado está atado a este lead; si el lead ya no es válido
+          // (convertido o inexistente), el plan tampoco debe sobrevivir.
+          localStorage.removeItem(LS_PLAN);
           setLeadId(null);
           return;
         }
@@ -184,6 +216,7 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
         }
       } catch {
         localStorage.removeItem(LS_LEAD);
+        localStorage.removeItem(LS_PLAN);
         setLeadId(null);
       }
     })();
@@ -360,6 +393,7 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          plan_slug: plan.slug,
           dni: form.dni.trim(),
           fecha_nacimiento: form.fecha_nacimiento,
           ciudad: form.ciudad,
@@ -401,14 +435,17 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
         return null;
       }
       localStorage.removeItem(LS_LEAD);
+      // El alta se completó: el próximo visitante de este browser no debe heredar
+      // el plan de otro affiliate ya creado.
+      localStorage.removeItem(LS_PLAN);
       setLeadId(null);
       setAffiliateId(data.affiliateId);
       setCheckoutUrl(data.checkoutUrl);
       setEventIdIC(eventIdIC);
 
       // Pixel CompleteRegistration + GA4 sign_up (dedup CAPI vía eventID compartido)
-      const planName = 'Previnca Nexo';
-      const value = 19500;
+      const planName = plan.nombre;
+      const value = plan.precio;
       if (typeof window !== 'undefined') {
         try {
           window.fbq?.('track', 'CompleteRegistration', { content_name: planName, currency: 'ARS', value }, { eventID: eventIdCR });
@@ -479,10 +516,10 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
     if (typeof window !== 'undefined') {
       const ic = eventIdIC ?? newEventId();
       try {
-        window.fbq?.('track', 'InitiateCheckout', { content_name: 'Previnca Nexo', currency: 'ARS', value: 19500 }, { eventID: ic });
+        window.fbq?.('track', 'InitiateCheckout', { content_name: plan.nombre, currency: 'ARS', value: plan.precio }, { eventID: ic });
       } catch {}
       try {
-        window.gtag?.('event', 'begin_checkout', { currency: 'ARS', value: 19500, items: [{ item_name: 'Previnca Nexo', price: 19500, quantity: 1 }] });
+        window.gtag?.('event', 'begin_checkout', { currency: 'ARS', value: plan.precio, items: [{ item_name: plan.nombre, price: plan.precio, quantity: 1 }] });
       } catch {}
     }
     // Pequeño delay para que el pixel pueda enviar el request antes del navigate
@@ -725,11 +762,11 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
                   <div className="ob-summary-plan-body">
                     <div>
                       <p className="ob-summary-plan-label">Plan</p>
-                      <p className="ob-summary-plan-name">Previnca Nexo</p>
+                      <p className="ob-summary-plan-name">{plan.nombre}</p>
                     </div>
                     <div>
                       <p className="ob-summary-plan-period">por mes</p>
-                      <p className="ob-summary-plan-price">$19.500</p>
+                      <p className="ob-summary-plan-price">${formatearMiles(plan.precio)}</p>
                     </div>
                   </div>
                 </div>
