@@ -219,11 +219,11 @@ export function Hero({ onOpenCheckout }: { onOpenCheckout?: () => void } = {}) {
             animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
             transition={{ delay: 0.85, duration: 0.5, ease: BLUR_EASE }}
           >
-            {formatearMiles(PRECIO_DESDE)} por mes
+            ${formatearMiles(PRECIO_DESDE)} por mes
           </m.span>
         ) : (
           <span className="inline-block whitespace-nowrap bg-white/25 px-3 py-1 rounded-full text-white font-bold border border-white/30">
-            {formatearMiles(PRECIO_DESDE)} por mes
+            ${formatearMiles(PRECIO_DESDE)} por mes
           </span>
         )}
         <BlurRevealWords text=". Teleconsultas médicas, emergencias médicas y beneficios para cuidarte, contratados en minutos y sin papeles." delay={0.95} enabled={animate} />
