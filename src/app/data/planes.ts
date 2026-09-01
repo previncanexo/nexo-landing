@@ -141,3 +141,15 @@ export const ON_DEMAND: ServicioOnDemand[] = [
   // lista de precio de vendedores me parece q esta mal". Sin confirmar.
   { id: 'vida', nombre: 'Seguro de Vida', precio: 2750, detalle: 'Suma asegurada $3.162.500', pendiente: true },
 ];
+
+/**
+ * Key de localStorage del plan elegido en una card, compartida entre `App.tsx`
+ * (que escribe) y `Onboarding.tsx` (que lee). Este repo no corre `tsc`, así que
+ * duplicar el literal en los dos archivos deja el mecanismo un typo lejos de
+ * romperse en silencio, justo en la rama que existe para cerrar bugs de
+ * sincronización de plan.
+ *
+ * Fuera del bloque `export const PLANES`/`ON_DEMAND` a propósito:
+ * `scripts/check-precios.mjs` extrae precios con una regex acotada a ese rango.
+ */
+export const LS_PLAN_KEY = 'nexo_plan_slug';

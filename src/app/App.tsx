@@ -15,7 +15,7 @@ import { FAQ } from './components/FAQ';
 import { Footer } from './components/Footer';
 import { Onboarding } from './components/Onboarding';
 import { captureAttribution } from './lib/attribution';
-import { PLANES } from './data/planes';
+import { PLANES, LS_PLAN_KEY } from './data/planes';
 
 const testimonials = [
   {
@@ -117,36 +117,76 @@ export default function App() {
   // y cobrarle $7.000 a quien quiso el de $20.000 es peor que asumir el principal.
   const [planSlug, setPlanSlug] = useState<string>('nexo-1');
 
-  // goToRegistro queda SIN parámetros a propósito. Navigation.tsx:99,
-  // IPhoneCTA.tsx:37 y ComoFunciona.tsx:203 la pasan como `onClick={onOpenCheckout}`
-  // sin envolver, así que React le inyecta el MouseEvent como primer argumento.
-  // Si aceptara un slug opcional, esas tres CTAs guardarían un evento del DOM como
-  // plan, ningún plan matchearía, y el cobro caería al más barato: justo el bug que
-  // esta entrega viene a cerrar.
-  const goToRegistro = useCallback(() => {
+  // Navegación pura hacia /onboarding, sin efectos sobre localStorage. Separada
+  // de goToRegistro/elegirPlan a propósito: si esas dos funciones compartieran
+  // este paso de limpieza, elegirPlan (que escribe el plan en localStorage y
+  // navega en el mismo tick) se borraría a sí misma. Ver el porqué completo en
+  // el comentario de goToRegistro, dos funciones más abajo.
+  const irAOnboarding = useCallback(() => {
     if (typeof window === 'undefined') return;
     window.history.pushState({}, '', '/onboarding/afiliado');
     setPathname('/onboarding/afiliado');
     window.scrollTo({ top: 0, behavior: 'auto' });
   }, []);
 
+  // goToRegistro queda SIN parámetros a propósito. Navigation.tsx:99,
+  // IPhoneCTA.tsx:37 y ComoFunciona.tsx:203 la pasan como `onClick={onOpenCheckout}`
+  // sin envolver, así que React le inyecta el MouseEvent como primer argumento.
+  // Si aceptara un slug opcional, esas tres CTAs guardarían un evento del DOM como
+  // plan, ningún plan matchearía, y el cobro caería al más barato: justo el bug que
+  // esta entrega viene a cerrar.
+  //
+  // Además de navegar, limpia el plan persistido. Es la CTA GENÉRICA (Navigation,
+  // Hero, ALaCarta, ComoFunciona, IPhoneCTA): "entré por acá, no por una card" es
+  // justo la condición que activa el fallback a 'nexo-1' documentado arriba. Si
+  // no se limpia, alguien que eligió Nexo III, abandonó sin crear lead (ningún
+  // removeItem de Onboarding.tsx se dispara sin LS_LEAD) y vuelve dentro de las
+  // 24h del TTL por una CTA genérica, heredaría el plan viejo en vez de caer al
+  // principal — el mismo bug de cobro incorrecto que esta entrega cierra, por
+  // la otra punta.
+  //
+  // NO fusionar esto con `irAOnboarding` ni compartirlo con `elegirPlan`:
+  // `elegirPlan` escribe el plan en localStorage y navega en el mismo tick, así
+  // que si pasara por este removeItem se borraría el plan que acaba de guardar.
+  const goToRegistro = useCallback(() => {
+    // Limpiar localStorage no alcanza: el estado planSlug de React sobrevive a una
+    // navegacion SPA (cerrar el wizard con la x y volver por una CTA generica, sin
+    // reload), y ese valor stale gana antes de llegar al fallback. Se resetea aca
+    // para que quien entra SIN elegir plan arranque siempre en el principal.
+    setPlanSlug('nexo-1');
+    if (typeof window !== 'undefined') {
+      try { localStorage.removeItem(LS_PLAN_KEY); } catch { /* ignore */ }
+    }
+    irAOnboarding();
+  }, [irAOnboarding]);
+
   /**
    * Entrada desde una card de plan: fija el plan y arranca el alta.
    *
-   * También lo persiste en localStorage (misma key que `Onboarding.tsx`: LS_PLAN =
-   * 'nexo_plan_slug'). Onboarding YA está diseñado para sobrevivir un reload a
-   * mitad del wizard (retoma LS_LEAD/LS_FORM); si `planSlug` viviera solo acá, ese
-   * mismo reload remontaría App con el default y cobraría el plan equivocado. Se
-   * escribe en cada clic para que nunca quede desactualizado respecto de la
-   * última decisión del usuario.
+   * También lo persiste en localStorage (`LS_PLAN_KEY`, importada de
+   * `data/planes.ts` para que un typo futuro no rompa el mecanismo en silencio
+   * en un repo sin `tsc`). Onboarding YA está diseñado para sobrevivir un reload
+   * a mitad del wizard (retoma LS_LEAD/LS_FORM); si `planSlug` viviera solo acá,
+   * ese mismo reload remontaría App con el default y cobraría el plan
+   * equivocado. Se escribe en cada clic para que nunca quede desactualizado
+   * respecto de la última decisión del usuario.
+   *
+   * Se guarda con timestamp (no el slug plano) porque `Onboarding.tsx` lo hace
+   * caducar: si alguien elige un plan y abandona antes de crear un lead, ningún
+   * cleanup existente lo borra, y sin TTL ese slug viejo secuestraría la sesión
+   * de otra persona que entre por deep link semanas después.
+   *
+   * Navega con `irAOnboarding`, NO con `goToRegistro`: esta última limpia el
+   * plan persistido (es la CTA genérica), y si elegirPlan pasara por ahí se
+   * borraría el plan que acaba de escribir dos líneas arriba, en el mismo tick.
    */
   const elegirPlan = useCallback((slug: string) => {
     setPlanSlug(slug);
     if (typeof window !== 'undefined') {
-      try { localStorage.setItem('nexo_plan_slug', slug); } catch { /* ignore */ }
+      try { localStorage.setItem(LS_PLAN_KEY, JSON.stringify({ slug, ts: Date.now() })); } catch { /* ignore */ }
     }
-    goToRegistro();
-  }, [goToRegistro]);
+    irAOnboarding();
+  }, [irAOnboarding]);
 
   const goToLanding = useCallback(() => {
     if (typeof window === 'undefined') return;

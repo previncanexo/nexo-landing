@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import logoImage from '@/assets/logo.png';
 import { getAttribution } from '../lib/attribution';
-import { PLANES, formatearMiles, type PlanComercial } from '@/app/data/planes';
+import { PLANES, formatearMiles, LS_PLAN_KEY, type PlanComercial } from '@/app/data/planes';
 
 type Step = 1 | 2 | 3 | 4 | 5 | 6 | 'success';
 
@@ -95,8 +95,37 @@ const LS_FORM = 'nexo_form_data';
 // diseñado para sobrevivir un reload a mitad del wizard (por eso existen LS_LEAD
 // y LS_FORM arriba) — si recargás en el step 4 habiendo elegido Nexo III, App se
 // remonta con su default y el resumen/PATCH terminarían cobrando $20.000 en vez
-// de $7.000. Se persiste acá, con la misma convención.
-const LS_PLAN = 'nexo_plan_slug';
+// de $7.000. Se persiste acá, con la misma convención. La key vive en
+// `data/planes.ts` (LS_PLAN_KEY) porque App.tsx también la escribe.
+//
+// El plan elegido caduca: si alguien abandona el alta sin crear lead, ningún
+// removeItem de abajo se dispara (todos cuelgan de que exista LS_LEAD), y el
+// slug queda huérfano en el browser. Semanas después, un deep link directo a
+// /onboarding/afiliado (sin pasar por ninguna card) leería ese slug viejo antes
+// que el fallback 'nexo-1' — la misma familia del incidente de URL hijacking
+// entre sesiones que documentan los LS_LEGACY_* de abajo.
+const LS_PLAN_TTL_MS = 24 * 60 * 60 * 1000;
+
+/** Lee el plan guardado y lo descarta si caducó, no matchea un slug vigente, o
+ *  el JSON es viejo/corrupto (versión anterior guardaba el slug plano: un
+ *  `JSON.parse('nexo-3')` tira, y ahí también hay que caer al fallback en vez
+ *  de arriesgar cobrar mal). */
+function leerPlanGuardado(): string | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    const crudo = localStorage.getItem(LS_PLAN_KEY);
+    if (!crudo) return null;
+    const { slug, ts } = JSON.parse(crudo);
+    if (typeof ts !== 'number' || Date.now() - ts > LS_PLAN_TTL_MS) {
+      localStorage.removeItem(LS_PLAN_KEY);
+      return null;
+    }
+    return typeof slug === 'string' ? slug : null;
+  } catch {
+    try { localStorage.removeItem(LS_PLAN_KEY); } catch { /* ignore */ }
+    return null;
+  }
+}
 // Caches legacy que se limpian al montar (ver useEffect de cleanup):
 const LS_LEGACY_AFFILIATE = 'nexo_affiliate_id';
 const LS_LEGACY_CHECKOUT = 'nexo_checkout_url';
@@ -136,16 +165,18 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
   // 'nexo-1' (no a PLANES[0]) para que un cambio de orden en el array de datos no
   // termine cayendo silenciosamente al plan más barato.
   // El plan se congela al montar el wizard. Recalcularlo en cada render lo hacía
-  // depender del localStorage vivo, y el removeItem(LS_PLAN) del cierre del alta
-  // lo dejaba caer al prop stale en el re-render intermedio: el resumen y el
-  // InitiateCheckout mostraban otro plan que el que se mandó a cobrar. Mismo
+  // depender del localStorage vivo, y el removeItem(LS_PLAN_KEY) del cierre del
+  // alta lo dejaba caer al prop stale en el re-render intermedio: el resumen y
+  // el InitiateCheckout mostraban otro plan que el que se mandó a cobrar. Mismo
   // patrón que ya usa este archivo para `step` y `leadId`: useState perezoso.
   //
   // Precedencia: localStorage primero (sobrevive un reload a mitad del wizard,
   // que App no sobrevive porque su estado vuelve a 'nexo-1'), después el prop
   // `planSlug` de App, después el plan principal como último resort.
+  // `leerPlanGuardado` valida el TTL: un slug legítimo pero viejo no debe
+  // secuestrar la sesión de otra persona que entra semanas después.
   const [plan] = useState<PlanComercial>(() => {
-    const guardado = typeof window !== 'undefined' ? localStorage.getItem(LS_PLAN) : null;
+    const guardado = leerPlanGuardado();
     return PLANES.find((p) => p.slug === guardado)
       ?? PLANES.find((p) => p.slug === planSlug)
       ?? PLANES.find((p) => p.slug === 'nexo-1')
@@ -201,7 +232,7 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
           localStorage.removeItem(LS_LEAD);
           // El plan guardado está atado a este lead; si el lead ya no es válido
           // (convertido o inexistente), el plan tampoco debe sobrevivir.
-          localStorage.removeItem(LS_PLAN);
+          localStorage.removeItem(LS_PLAN_KEY);
           setLeadId(null);
           return;
         }
@@ -216,7 +247,7 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
         }
       } catch {
         localStorage.removeItem(LS_LEAD);
-        localStorage.removeItem(LS_PLAN);
+        localStorage.removeItem(LS_PLAN_KEY);
         setLeadId(null);
       }
     })();
@@ -437,7 +468,7 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
       localStorage.removeItem(LS_LEAD);
       // El alta se completó: el próximo visitante de este browser no debe heredar
       // el plan de otro affiliate ya creado.
-      localStorage.removeItem(LS_PLAN);
+      localStorage.removeItem(LS_PLAN_KEY);
       setLeadId(null);
       setAffiliateId(data.affiliateId);
       setCheckoutUrl(data.checkoutUrl);
