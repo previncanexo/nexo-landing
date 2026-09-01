@@ -563,13 +563,17 @@ export const ON_DEMAND: ServicioOnDemand[] = [
 ];
 ```
 
-- [ ] **Step 2: Verificar que tipa**
+- [ ] **Step 2: Verificar que el build lo resuelve**
 
-Run: `npx tsc --noEmit`
+Run: `npm run build`
 
-Expected: sin errores.
+Expected: build exitoso.
+
+**No uses `npx tsc --noEmit` en este repo.** La landing NO tiene TypeScript instalado ni `tsconfig.json`: Vite transpila con esbuild, que borra los tipos sin chequearlos. Correr `tsc` te obligaria a fabricar un tsconfig y sumar `typescript` como dependencia, y eso es una decision de tooling propia que NO forma parte de esta entrega. Si el build pasa, el archivo esta bien. (En el repo del portal si hay tsconfig; ahi `tsc --noEmit` es valido, y por eso la Task 1 lo usa.)
 
 - [ ] **Step 3: Commit**
+
+El hook de pre-commit `gga` corre una review con IA sobre los archivos `.ts` y `.tsx`, y su timeout propio es de **300 segundos**. Corre el commit con un timeout de al menos 400s en la herramienta Bash. **No lo saltees con `--no-verify`**: es un control de calidad deliberado del equipo.
 
 ```bash
 git add src/app/data/planes.ts
