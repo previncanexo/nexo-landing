@@ -100,6 +100,11 @@ confirmación del cliente:
 5. **Doc24 Pediatría** — cant. 0 en II y III, con la nota "no se usa, sin grupo familiar".
    **Recomendación: no listarlo en la landing.** Publicar una prestación que ningún socio puede
    usar (no se vende a menores) genera reclamos de posventa.
+6. **Descuento monotributista (25%)** — existe en el prototipo `MenuLanding.tsx:198`
+   (`MONOTRIBUTO_OFF`) pero **no aparece en el documento de producto de Nexo I/II/III**. No se
+   traslada a las cards nuevas hasta que el cliente confirme si sigue vigente y sobre qué planes
+   aplica. Un descuento inventado sobre un precio publicado es un problema comercial, no un
+   detalle de UI.
 
 ## Decisiones tomadas
 
@@ -184,9 +189,28 @@ Consumidores secundarios del mismo dato:
 
 ### C. Selección de plan en el alta (landing)
 
-`Onboarding.tsx` suma un paso de selección de plan y manda `plan_id` en el `PATCH` a
-`/api/leads/[id]`. **Sin esto la entrega no se puede publicar**: sería cobrar $7.000 a quien
-compró un plan de $20.000.
+El plan se elige **en la card de la landing**, no como paso nuevo del wizard. El `slug` viaja
+hasta el `PATCH` a `/api/leads/[id]`. **Sin esto la entrega no se puede publicar**: sería
+cobrar $7.000 a quien compró un plan de $20.000.
+
+**Por qué no un paso nuevo en el wizard** (corrección al diseño original, tras leer el código):
+`Onboarding.tsx` numera sus pasos del 1 al 6 y ese número es una clave pública en cuatro lugares
+a la vez — `STEP_TO_PATH`/`PATH_TO_STEP` (`Onboarding.tsx:99-119`, deep links tipo
+`/onboarding/dni`), el indicador de puntos (`:576`, con `i < 5` hardcodeado), `trackStepView()`
+(`:74`, que manda el número a GA4) y la lógica de retomar un lead a medias (`:182`, `setStep(3)`).
+Insertar un paso renumera todo eso: rompe los deep links que ya están en la calle, corta la serie
+histórica de GA4 y manda a los leads guardados a mitad de embudo al paso equivocado.
+
+Elegir en la card es además mejor comercialmente: el usuario ya decidió cuando hizo clic, y
+volver a preguntárselo dentro del formulario reabre una decisión cerrada.
+
+Implementación: `goToRegistro()` en `App.tsx:65` acepta un `slug` opcional, lo guarda en estado
+y se lo pasa a `<Onboarding planSlug={...} />`, que lo agrega al body del `PATCH`. El wizard
+sigue teniendo 6 pasos y ninguna de las cuatro claves cambia.
+
+Si el usuario entra por `/onboarding` directo (deep link, sin pasar por una card), `planSlug`
+queda `undefined`. En ese caso la landing manda `'nexo-1'` como valor por defecto explícito —
+el plan principal— en vez de dejar que el backend caiga al más barato.
 
 **La landing no maneja UUIDs.** `plan_id` es un UUID de Supabase; hacer que la landing lo
 resuelva en build time la volvería dependiente del portal para poder buildear, que es
