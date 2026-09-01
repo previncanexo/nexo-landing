@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "build": "vite-react-ssg build",
-    "dev": "vite-react-ssg dev"
+    "dev": "vite-react-ssg dev",
+    "test": "node --test scripts/",
+    "check:precios": "node scripts/check-precios.mjs"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",
