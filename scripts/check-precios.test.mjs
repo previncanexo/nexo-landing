@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { compararPlanes, extraerPlanesLocales } from './check-precios.mjs';
+import { compararPlanes, extraerPlanesLocales, resolverApiUrl } from './check-precios.mjs';
 
 test('sin discrepancias cuando los precios coinciden', () => {
   const locales = [{ slug: 'nexo-1', precio: 20000 }];
@@ -58,4 +58,16 @@ export const ON_DEMAND = [
 
 test('no devuelve nada si el archivo no tiene el bloque PLANES', () => {
   assert.deepEqual(extraerPlanesLocales('export const OTRA_COSA = [];'), []);
+});
+
+test('resolverApiUrl cae al default si la env var no está definida', () => {
+  assert.equal(resolverApiUrl(undefined), 'https://nexo.portal.previncasalud.com.ar');
+});
+
+test('resolverApiUrl cae al default si la env var llega vacía (caso GitHub Actions)', () => {
+  assert.equal(resolverApiUrl(''), 'https://nexo.portal.previncasalud.com.ar');
+});
+
+test('resolverApiUrl respeta el valor cuando está configurado', () => {
+  assert.equal(resolverApiUrl('https://algo'), 'https://algo');
 });

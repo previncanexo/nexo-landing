@@ -57,10 +57,20 @@ export function extraerPlanesLocales(fuente) {
   return planes;
 }
 
+/**
+ * Resuelve la URL del portal a partir de la env var. En GitHub Actions, una
+ * variable de repo (`vars.*`) sin configurar llega como string VACÍO, no como
+ * `undefined` — así que `??` no alcanza para caer al default. Se valida
+ * explícitamente con `trim() || default`.
+ */
+export function resolverApiUrl(env) {
+  return (env || '').trim() || 'https://nexo.portal.previncasalud.com.ar';
+}
+
 // Solo corre la parte de E/S cuando se invoca directo, no cuando lo importa el test.
 if (process.argv[1] && process.argv[1].endsWith('check-precios.mjs')) {
   const { readFileSync } = await import('node:fs');
-  const apiUrl = process.env.NEXO_API_URL ?? 'https://nexo.portal.previncasalud.com.ar';
+  const apiUrl = resolverApiUrl(process.env.NEXO_API_URL);
 
   const fuente = readFileSync(new URL('../src/app/data/planes.ts', import.meta.url), 'utf8');
   const locales = extraerPlanesLocales(fuente);
@@ -70,12 +80,26 @@ if (process.argv[1] && process.argv[1].endsWith('check-precios.mjs')) {
     process.exit(1);
   }
 
-  const res = await fetch(`${apiUrl}/api/planes`);
-  if (!res.ok) {
-    console.error(`✖ El portal respondió ${res.status} en ${apiUrl}/api/planes`);
+  let remotos;
+  try {
+    const res = await fetch(`${apiUrl}/api/planes`);
+    if (!res.ok) {
+      console.error(`✖ El portal respondió ${res.status} en ${apiUrl}/api/planes`);
+      process.exit(1);
+    }
+    const body = await res.json();
+    remotos = body?.planes;
+  } catch (err) {
+    // Portal caído, DNS, JSON inválido: importa que el mensaje diga QUÉ falló,
+    // no que Node vomite un stack trace en el log de CI.
+    console.error(`✖ No se pudo consultar ${apiUrl}/api/planes: ${err.message}`);
     process.exit(1);
   }
-  const { planes: remotos } = await res.json();
+
+  if (!Array.isArray(remotos)) {
+    console.error(`✖ ${apiUrl}/api/planes no devolvió { planes: [...] }`);
+    process.exit(1);
+  }
 
   const errores = compararPlanes(locales, remotos);
   if (errores.length > 0) {
