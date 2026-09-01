@@ -13,7 +13,7 @@ import { BannerCarousel } from './components/BannerCarousel';
 import { Testimonios } from './components/Testimonios';
 import { FAQ } from './components/FAQ';
 import { Footer } from './components/Footer';
-import { Onboarding } from './components/Onboarding';
+import { Onboarding, LS_LEAD } from './components/Onboarding';
 import { captureAttribution } from './lib/attribution';
 import { PLANES, LS_PLAN_KEY } from './data/planes';
 
@@ -153,8 +153,16 @@ export default function App() {
     // navegacion SPA (cerrar el wizard con la x y volver por una CTA generica, sin
     // reload), y ese valor stale gana antes de llegar al fallback. Se resetea aca
     // para que quien entra SIN elegir plan arranque siempre en el principal.
-    setPlanSlug('nexo-1');
-    if (typeof window !== 'undefined') {
+    //
+    // PERO solo si no hay un lead en curso (LS_LEAD, de Onboarding.tsx): si lo
+    // hay, Onboarding va a reanudarlo en el step 3 con los datos del usuario, y
+    // borrarle el plan acá lo haría pagar otro precio dentro de un flujo que
+    // percibe como continuo (eligió Nexo III, avanzó al step 2, cerró con la
+    // x, y volvió por esta misma CTA genérica). Es justo el caso que este
+    // reset NO debe cubrir — el que sí cubre es el abandono SIN lead, donde
+    // no hay nada que reanudar.
+    if (typeof window !== 'undefined' && !localStorage.getItem(LS_LEAD)) {
+      setPlanSlug('nexo-1');
       try { localStorage.removeItem(LS_PLAN_KEY); } catch { /* ignore */ }
     }
     irAOnboarding();

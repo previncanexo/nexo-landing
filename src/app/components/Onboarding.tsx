@@ -89,7 +89,9 @@ const API_URL = (import.meta as { env?: Record<string, string> }).env?.VITE_NEXO
 // quedan cacheados, otros usuarios que abran el flow en el mismo browser podrían
 // pagar usando la URL de MP del usuario original (bug histórico — un payer cargó
 // 3 pagos al affiliate de Matias por este motivo).
-const LS_LEAD = 'nexo_lead_id';
+// Exportada: App.tsx (goToRegistro) necesita saber si hay un lead en curso
+// antes de limpiar el plan persistido — ver el comentario de goToRegistro.
+export const LS_LEAD = 'nexo_lead_id';
 const LS_FORM = 'nexo_form_data';
 // El plan viaja en memoria desde App (prop `planSlug`), pero el flujo YA está
 // diseñado para sobrevivir un reload a mitad del wizard (por eso existen LS_LEAD
