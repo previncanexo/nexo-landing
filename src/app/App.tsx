@@ -226,19 +226,31 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    // Cacheamos el offset de #beneficios: leer offsetTop en CADA evento de scroll
-    // fuerza un reflow del layout y traba el scroll en iOS Safari. Lo medimos una
-    // vez (y en resize/load), y el handler de scroll solo lee window.scrollY.
-    let planBaseTop = Infinity;
+    // Cacheamos las medidas de #beneficios: leerlas en CADA evento de scroll
+    // fuerza un reflow del layout y traba el scroll en iOS Safari (AGENTS.md §6).
+    // Se miden una vez (y en resize/load), y el handler solo lee window.scrollY.
+    //
+    // La barra flotante se oculta cuando la sección de planes está EN PANTALLA,
+    // no a partir de un offset fijo. El umbral viejo (`y < offsetTop - 200`)
+    // asumía que esa sección arrancaba muy abajo; con la comparativa de planes
+    // justo después del hero, `offsetTop` es ~844 en mobile y la barra quedaba
+    // visible durante 44px de scroll, o sea nunca. Ahora reaparece después de
+    // los planes, que es donde un CTA persistente realmente sirve.
+    let planesTop = Infinity;
+    let planesBottom = Infinity;
+    let alturaViewport = 0;
     const measure = () => {
       const el = document.getElementById('beneficios');
-      planBaseTop = el ? el.offsetTop - 200 : Infinity;
+      planesTop = el ? el.offsetTop : Infinity;
+      planesBottom = el ? el.offsetTop + el.offsetHeight : Infinity;
+      alturaViewport = window.innerHeight;
     };
     measure();
 
     const onScroll = () => {
       const y = window.scrollY;
-      const nextMobile = y > 600 && y < planBaseTop;
+      const planesEnPantalla = y + alturaViewport > planesTop && y < planesBottom;
+      const nextMobile = y > 600 && !planesEnPantalla;
       const nextBack = y > 800;
 
       if (nextMobile !== showMobileCtaRef.current) {

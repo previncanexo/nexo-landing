@@ -36,7 +36,11 @@ export function IPhoneCTA({ isVisible, onOpenCheckout }: IPhoneCTAProps) {
             </div>
             <button
               onClick={onOpenCheckout}
-              className="shrink-0 text-white text-sm font-bold px-5 py-2.5 rounded-xl cursor-pointer transition-transform active:scale-95 font-['DM_Sans']"
+              /* min-h-[44px]: es el único CTA persistente en mobile y medía 40px,
+                 bajo el mínimo táctil de ~44px que pide AGENTS.md §7 — importa
+                 más acá que en ningún otro botón, porque parte del público son
+                 adultos mayores. */
+              className="shrink-0 min-h-[44px] text-white text-sm font-bold px-5 py-3 rounded-xl cursor-pointer transition-transform active:scale-95 font-['DM_Sans']"
               style={{
                 background: 'linear-gradient(135deg, var(--purple) 0%, var(--pink) 100%)',
                 boxShadow: '0 4px 16px rgba(134,96,239,0.35)',
