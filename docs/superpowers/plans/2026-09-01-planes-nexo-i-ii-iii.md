@@ -21,7 +21,7 @@
 - **Estilos inline (`style={{...}}`) están permitidos** y son el patrón de este repo.
 - **Precios exactos, sin inventar:** Nexo I `20000`, Nexo II `12000`, Nexo III `7000`. Slugs: `nexo-1`, `nexo-2`, `nexo-3`.
 - **Nada de descuento monotributista** en las cards nuevas. No figura en el documento de producto (spec, pendiente #6).
-- **Los 6 datos sin confirmar van con `pendiente: true`.** No inventar valores para completarlos.
+- **Los datos sin confirmar van con `pendiente: true`.** No inventar valores para completarlos. El spec lista 6 pendientes, pero eso da **5 flags** en el código: Óptica genera 3 (uno por plan) a partir de 2 items del spec, y otros 2 pendientes (Doc24 Pediatría y el descuento monotributista) se resuelven **no mostrando nada**, así que no llevan flag.
 - **No tocar suscripciones existentes de Mercado Pago.** Está fuera de alcance.
 - **Conventional commits, en español, sin `Co-Authored-By` ni atribución de IA.**
 
@@ -1163,7 +1163,13 @@ Expected: build limpio y 7 tests en verde.
 
 Run: `grep -n "pendiente: true" src/app/data/planes.ts`
 
-Expected: exactamente 6 resultados — Óptica en los tres planes, Médico a Domicilio en Nexo II, y el Seguro de Vida. Si son menos, alguien confirmó un dato sin dejar registro; si son más, revisá cuál se agregó.
+Expected: exactamente **5** resultados — Óptica en los tres planes (3), Médico a Domicilio en Nexo II (1), y el Seguro de Vida (1). Si son menos, alguien confirmó un dato sin dejar registro; si son más, revisá cuál se agregó.
+
+Verificá también que los dos pendientes que se resuelven por omisión siguen omitidos:
+
+Run: `grep -in "pediatr\|monotribut" src/app/data/planes.ts`
+
+Expected: solo los comentarios que explican por qué no están. Ninguna entrada de `PLANES` con esos datos.
 
 - [ ] **Step 3: Mergear el portal a `staging` y desplegar**
 
