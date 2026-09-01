@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { compararPlanes, extraerPlanesLocales, resolverApiUrl } from './check-precios.mjs';
+import { compararPlanes, extraerPlanesLocales, extraerPreciosOnDemand, resolverApiUrl, preciosHuerfanos } from './check-precios.mjs';
 
 test('sin discrepancias cuando los precios coinciden', () => {
   const locales = [{ slug: 'nexo-1', precio: 20000 }];
@@ -70,4 +70,39 @@ test('resolverApiUrl cae al default si la env var llega vacía (caso GitHub Acti
 
 test('resolverApiUrl respeta el valor cuando está configurado', () => {
   assert.equal(resolverApiUrl('https://algo'), 'https://algo');
+});
+
+test('extraerPreciosOnDemand lee los precios del bloque ON_DEMAND', () => {
+  const fuente = `
+export const PLANES = [
+  { slug: 'nexo-1', nombre: 'Nexo I', precio: 20000 },
+];
+export const ON_DEMAND = [
+  { id: 'salud-1', nombre: 'Seguro de Salud I', precio: 6000 },
+  { id: 'arbol-de-vida', nombre: 'Árbol de Vida', precio: 5000, pendiente: true },
+];
+export const LS_PLAN_KEY = 'nexo_plan_slug';
+`;
+  assert.deepEqual(extraerPreciosOnDemand(fuente), [6000, 5000]);
+});
+
+test('extraerPreciosOnDemand no devuelve nada si el archivo no tiene el bloque ON_DEMAND', () => {
+  assert.deepEqual(extraerPreciosOnDemand('export const OTRA_COSA = [];'), []);
+});
+
+test('preciosHuerfanos detecta un precio hardcodeado que ya no existe en ningún plan', () => {
+  const html = '<title>Previnca Nexo — Tu plan de salud completo · $19.500/mes</title>';
+  const preciosConocidos = [20000, 12000, 7000];
+  assert.deepEqual(preciosHuerfanos(html, preciosConocidos), ['19.500']);
+});
+
+test('preciosHuerfanos no devuelve nada cuando todos los precios del HTML son válidos', () => {
+  const html = '<title>Previnca Nexo — Desde $7.000/mes</title><meta content="El plan completo, $20.000/mes">';
+  const preciosConocidos = [20000, 12000, 7000];
+  assert.deepEqual(preciosHuerfanos(html, preciosConocidos), []);
+});
+
+test('preciosHuerfanos no repite el mismo precio huérfano si aparece más de una vez', () => {
+  const html = '$19.500/mes ... $19.500/mes de nuevo';
+  assert.deepEqual(preciosHuerfanos(html, [20000, 12000, 7000]), ['19.500']);
 });

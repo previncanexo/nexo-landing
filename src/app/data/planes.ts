@@ -134,7 +134,13 @@ export const PLANES: PlanComercial[] = [
  */
 export const ON_DEMAND: ServicioOnDemand[] = [
   { id: 'salud-1', nombre: 'Seguro de Salud I', precio: 6000, detalle: 'Alta complejidad, internación y trasplante' },
-  { id: 'arbol-de-vida', nombre: 'Árbol de Vida', precio: 5000, detalle: 'Sepelio, cremación ecológica y parcela con árbol' },
+  // DISCREPANCIA SIN RESOLVER: acá se publica $5.000 (documento de producto del
+  // cliente) pero el portal COBRA $4.500 (nexo-portal ServiceCards.tsx, constante
+  // ARBOL_VIDA_PRECIO). No se elige uno por nuestra cuenta: es el cliente quien
+  // define cuál vale. `check-precios.mjs` no cubre esta discrepancia — solo
+  // compara el bloque PLANES contra la tabla `plans`, y los servicios on demand
+  // no viven ahí.
+  { id: 'arbol-de-vida', nombre: 'Árbol de Vida', precio: 5000, detalle: 'Sepelio, cremación ecológica y parcela con árbol', pendiente: true },
   { id: 'hogar-1', nombre: 'Seguro de Hogar · hasta 1er piso', precio: 19000, detalle: 'Casas, PB y 1er piso · Solo en Rosario' },
   { id: 'hogar-2', nombre: 'Seguro de Hogar · 2do piso +', precio: 22000, detalle: 'Dentro y fuera de Rosario' },
   // El precio viene del documento con un comentario interno pegado: "chequear
@@ -153,3 +159,14 @@ export const ON_DEMAND: ServicioOnDemand[] = [
  * `scripts/check-precios.mjs` extrae precios con una regex acotada a ese rango.
  */
 export const LS_PLAN_KEY = 'nexo_plan_slug';
+
+/**
+ * Precio de entrada ("desde $X/mes"): se deriva de PLANES en vez de
+ * hardcodearse, para que no quede un número viejo pegado en la UI cuando
+ * cambien las tarifas. Centralizado acá (y no repetido en cada componente que
+ * lo usa — Hero, ComoFunciona, IPhoneCTA) porque esta misma entrega existe
+ * para cerrar un $19.500 que había quedado hardcodeado en seis lugares del
+ * sitio: repetir la derivación en vez de centralizarla reintroduciría la
+ * misma clase de problema.
+ */
+export const PRECIO_DESDE = Math.min(...PLANES.map((p) => p.precio));

@@ -3,8 +3,16 @@ name: Precios sincronizados
 on:
   pull_request:
     paths:
+      - 'index.html'
       - 'src/app/data/planes.ts'
       - 'scripts/check-precios.mjs'
+  # El caso real de desincronización no abre ningún PR acá: el cliente cambia
+  # un precio desde /admin/planes (portal), y este repo no se entera. Por eso
+  # además de reaccionar a cambios locales, corre solo una vez por día y se
+  # puede disparar a mano.
+  schedule:
+    - cron: '0 13 * * *'
+  workflow_dispatch: {}
 
 jobs:
   check:

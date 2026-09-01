@@ -67,6 +67,51 @@ export function resolverApiUrl(env) {
   return (env || '').trim() || 'https://nexo.portal.previncasalud.com.ar';
 }
 
+/**
+ * Extrae los precios de `ON_DEMAND` (servicios que se pagan por fuera de la
+ * cuota) de la misma forma que `extraerPlanesLocales` extrae `PLANES`: sin
+ * compilar TypeScript, acotando el bloque para no arrastrar nada de fuera.
+ */
+export function extraerPreciosOnDemand(fuente) {
+  const inicio = fuente.indexOf('export const ON_DEMAND');
+  if (inicio === -1) return [];
+  const fin = fuente.indexOf('export const LS_PLAN_KEY', inicio);
+  const bloque = fuente.slice(inicio, fin === -1 ? undefined : fin);
+
+  const precios = [];
+  const re = /precio:\s*(\d+)/g;
+  let m;
+  while ((m = re.exec(bloque)) !== null) {
+    precios.push(Number(m[1]));
+  }
+  return precios;
+}
+
+/**
+ * Formatea un número con puntos de miles, igual que `formatearMiles` de
+ * `data/planes.ts`. Se replica acá (en vez de importarla) porque este script
+ * lee el `.ts` como texto plano, sin transpilar — ver `extraerPlanesLocales`.
+ */
+function formatearMilesLocal(n) {
+  return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+}
+
+/**
+ * Guardarraíl del Critical de $19.500: busca en el HTML estático precios con
+ * formato `$N.NNN` y devuelve los que no coinciden con ningún precio conocido
+ * (`PLANES` + `ON_DEMAND`). Un precio "huérfano" así es exactamente lo que
+ * causó el incidente — un número que quedó pegado en el HTML después de que
+ * el plan que lo tenía cambió de precio o dejó de existir.
+ */
+export function preciosHuerfanos(html, preciosConocidos) {
+  const conocidos = new Set(preciosConocidos.map((n) => formatearMilesLocal(n)));
+  const encontrados = html.match(/\$(\d{1,3}(?:\.\d{3})+)/g) ?? [];
+  const huerfanos = encontrados
+    .map((p) => p.slice(1))
+    .filter((p) => !conocidos.has(p));
+  return [...new Set(huerfanos)];
+}
+
 // Solo corre la parte de E/S cuando se invoca directo, no cuando lo importa el test.
 if (process.argv[1] && process.argv[1].endsWith('check-precios.mjs')) {
   const { readFileSync } = await import('node:fs');
@@ -77,6 +122,21 @@ if (process.argv[1] && process.argv[1].endsWith('check-precios.mjs')) {
 
   if (locales.length === 0) {
     console.error('✖ No se pudo leer ningún plan de src/app/data/planes.ts');
+    process.exit(1);
+  }
+
+  // Guardarraíl del Critical de $19.500: un precio hardcodeado en index.html
+  // que no existe en ningún plan ni servicio on-demand tiene que romper el
+  // build, no esperar a que alguien lo note a ojo en una revisión final.
+  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  const preciosConocidos = [
+    ...locales.map((p) => p.precio),
+    ...extraerPreciosOnDemand(fuente),
+  ];
+  const huerfanos = preciosHuerfanos(html, preciosConocidos);
+  if (huerfanos.length > 0) {
+    console.error('✖ index.html menciona precios que no existen en ningún plan:\n');
+    for (const p of huerfanos) console.error(`  · $${p}`);
     process.exit(1);
   }
 

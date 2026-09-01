@@ -52,9 +52,10 @@
   <!-- Description -->
   <text x="80" y="462" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="22" fill="rgba(255,255,255,0.62)" letter-spacing="0.2">Teleconsultas 24/7 · Urgencias · Farmacias · Odontología</text>
 
-  <!-- Price badge -->
-  <rect x="80" y="498" width="280" height="52" rx="26" fill="url(#badgeGrad)"/>
-  <text x="220" y="531" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20" font-weight="700" fill="white" text-anchor="middle">$19.500 por mes</text>
+  <!-- Price badge. Ancho ajustado a 340 (antes 280) para "Desde $7.000 por
+       mes", más largo que el precio viejo (19500) que reemplaza. -->
+  <rect x="80" y="498" width="340" height="52" rx="26" fill="url(#badgeGrad)"/>
+  <text x="250" y="531" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20" font-weight="700" fill="white" text-anchor="middle">Desde $7.000 por mes</text>
 
   <!-- Right side decorative dots grid -->
   <g opacity="0.12">
