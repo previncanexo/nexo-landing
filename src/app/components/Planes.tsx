@@ -231,6 +231,17 @@ export function ServiciosOnDemand() {
       <p className="mx-auto mt-3 max-w-[460px] text-center text-sm text-[#6b6b6b]">
         No están incluidos en los planes. Se contratan aparte y se suman a tu cuota únicamente si los querés.
       </p>
+      {/*
+        Sin esta línea la sección promete algo que no se puede cumplir: son cinco
+        tarjetas con precio y sin ninguna señal de que hace falta algo más, así que
+        se lee como "compro el Seguro de Vida por $2.750 y listo". La regla real es
+        que solo se pueden contratar teniendo un plan activo — el portal ya lo
+        impone (las tarjetas on demand solo existen para afiliados activos), pero
+        la landing no lo decía en ningún lado.
+      */}
+      <p className="mx-auto mt-2 max-w-[460px] text-center text-sm font-semibold" style={{ color: VIOLETA_TEXTO }}>
+        Necesitás un plan Nexo activo para contratarlos.
+      </p>
 
       <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {ON_DEMAND.map((s) => {
