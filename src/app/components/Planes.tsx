@@ -124,7 +124,7 @@ function PlanCard({ plan, onElegirPlan }: { plan: PlanComercial; onElegirPlan: (
           <Button
             onClick={() => onElegirPlan(plan.slug)}
             aria-label={`Afiliarme a ${plan.nombre}`}
-            className="w-full rounded-full text-white hover:opacity-90"
+            className="w-full cursor-pointer rounded-full text-white transition-opacity hover:opacity-90"
             style={{ background: plan.recomendado ? NEXO_GRADIENT : VIOLETA_BOTON }}
           >
             Afiliarme
