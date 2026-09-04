@@ -376,6 +376,9 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
           apellido: form.apellido.trim(),
           email: form.email.trim().toLowerCase(),
           whatsapp: form.whatsapp.trim(),
+          // Plan elegido en la card. Persistir desde el step 1 para no perder
+          // la elección si el usuario abandona antes del stage 2 (PATCH).
+          plan_slug: plan.slug,
           event_id,
           event_source_url: typeof window !== 'undefined' ? window.location.href : undefined,
           utm_source: attr.utm_source ?? undefined,
