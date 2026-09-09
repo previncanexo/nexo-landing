@@ -133,7 +133,7 @@ export const PLANES: PlanComercial[] = [
       { label: 'Seguro de Salud I', estado: 'incluido', detalle: 'Alta complejidad, internación y trasplante' },
       { label: 'Farmacia', estado: 'incluido' },
       OPTICA,
-      { label: 'Médico a domicilio', estado: 'incluido', pendiente: true },
+      { label: 'Médico a domicilio', estado: 'coseguro', detalle: 'Consultas sin límite luego $30.000' },
       { label: 'Doc24 · Clínica', estado: 'coseguro', detalle: '1 consulta sin cargo · luego $18.000' },
       PSICOLOGIA,
       { label: 'Emergencias médicas', estado: 'no-incluido' },
