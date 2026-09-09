@@ -12,3 +12,4 @@ PDF/
 errores/
 .env*
 .supabase.json
+.vercel.json
