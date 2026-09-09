@@ -131,6 +131,13 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
   const [error, setError] = useState<string | null>(null);
   const [invalidFields, setInvalidFields] = useState<Set<string>>(new Set());
   const [submitting, setSubmitting] = useState(false);
+
+  // Fecha máxima seleccionable = hoy - 18 años (limita el picker nativo en mobile).
+  const maxBirthDate = (() => {
+    const d = new Date();
+    d.setFullYear(d.getFullYear() - 18);
+    return d.toISOString().slice(0, 10);
+  })();
   const [leadId, setLeadId] = useState<string | null>(
     typeof window !== 'undefined' ? localStorage.getItem(LS_LEAD) : null
   );
@@ -519,7 +526,16 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
         .ob-field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1rem; }
         .ob-field-grid .ob-field { margin-bottom: 0; }
         .ob-label { font-size: 0.75rem; font-weight: 600; color: rgba(255,255,255,0.65); text-transform: uppercase; letter-spacing: 0.06em; }
-        .ob-input { width: 100%; padding: 0.85rem 1rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.14); border-radius: 12px; color: #fff; font-family: inherit; font-size: 0.95rem; transition: all 0.2s ease; color-scheme: dark; }
+        /* font-size 16px evita el zoom automático de iOS al enfocar un input. */
+        .ob-input { width: 100%; padding: 0.85rem 1rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.14); border-radius: 12px; color: #fff; font-family: inherit; font-size: 1rem; line-height: 1.25; transition: all 0.2s ease; color-scheme: dark; }
+        /* Date input nativo: se apila invisible encima del input text para que
+           el usuario vea siempre "DD/MM/AAAA" bien formateado y en mobile se
+           dispare el picker nativo del sistema. */
+        .ob-date-wrap { position: relative; }
+        .ob-date-wrap .ob-input { padding-right: 2.75rem; }
+        .ob-date-icon { position: absolute; top: 50%; right: 0.9rem; transform: translateY(-50%); pointer-events: none; color: rgba(255,255,255,0.55); }
+        .ob-date-native { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.001; border: 0; padding: 0; margin: 0; background: transparent; color: transparent; cursor: pointer; font-size: 16px; color-scheme: dark; -webkit-appearance: none; appearance: none; }
+        .ob-date-native::-webkit-calendar-picker-indicator { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
         .ob-input:focus { outline: none; border-color: #8660ef; background: rgba(134,96,239,0.08); }
         .ob-input::placeholder { color: rgba(255,255,255,0.4); }
         .ob-cselect { position: relative; }
@@ -633,7 +649,29 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
                 <h2 className="ob-title">{getTitle(3).title}</h2>
                 <p className="ob-desc">{getTitle(3).desc}</p>
                 <div className="ob-field"><label className="ob-label">DNI</label><input className={`ob-input${errCls('dni')}`} type="text" inputMode="numeric" maxLength={8} value={form.dni} onChange={(e) => setField('dni', e.target.value)} placeholder="12345678" /></div>
-                <div className="ob-field"><label className="ob-label">Fecha de nacimiento</label><input className={`ob-input${errCls('fecha_nacimiento')}`} type="date" value={form.fecha_nacimiento} onChange={(e) => setField('fecha_nacimiento', e.target.value)} /></div>
+                <div className="ob-field">
+                  <label className="ob-label">Fecha de nacimiento</label>
+                  <div className="ob-date-wrap">
+                    <input
+                      className={`ob-input${errCls('fecha_nacimiento')}`}
+                      type="text"
+                      readOnly
+                      inputMode="none"
+                      placeholder="DD/MM/AAAA"
+                      value={form.fecha_nacimiento ? form.fecha_nacimiento.split('-').reverse().join('/') : ''}
+                      onClick={(e) => (e.currentTarget.nextElementSibling?.nextElementSibling as HTMLInputElement | null)?.showPicker?.()}
+                    />
+                    <svg className="ob-date-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    <input
+                      className="ob-date-native"
+                      type="date"
+                      value={form.fecha_nacimiento}
+                      max={maxBirthDate}
+                      onChange={(e) => setField('fecha_nacimiento', e.target.value)}
+                      aria-label="Fecha de nacimiento"
+                    />
+                  </div>
+                </div>
                 {error && <ErrorMsg msg={error} />}
                 <div className="ob-actions">
                   <button type="button" className="ob-btn" onClick={prev}>← Atrás</button>
