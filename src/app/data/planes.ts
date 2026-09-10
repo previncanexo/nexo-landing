@@ -8,8 +8,20 @@
  * consume el portal: son dos cosas con distinta audiencia y distinta cadencia
  * de cambio. Ver el spec, sección "Por qué el copy y la matriz están separados".
  *
- * El único dato compartido con el portal es el PRECIO, y por eso lo verifica
- * `scripts/check-precios.mjs` contra `GET /api/planes`.
+ * Datos compartidos con el portal, y qué los verifica:
+ *
+ * - PRECIO de planes y on-demand → `scripts/check-precios.mjs` los compara contra
+ *   `GET /api/planes`. Cubierto.
+ * - PRESTACIONES por plan → el portal las expone en `/api/planes` desde su propia
+ *   matriz (`src/lib/planes-catalogo.ts`). El script todavía NO las compara.
+ * - IMPORTES DE COSEGURO escritos dentro de `detalle` ($15.000, $18.000, $10.000,
+ *   $30.000) → repiten las columnas "valor cubierto" / "valor no cubierto" de la
+ *   matriz del portal, y NO los verifica nada. El chequeo de precios huérfanos
+ *   tampoco los alcanza: lee el `index.html` raíz, no la salida del SSG.
+ *
+ * Ese último punto es el que ya nos mordió dos veces —el $19.500 hardcodeado y el
+ * Árbol de Vida a $5.000 contra $4.500 del portal—, una casilla más allá. Conviene
+ * extender `check-precios.mjs` para cubrirlo antes de que vuelva a pasar.
  */
 
 /**
@@ -60,6 +72,24 @@ export function formatearMiles(n: number): string {
 }
 
 /**
+ * La etiqueta se separa de la prestación porque Óptica aparece en los tres
+ * planes con DOS formas distintas: `incluido` con detalle en Nexo II y III (la
+ * const `OPTICA` de abajo) y `no-incluido` en Nexo I.
+ * Si el nombre queda tipeado en los dos lugares, un renombre puede arreglar uno
+ * y olvidarse del otro, y la tabla comparativa termina mostrando dos nombres
+ * para el mismo servicio en columnas contiguas.
+ */
+const LABEL_OPTICA = 'Óptica';
+
+/**
+ * Seguro de Salud I aparece en dos lugares con el mismo nombre y la misma bajada:
+ * incluido dentro de Nexo II, y también suelto en `ON_DEMAND` para quien no lo
+ * tiene. Es el mismo producto, así que el nombre y el detalle se escriben una vez.
+ */
+const SALUD_1_NOMBRE = 'Seguro de Salud I';
+const SALUD_1_DETALLE = 'Alta complejidad, internación y trasplante';
+
+/**
  * Óptica. Fuente: `circuito_optica_previnca_v2.docx` (2026-09-01), que a su vez
  * cita TEXTUALMENTE la cartilla médica AGO 2026 de Previnca Salud para las
  * condiciones de cobertura. Prestador: Rosario Visión Ópticas (4 sucursales).
@@ -75,23 +105,11 @@ export function formatearMiles(n: number): string {
  * Lo que el documento NO resuelve: en qué planes entra. Habla del "afiliado" de
  * Previnca Salud en general, sin mencionar Nexo I/II/III.
  *
- * Por eso los dos pendientes de Óptica tuvieron destinos distintos: en II y III
- * el flag estaba por las CONDICIONES DE COBERTURA que faltaban (el documento de
- * producto ya los listaba con Óptica, eso nunca estuvo en duda), y este
- * documento las trae, así que sale. En Nexo I el flag está por la ASIGNACIÓN
- * DE PLAN — el documento de producto no lo lista y este tampoco lo desmiente —,
- * así que sigue abierto.
+ * CERRADO (2026-09-10): Previnca confirmó que Nexo I NO incluye Óptica. El
+ * documento de producto no la listaba ahí y la sospecha era que fuera una
+ * omisión, porque sí aparece en II y III, que son más baratos. No lo era: es
+ * deliberado. Se saca el flag `pendiente` y queda `no-incluido` a secas.
  */
-/**
- * La etiqueta se separa de la prestación porque Óptica aparece en los tres
- * planes con DOS formas distintas: `incluido` con detalle en Nexo II y III (la
- * const `OPTICA` de abajo) y `no-incluido` marcada como pendiente en Nexo I.
- * Si el nombre queda tipeado en los dos lugares, un renombre puede arreglar uno
- * y olvidarse del otro, y la tabla comparativa termina mostrando dos nombres
- * para el mismo servicio en columnas contiguas.
- */
-const LABEL_OPTICA = 'Óptica';
-
 const OPTICA: Prestacion = {
   label: LABEL_OPTICA,
   estado: 'incluido',
@@ -174,11 +192,10 @@ export const PLANES: PlanComercial[] = [
       emergencias('incluido'),
       guardiaOdontologica('incluido'),
       farmacia('incluido'),
-      // El documento de producto no lista Óptica en Nexo I, pero sí en II y III,
-      // que son más baratos. Probable omisión en el origen. A confirmar.
-      // `circuito_optica_previnca_v2.docx` trajo QUÉ cubre la óptica, no EN QUÉ
-      // PLANES entra, así que este pendiente sigue abierto.
-      { label: LABEL_OPTICA, estado: 'no-incluido', pendiente: true },
+      // Confirmado por Previnca (2026-09-10): Nexo I no incluye Óptica. Ver el
+      // comentario de `LABEL_OPTICA` más arriba para el detalle de por qué
+      // estuvo abierto y cómo se cerró.
+      { label: LABEL_OPTICA, estado: 'no-incluido' },
       guardiaClinica('1 consulta sin cargo · luego $18.000'),
       PSICOLOGIA,
     ],
@@ -189,7 +206,7 @@ export const PLANES: PlanComercial[] = [
     precio: 12000,
     bajada: 'Seguro de salud, farmacia y óptica, con telemedicina.',
     prestaciones: [
-      { label: 'Seguro de Salud I', estado: 'incluido', detalle: 'Alta complejidad, internación y trasplante' },
+      { label: SALUD_1_NOMBRE, estado: 'incluido', detalle: SALUD_1_DETALLE },
       farmacia('incluido'),
       OPTICA,
       // TENSIÓN RESUELTA (2026-09-10). Venía de una contradicción entre dos
@@ -236,7 +253,7 @@ export const PLANES: PlanComercial[] = [
  * `segundo_piso_plus`). Ver nexo-portal/docs/superpowers/specs/2026-06-30-seguro-hogar-design.md
  */
 export const ON_DEMAND: ServicioOnDemand[] = [
-  { id: 'salud-1', nombre: 'Seguro de Salud I', precio: 6000, detalle: 'Alta complejidad, internación y trasplante' },
+  { id: 'salud-1', nombre: SALUD_1_NOMBRE, precio: 6000, detalle: SALUD_1_DETALLE },
   // DISCREPANCIA RESUELTA (2026-09-10): acá se publicaba $5.000 (documento de
   // producto del cliente) pero el portal cobraba $4.500 (nexo-portal
   // ServiceCards.tsx, constante ARBOL_VIDA_PRECIO). El cliente confirmó
