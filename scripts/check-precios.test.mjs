@@ -1,6 +1,15 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { compararPlanes, extraerPlanesLocales, extraerPreciosOnDemand, resolverApiUrl, preciosHuerfanos } from './check-precios.mjs';
+import {
+  compararPlanes,
+  compararOnDemand,
+  evaluarOnDemand,
+  extraerPlanesLocales,
+  extraerOnDemandLocales,
+  extraerPreciosOnDemand,
+  resolverApiUrl,
+  preciosHuerfanos,
+} from './check-precios.mjs';
 
 test('sin discrepancias cuando los precios coinciden', () => {
   const locales = [{ slug: 'nexo-1', precio: 20000 }];
@@ -88,6 +97,86 @@ export const LS_PLAN_KEY = 'nexo_plan_slug';
 
 test('extraerPreciosOnDemand no devuelve nada si el archivo no tiene el bloque ON_DEMAND', () => {
   assert.deepEqual(extraerPreciosOnDemand('export const OTRA_COSA = [];'), []);
+});
+
+test('extraerOnDemandLocales lee { id, precio } del bloque ON_DEMAND', () => {
+  const fuente = `
+export const PLANES = [
+  { slug: 'nexo-1', nombre: 'Nexo I', precio: 20000 },
+];
+export const ON_DEMAND = [
+  { id: 'salud-1', nombre: 'Seguro de Salud I', precio: 6000 },
+  { id: 'arbol-de-vida', nombre: 'Árbol de Vida', precio: 5000 },
+];
+export const LS_PLAN_KEY = 'nexo_plan_slug';
+`;
+  assert.deepEqual(extraerOnDemandLocales(fuente), [
+    { id: 'salud-1', precio: 6000 },
+    { id: 'arbol-de-vida', precio: 5000 },
+  ]);
+});
+
+test('extraerOnDemandLocales no devuelve nada si el archivo no tiene el bloque ON_DEMAND', () => {
+  assert.deepEqual(extraerOnDemandLocales('export const OTRA_COSA = [];'), []);
+});
+
+test('compararOnDemand sin discrepancias cuando los precios coinciden', () => {
+  const locales = [{ id: 'arbol-de-vida', precio: 5000 }];
+  const remotos = [{ id: 'arbol-de-vida', precio: 5000 }];
+  assert.deepEqual(compararOnDemand(locales, remotos), []);
+});
+
+test('compararOnDemand detecta un precio distinto', () => {
+  const locales = [{ id: 'arbol-de-vida', precio: 5000 }];
+  const remotos = [{ id: 'arbol-de-vida', precio: 4500 }];
+  const errores = compararOnDemand(locales, remotos);
+  assert.equal(errores.length, 1);
+  assert.match(errores[0], /arbol-de-vida/);
+  assert.match(errores[0], /5000/);
+  assert.match(errores[0], /4500/);
+});
+
+test('compararOnDemand detecta un id que está en la landing pero no en el portal', () => {
+  const errores = compararOnDemand([{ id: 'arbol-de-vida', precio: 5000 }], []);
+  assert.equal(errores.length, 1);
+  assert.match(errores[0], /arbol-de-vida/);
+  assert.match(errores[0], /no existe en el portal/);
+});
+
+test('compararOnDemand detecta un id que está en el portal pero no en la landing', () => {
+  const errores = compararOnDemand([], [{ id: 'servicio-nuevo', precio: 1000 }]);
+  assert.equal(errores.length, 1);
+  assert.match(errores[0], /servicio-nuevo/);
+  assert.match(errores[0], /no se muestra en la landing/);
+});
+
+test('compararOnDemand acumula varias discrepancias a la vez', () => {
+  const locales = [
+    { id: 'arbol-de-vida', precio: 5000 },
+    { id: 'vida', precio: 2750 },
+  ];
+  const remotos = [
+    { id: 'arbol-de-vida', precio: 4500 },
+    { id: 'hogar-1', precio: 19000 },
+  ];
+  // 1: arbol-de-vida con precio distinto, 2: 'vida' no está en el portal,
+  // 3: 'hogar-1' no está en la landing.
+  assert.equal(compararOnDemand(locales, remotos).length, 3);
+});
+
+test('evaluarOnDemand compara normalmente cuando el portal manda "onDemand"', () => {
+  const locales = [{ id: 'arbol-de-vida', precio: 5000 }];
+  const remotos = [{ id: 'arbol-de-vida', precio: 4500 }];
+  const { errores, warning } = evaluarOnDemand(locales, remotos);
+  assert.equal(errores.length, 1);
+  assert.equal(warning, null);
+});
+
+test('evaluarOnDemand warnea y no falla si "onDemand" no viene en la respuesta (portal sin deployar el cambio)', () => {
+  const locales = [{ id: 'arbol-de-vida', precio: 5000 }];
+  const { errores, warning } = evaluarOnDemand(locales, undefined);
+  assert.deepEqual(errores, []);
+  assert.equal(warning, 'onDemand-ausente');
 });
 
 test('preciosHuerfanos detecta un precio hardcodeado que ya no existe en ningún plan', () => {
