@@ -133,7 +133,22 @@ export const PLANES: PlanComercial[] = [
       { label: 'Seguro de Salud I', estado: 'incluido', detalle: 'Alta complejidad, internación y trasplante' },
       { label: 'Farmacia', estado: 'incluido' },
       OPTICA,
-      { label: 'Médico a domicilio', estado: 'coseguro', detalle: 'Consultas sin límite luego $30.000' },
+      // Fuente: confirmación del cliente registrada en el commit b908c069
+      // ("consultas sin límite y luego $30.000"). Es el único dato del archivo
+      // cuya cita vivía sólo en el mensaje de commit; se trae acá porque el
+      // resto del archivo sostiene esa convención.
+      //
+      // El separador `·` no es decorativo: es el borde entre lo que recibís y lo
+      // que pagás, y `Planes.tsx` renderiza `detalle` como una sola línea de
+      // 13px. Sin él las dos ideas se leen como una sola frase, en el cuerpo más
+      // chico de la card y para un público que incluye adultos mayores.
+      //
+      // OJO, tensión sin cerrar: el documento de producto lista Médico a
+      // Domicilio en Nexo II con "Cant. Cubierta 0" y "Valor No Cubierto —", lo
+      // que se leería como que NINGUNA consulta viene sin cargo. La confirmación
+      // del cliente dice otra cosa. Se respeta la confirmación, que es posterior
+      // y explícita, pero conviene cerrarlo con el cliente.
+      { label: 'Médico a domicilio', estado: 'coseguro', detalle: 'Consultas sin límite · luego $30.000' },
       { label: 'Doc24 · Clínica', estado: 'coseguro', detalle: '1 consulta sin cargo · luego $18.000' },
       PSICOLOGIA,
       { label: 'Emergencias médicas', estado: 'no-incluido' },
@@ -165,13 +180,18 @@ export const PLANES: PlanComercial[] = [
  */
 export const ON_DEMAND: ServicioOnDemand[] = [
   { id: 'salud-1', nombre: 'Seguro de Salud I', precio: 6000, detalle: 'Alta complejidad, internación y trasplante' },
-  // DISCREPANCIA SIN RESOLVER: acá se publica $5.000 (documento de producto del
-  // cliente) pero el portal COBRA $4.500 (nexo-portal ServiceCards.tsx, constante
-  // ARBOL_VIDA_PRECIO). No se elige uno por nuestra cuenta: es el cliente quien
-  // define cuál vale. `check-precios.mjs` no cubre esta discrepancia — solo
-  // compara el bloque PLANES contra la tabla `plans`, y los servicios on demand
-  // no viven ahí.
-  { id: 'arbol-de-vida', nombre: 'Árbol de Vida', precio: 5000, detalle: 'Sepelio, cremación ecológica y parcela con árbol', pendiente: true },
+  // DISCREPANCIA RESUELTA (2026-09-10): acá se publicaba $5.000 (documento de
+  // producto del cliente) pero el portal cobraba $4.500 (nexo-portal
+  // ServiceCards.tsx, constante ARBOL_VIDA_PRECIO). El cliente confirmó
+  // explícitamente que mandan los precios de la landing, por ser los últimos
+  // que pasó — no se resolvió por criterio propio. El portal se está
+  // actualizando a $5.000 en paralelo (otro cambio, otro repo). El precio de
+  // acá ($5.000) ya estaba correcto y no se toca; lo que se saca es el flag
+  // `pendiente`, porque la discrepancia que lo motivaba ya no existe.
+  // `check-precios.mjs` extiende su chequeo para cubrir on-demand contra
+  // `/api/planes` y así evitar que una discrepancia como esta vuelva a pasar
+  // desapercibida (antes solo comparaba el bloque PLANES contra `plans`).
+  { id: 'arbol-de-vida', nombre: 'Árbol de Vida', precio: 5000, detalle: 'Sepelio, cremación ecológica y parcela con árbol' },
   { id: 'hogar-1', nombre: 'Seguro de Hogar · hasta 1er piso', precio: 19000, detalle: 'Casas, PB y 1er piso · Solo en Rosario' },
   { id: 'hogar-2', nombre: 'Seguro de Hogar · 2do piso +', precio: 22000, detalle: 'Dentro y fuera de Rosario' },
   // El precio viene del documento con un comentario interno pegado: "chequear
