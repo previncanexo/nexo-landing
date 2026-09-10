@@ -82,27 +82,86 @@ export function formatearMiles(n: number): string {
  * DE PLAN — el documento de producto no lo lista y este tampoco lo desmiente —,
  * así que sigue abierto.
  */
+/**
+ * La etiqueta se separa de la prestación porque Óptica aparece en los tres
+ * planes con DOS formas distintas: `incluido` con detalle en Nexo II y III (la
+ * const `OPTICA` de abajo) y `no-incluido` marcada como pendiente en Nexo I.
+ * Si el nombre queda tipeado en los dos lugares, un renombre puede arreglar uno
+ * y olvidarse del otro, y la tabla comparativa termina mostrando dos nombres
+ * para el mismo servicio en columnas contiguas.
+ */
+const LABEL_OPTICA = 'Óptica';
+
 const OPTICA: Prestacion = {
-  label: 'Óptica',
+  label: LABEL_OPTICA,
   estado: 'incluido',
   detalle: '1 par al año · Armazón y cristales de stock hasta 4.00 esf / 2.00 cil',
 };
 
 /**
- * Coseguros de Doc24 según la aclaración de Javier Talarn (Slack, 2026-08-31):
- * "en nexo ii que sale $12.000 tiene cubierta una consulta de clinica sin cargo,
- * y el resto a $18.000 (pediatria igual pero como no vendemos a menores no va a
- * aplicar). en nexo iii, tiene una cobertura a $10.000 y el resto a 18.000. Y
- * psicologia todo igual."
+ * OJO CON LA FUENTE de estos dos importes: NO salen de la aclaración de Javier
+ * Talarn (Slack, 2026-08-31). Ese mensaje sólo dice, sobre psicología, "Y
+ * psicologia todo igual" — no trae ningún número. Los $15.000 / $30.000 vienen
+ * de la tabla de coseguros del documento de producto del cliente (capturas en
+ * `Nuevos servicios/`, 2026-09-01), que lista "Doc24 Psicología · Cant. cubierta
+ * 1 · Valor cubierto $15.000 · Valor no cubierto $30.000", igual en los tres
+ * planes. Lo que aporta el mensaje de Talarn es que psicología NO cambia entre
+ * planes, a diferencia de la guardia clínica.
+ *
+ * Se aclara porque un comentario que parece citado y no lo está es peor que no
+ * tener comentario: el próximo lector da los importes por verificados contra
+ * Slack y no los vuelve a chequear.
  *
  * Doc24 Pediatría NO se lista: no se vende a menores, así que ningún socio puede
  * usarla. Publicarla genera reclamos de posventa.
  */
 const PSICOLOGIA: Prestacion = {
-  label: 'Doc24 · Psicología',
+  label: 'Psicología · Doc24',
   estado: 'coseguro',
   detalle: '1 sesión a $15.000 · luego $30.000',
 };
+
+/**
+ * Guardia clínica: es el MISMO servicio en los tres planes y sólo cambia el
+ * coseguro, así que la etiqueta se escribe una vez y el detalle se pasa por
+ * plan. Sin esto la cadena queda tipeada a mano tres veces y el próximo
+ * renombre arregla dos y se olvida de una — y ahí Nexo III termina anunciando
+ * un nombre de servicio distinto al de Nexo I y II, en la misma tabla
+ * comparativa, sin que nada lo detecte. Los precios tienen `check-precios.mjs`
+ * como red; los nombres no tienen ninguna.
+ *
+ * Se declara arriba del bloque PLANES a propósito: las regex de
+ * `check-precios.mjs` están acotadas a ese bloque y al de ON_DEMAND, así que una
+ * constante declarada acá queda fuera de las dos ventanas y no altera la
+ * extracción de precios.
+ *
+ * OJO al redactar comentarios acá arriba: el script localiza el inicio del
+ * bloque con `indexOf` sobre la cadena `export` + ` const PLANES`. Escribir esa
+ * cadena completa en un comentario ANTERIOR a la declaración real hace que el
+ * `indexOf` matchee el comentario y la ventana arranque antes de donde debe. Por
+ * eso acá se nombra "el bloque PLANES" y no la declaración textual.
+ */
+const guardiaClinica = (detalle: string): Prestacion => ({
+  label: 'Guardia clínica 24/7 · Doc24',
+  estado: 'coseguro',
+  detalle,
+});
+
+/**
+ * Las tres prestaciones que aparecen en los tres planes cambiando sólo el
+ * `estado`. Mismo motivo que `guardiaClinica`: tipeadas a mano son tres copias
+ * de la misma cadena, `label` es un `string` cualquiera y un typo compila
+ * perfecto — la tabla comparativa terminaría mostrando dos nombres distintos
+ * para el mismo servicio, en columnas contiguas, sin que nada lo detecte. Los
+ * precios los cubre `check-precios.mjs`; los nombres no tienen ninguna red.
+ *
+ * Se declaran arriba del bloque PLANES para no entrar en las ventanas que ese
+ * script acota con `indexOf` (ver la advertencia sobre la cadena centinela en el
+ * comentario de `guardiaClinica`).
+ */
+const emergencias = (estado: Estado): Prestacion => ({ label: 'Emergencias médicas', estado });
+const guardiaOdontologica = (estado: Estado): Prestacion => ({ label: 'Guardia odontológica', estado });
+const farmacia = (estado: Estado): Prestacion => ({ label: 'Farmacia', estado });
 
 export const PLANES: PlanComercial[] = [
   {
@@ -112,15 +171,15 @@ export const PLANES: PlanComercial[] = [
     bajada: 'La cobertura completa: emergencias, odontología y farmacia.',
     recomendado: true,
     prestaciones: [
-      { label: 'Emergencias médicas', estado: 'incluido' },
-      { label: 'Guardia odontológica', estado: 'incluido' },
-      { label: 'Farmacia', estado: 'incluido' },
+      emergencias('incluido'),
+      guardiaOdontologica('incluido'),
+      farmacia('incluido'),
       // El documento de producto no lista Óptica en Nexo I, pero sí en II y III,
       // que son más baratos. Probable omisión en el origen. A confirmar.
       // `circuito_optica_previnca_v2.docx` trajo QUÉ cubre la óptica, no EN QUÉ
       // PLANES entra, así que este pendiente sigue abierto.
-      { label: 'Óptica', estado: 'no-incluido', pendiente: true },
-      { label: 'Doc24 · Clínica', estado: 'coseguro', detalle: '1 consulta sin cargo · luego $18.000' },
+      { label: LABEL_OPTICA, estado: 'no-incluido', pendiente: true },
+      guardiaClinica('1 consulta sin cargo · luego $18.000'),
       PSICOLOGIA,
     ],
   },
@@ -131,28 +190,26 @@ export const PLANES: PlanComercial[] = [
     bajada: 'Seguro de salud, farmacia y óptica, con telemedicina.',
     prestaciones: [
       { label: 'Seguro de Salud I', estado: 'incluido', detalle: 'Alta complejidad, internación y trasplante' },
-      { label: 'Farmacia', estado: 'incluido' },
+      farmacia('incluido'),
       OPTICA,
-      // Fuente: confirmación del cliente registrada en el commit b908c069
-      // ("consultas sin límite y luego $30.000"). Es el único dato del archivo
-      // cuya cita vivía sólo en el mensaje de commit; se trae acá porque el
-      // resto del archivo sostiene esa convención.
+      // TENSIÓN RESUELTA (2026-09-10). Venía de una contradicción entre dos
+      // fuentes: el documento de producto lista este servicio con "Cant.
+      // Cubierta 0" (ninguna consulta sin cargo) y una confirmación anterior
+      // decía "consultas sin límite y luego $30.000", que se leía al revés.
+      // El cliente definió el texto final: "Consulta a $30.000 · sin límite".
+      // O sea que se cobran TODAS las consultas, a $30.000 cada una, y lo que
+      // no tiene límite es la cantidad — coincide con el "Cant. Cubierta 0" del
+      // documento original.
       //
-      // El separador `·` no es decorativo: es el borde entre lo que recibís y lo
-      // que pagás, y `Planes.tsx` renderiza `detalle` como una sola línea de
-      // 13px. Sin él las dos ideas se leen como una sola frase, en el cuerpo más
-      // chico de la card y para un público que incluye adultos mayores.
-      //
-      // OJO, tensión sin cerrar: el documento de producto lista Médico a
-      // Domicilio en Nexo II con "Cant. Cubierta 0" y "Valor No Cubierto —", lo
-      // que se leería como que NINGUNA consulta viene sin cargo. La confirmación
-      // del cliente dice otra cosa. Se respeta la confirmación, que es posterior
-      // y explícita, pero conviene cerrarlo con el cliente.
-      { label: 'Médico a domicilio', estado: 'coseguro', detalle: 'Consultas sin límite · luego $30.000' },
-      { label: 'Doc24 · Clínica', estado: 'coseguro', detalle: '1 consulta sin cargo · luego $18.000' },
+      // El separador `·` no es decorativo: es el borde entre lo que pagás y lo
+      // que recibís. `Planes.tsx` pinta `detalle` en 13px, el cuerpo más chico
+      // de la card; sin el separador las dos ideas se leen como una sola frase,
+      // para un público que incluye adultos mayores.
+      { label: 'Médico a domicilio', estado: 'coseguro', detalle: 'Consulta a $30.000 · sin límite' },
+      guardiaClinica('1 consulta sin cargo · luego $18.000'),
       PSICOLOGIA,
-      { label: 'Emergencias médicas', estado: 'no-incluido' },
-      { label: 'Guardia odontológica', estado: 'no-incluido' },
+      emergencias('no-incluido'),
+      guardiaOdontologica('no-incluido'),
     ],
   },
   {
@@ -163,11 +220,11 @@ export const PLANES: PlanComercial[] = [
     prestaciones: [
       { label: 'Seguro de Salud II', estado: 'incluido', detalle: 'Alta complejidad, enfermedades graves y rehabilitación' },
       OPTICA,
-      { label: 'Doc24 · Clínica', estado: 'coseguro', detalle: 'Cobertura de $10.000 · luego $18.000' },
+      guardiaClinica('Cobertura de $10.000 · luego $18.000'),
       PSICOLOGIA,
-      { label: 'Emergencias médicas', estado: 'no-incluido' },
-      { label: 'Guardia odontológica', estado: 'no-incluido' },
-      { label: 'Farmacia', estado: 'no-incluido' },
+      emergencias('no-incluido'),
+      guardiaOdontologica('no-incluido'),
+      farmacia('no-incluido'),
     ],
   },
 ];
@@ -206,8 +263,14 @@ export const ON_DEMAND: ServicioOnDemand[] = [
  * romperse en silencio, justo en la rama que existe para cerrar bugs de
  * sincronización de plan.
  *
- * Fuera del bloque `export const PLANES`/`ON_DEMAND` a propósito:
- * `scripts/check-precios.mjs` extrae precios con una regex acotada a ese rango.
+ * Fuera de los bloques PLANES y ON_DEMAND a propósito, y con este
+ * nombre: la cadena literal `export const LS_PLAN_KEY` es el DELIMITADOR de fin
+ * del bloque `ON_DEMAND` en `scripts/check-precios.mjs` (busca su posición con
+ * `indexOf` para acotar la regex). Si se la renombra, o se la mueve arriba de
+ * `ON_DEMAND`, ese `indexOf` devuelve -1, el bloque se extiende hasta el final
+ * del archivo y el chequeo de precios se degrada SIN FALLAR. Hoy no rompe nada
+ * porque después no hay más pares `id:`/`precio:`, que es justo lo que lo hace
+ * peligroso: es una trampa armada para el próximo que agregue un export al pie.
  */
 export const LS_PLAN_KEY = 'nexo_plan_slug';
 
