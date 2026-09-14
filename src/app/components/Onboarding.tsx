@@ -737,12 +737,11 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
 
             {step === 5 && (
               <>
-                <h2 className="ob-title">¿Pagás con Mercado Pago?</h2>
-                <p className="ob-desc">Si elegís pagar con MP, te pedimos el email asociado a tu cuenta.</p>
+                <h2 className="ob-title">¿Cómo vas a pagar?</h2>
                 <div className="ob-options">
                   {[
-                    { value: 'mp_balance', title: 'Sí', sub: 'Con mi cuenta MP', icon: 'M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z' },
-                    { value: 'tarjeta', title: 'No', sub: 'Con tarjeta como invitado', icon: 'M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z' },
+                    { value: 'mp_balance', title: 'Con mi cuenta de Mercado Pago', sub: 'Necesitamos el email asociado a tu cuenta', icon: 'M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z' },
+                    { value: 'tarjeta', title: 'Solo con tarjeta', sub: 'Sin iniciar sesión en Mercado Pago', icon: 'M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z' },
                   ].map((opt) => (
                     <label key={opt.value} className={`ob-option ${form.medio_pago === opt.value ? 'checked' : ''} ${isInvalid('medio_pago') ? 'ob-option-error' : ''}`}>
                       <input type="radio" name="medio_pago" value={opt.value} checked={form.medio_pago === opt.value} onChange={() => setField('medio_pago', opt.value)} style={{ position: 'absolute', opacity: 0, pointerEvents: 'none' }} />
@@ -757,8 +756,11 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
                 </div>
                 <div className={`ob-collapsible ${form.medio_pago === 'mp_balance' ? 'open' : 'closed'}`}>
                   <div className="ob-field" style={{ marginBottom: 0 }}>
-                    <label className="ob-label">Email de tu cuenta MP</label>
+                    <label className="ob-label">Email de tu cuenta de Mercado Pago</label>
                     <input className={`ob-input${errCls('mp_email')}`} type="email" value={form.mp_email} onChange={(e) => setField('mp_email', e.target.value)} placeholder="tu@email.com" />
+                    <p style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.55)', marginTop: '0.35rem', fontFamily: 'inherit' }}>
+                      Debe ser el mismo con el que iniciás sesión en Mercado Pago.
+                    </p>
                   </div>
                 </div>
                 {error && <ErrorMsg msg={error} />}
