@@ -453,12 +453,21 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
     // El backend es idempotente: si el lead ya está convertido, devuelve la
     // checkoutUrl existente del affiliate ya creado, sin crear uno nuevo.
     if (step === 5) {
-      if (!leadId) {
-        setError('La sesión expiró. Recargá para empezar de nuevo.');
-        return;
+      let currentLeadId = leadId;
+      // Auto-recuperación: si el leadId se perdió (localStorage limpiado por
+      // 404 del lead viejo, o el usuario volvió atrás y cambió datos), lo
+      // recreamos con los datos actuales antes de finalizar, en vez de
+      // obligar al usuario a recargar.
+      if (!currentLeadId) {
+        setSubmitting(true);
+        currentLeadId = await callCreateLead();
+        if (!currentLeadId) {
+          setSubmitting(false);
+          return;
+        }
       }
       setSubmitting(true);
-      const result = await callFinalizeLead(leadId);
+      const result = await callFinalizeLead(currentLeadId);
       setSubmitting(false);
       if (!result) return;
     }
