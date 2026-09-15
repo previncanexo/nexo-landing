@@ -827,12 +827,8 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
 
             {step === 5 && (
               <>
-                <h2 className="ob-title">¿Cuál es tu email asociado a tu cuenta de Mercado Pago?</h2>
-                <p className="ob-desc">
-                  Generamos la suscripción por Mercado Pago. Necesitamos este dato para
-                  emitirla y que el pago no falle. Vamos a usar este mismo email para
-                  activar tu cuenta en Nexo.
-                </p>
+                <h2 className="ob-title">Email de tu cuenta de Mercado Pago</h2>
+                <p className="ob-desc">Con este email emitimos tu suscripción y activamos tu cuenta en Nexo.</p>
                 <div className="ob-field">
                   <label className="ob-label">Email de tu cuenta de Mercado Pago</label>
                   <input
