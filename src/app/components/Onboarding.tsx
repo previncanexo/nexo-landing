@@ -215,11 +215,11 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
     const stored = localStorage.getItem(LS_FORM);
     if (stored) {
       try {
-        // El medio de pago se re-elige cada vez que se llega al step 5 —
-        // guardar la selección anterior confunde (aparece pre-marcada sin
-        // que el usuario haya hecho clic en esta sesión).
-        const { medio_pago: _mp, mp_email: _me, ...rest } = JSON.parse(stored);
-        setForm({ ...initialForm, ...rest });
+        // Restauramos lo que había — incluye `mp_email` (email de MP), que
+        // ahora es el único campo del step 5 y conviene conservarlo si el
+        // usuario ya lo tipeó. `medio_pago` desapareció del flow.
+        const stored_ = JSON.parse(stored);
+        setForm({ ...initialForm, ...stored_ });
       } catch { /* ignore */ }
     }
     // Limpiar caches viejos que podían provocar URL hijacking entre sesiones.
@@ -277,8 +277,8 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
     } else if (s === 2) {
       if (!form.nombre.trim()) invalid.add('nombre');
       if (!form.apellido.trim()) invalid.add('apellido');
-      if (!form.email.trim() || !EMAIL_RE.test(form.email.trim())) invalid.add('email');
       if (form.whatsapp.replace(/\D/g, '').length < 8) invalid.add('whatsapp');
+      // El email se pide en el step 5 (junto al de MP), no acá.
     } else if (s === 3) {
       if (!/^\d{7,8}$/.test(form.dni.trim())) invalid.add('dni');
       if (!form.fecha_nacimiento) {
@@ -294,9 +294,11 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
       if (!form.calle.trim()) invalid.add('calle');
       if (!form.numero.trim()) invalid.add('numero');
     } else if (s === 5) {
-      if (!form.medio_pago) invalid.add('medio_pago');
-      // mp_email es opcional: si viene, mejora la trazabilidad; si no, MP
-      // acepta la sub igual con el email de contacto.
+      // Único campo del step: email asociado a Mercado Pago. Obligatorio y
+      // con formato válido — MP rechaza la creación de la sub si viene mal,
+      // y es el mismo email que Nexo usa para activar la cuenta del portal.
+      const mp = form.mp_email.trim();
+      if (!mp || !EMAIL_RE.test(mp)) invalid.add('mp_email');
     }
     return {
       error: invalid.size > 0 ? 'Completá los campos en rojo para continuar.' : null,
@@ -388,7 +390,9 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
           para_quien: form.para_quien,
           nombre: form.nombre.trim(),
           apellido: form.apellido.trim(),
-          email: form.email.trim().toLowerCase(),
+          // El email ya no se pide en el step 2 — se completa en el step 5
+          // junto al email de MP. El backend acepta el POST sin email y lo
+          // guarda como null hasta el PATCH final.
           whatsapp: form.whatsapp.trim(),
           // Plan elegido en la card. Persistir desde el step 1 para no perder
           // la elección si el usuario abandona antes del stage 2 (PATCH).
@@ -404,6 +408,15 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
           gclid: attr.gclid ?? undefined,
           referer: attr.referer ?? undefined,
           landing_url: attr.landing_url ?? undefined,
+          // Constantes del canal Nexo para la integración con Salesforce.
+          // El backend las reenvía tal cual a SF, así queda agnóstico del canal:
+          // otro canal (WhatsApp, etc.) mandaría sus propios valores.
+          sales_channel: 'Nexo',
+          document_type: 'DNI',
+          country: 'Argentina',
+          state: 'Santa Fe',
+          declared_members_count: 1,
+          senior_members_count: 0,
         }),
       });
       const data = await res.json();
@@ -450,8 +463,11 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
           calle: form.calle.trim(),
           numero: form.numero.trim(),
           depto: form.depto.trim(),
-          medio_pago: form.medio_pago,
-          mp_email: form.mp_email.trim() || undefined,
+          // Ya no preguntamos método de pago (lo elige el usuario dentro del
+          // checkout de MP). Mandamos el email declarado como email de contacto
+          // Y como email MP — es el mismo dato ahora.
+          email: form.mp_email.trim().toLowerCase(),
+          mp_email: form.mp_email.trim().toLowerCase(),
           event_id_complete_registration: eventIdCR,
           event_id_initiate_checkout: eventIdIC,
           event_source_url: typeof window !== 'undefined' ? window.location.href : undefined,
@@ -472,6 +488,14 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
           gclid: attr.gclid ?? undefined,
           referer: attr.referer ?? undefined,
           landing_url: attr.landing_url ?? undefined,
+          // Constantes del canal Nexo (idem POST) — el backend las reenvía
+          // a Salesforce sin conocer el canal.
+          sales_channel: 'Nexo',
+          document_type: 'DNI',
+          country: 'Argentina',
+          state: 'Santa Fe',
+          declared_members_count: 1,
+          senior_members_count: 0,
         }),
       });
       const data = await res.json();
@@ -721,7 +745,6 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
                   <div className="ob-field"><label className="ob-label">Nombre</label><input className={`ob-input${errCls('nombre')}`} type="text" value={form.nombre} onChange={(e) => setField('nombre', e.target.value)} placeholder="Juan" /></div>
                   <div className="ob-field"><label className="ob-label">Apellido</label><input className={`ob-input${errCls('apellido')}`} type="text" value={form.apellido} onChange={(e) => setField('apellido', e.target.value)} placeholder="García" /></div>
                 </div>
-                <div className="ob-field"><label className="ob-label">Email</label><input className={`ob-input${errCls('email')}`} type="email" value={form.email} onChange={(e) => setField('email', e.target.value)} placeholder="tu@email.com" /></div>
                 <div className="ob-field"><label className="ob-label">WhatsApp</label><input className={`ob-input${errCls('whatsapp')}`} type="tel" value={form.whatsapp} onChange={(e) => setField('whatsapp', e.target.value)} placeholder="+54 9 341 1234 5678" /></div>
                 {error && <ErrorMsg msg={error} />}
                 <div className="ob-actions">
@@ -804,29 +827,23 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
 
             {step === 5 && (
               <>
-                <h2 className="ob-title">¿Cómo querés pagar?</h2>
-                <p className="ob-desc">Elegí el medio de pago para tu suscripción mensual.</p>
-                <div className="ob-options">
-                  {[
-                    { value: 'tarjeta', title: 'Tarjeta de crédito o débito', sub: 'Visa, Mastercard, American Express', icon: 'M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z' },
-                    { value: 'mp_balance', title: 'Dinero en cuenta Mercado Pago', sub: 'Saldo disponible en tu billetera', icon: 'M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z' },
-                  ].map((opt) => (
-                    <label key={opt.value} className={`ob-option ${form.medio_pago === opt.value ? 'checked' : ''} ${isInvalid('medio_pago') ? 'ob-option-error' : ''}`}>
-                      <input type="radio" name="medio_pago" value={opt.value} checked={form.medio_pago === opt.value} onChange={() => setField('medio_pago', opt.value)} style={{ position: 'absolute', opacity: 0, pointerEvents: 'none' }} />
-                      <span className="ob-option-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="#fff"><path d={opt.icon} /></svg></span>
-                      <span className="ob-option-text">
-                        <span className="ob-option-title">{opt.title}</span>
-                        <span className="ob-option-sub">{opt.sub}</span>
-                      </span>
-                      <span className="ob-option-check">{form.medio_pago === opt.value && <svg width="12" height="12" viewBox="0 0 24 24" fill="#fff"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" /></svg>}</span>
-                    </label>
-                  ))}
-                </div>
-                <div className={`ob-collapsible ${form.medio_pago === 'mp_balance' ? 'open' : 'closed'}`}>
-                  <div className="ob-field" style={{ marginBottom: 0 }}>
-                    <label className="ob-label">Email de la cuenta Mercado Pago (opcional)</label>
-                    <input className="ob-input" type="email" value={form.mp_email} onChange={(e) => setField('mp_email', e.target.value)} placeholder="tu@email.com" />
-                  </div>
+                <h2 className="ob-title">¿Cuál es tu email asociado a tu cuenta de Mercado Pago?</h2>
+                <p className="ob-desc">
+                  Generamos la suscripción por Mercado Pago. Necesitamos este dato para
+                  emitirla y que el pago no falle. Vamos a usar este mismo email para
+                  activar tu cuenta en Nexo.
+                </p>
+                <div className="ob-field">
+                  <label className="ob-label">Email de tu cuenta de Mercado Pago</label>
+                  <input
+                    className={`ob-input${errCls('mp_email')}`}
+                    type="email"
+                    value={form.mp_email}
+                    onChange={(e) => setField('mp_email', e.target.value)}
+                    placeholder="tu@email.com"
+                    autoComplete="email"
+                    inputMode="email"
+                  />
                 </div>
                 {error && <ErrorMsg msg={error} />}
                 <div className="ob-actions">
