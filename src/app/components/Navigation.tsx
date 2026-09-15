@@ -9,9 +9,18 @@ interface NavigationProps {
   onOpenCheckout: () => void;
 }
 
-export function Navigation({ onOpenCheckout }: NavigationProps) {
+export function Navigation({ onOpenCheckout: _onOpenCheckout }: NavigationProps) {
+  // Prop preservada por compat con App.tsx; el CTA del nav ahora scrollea a
+  // la sección de planes (id="beneficios") en vez de saltar al onboarding —
+  // el usuario primero elige el plan y desde ahí entra al flujo de alta.
+  void _onOpenCheckout;
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  function scrollToPlanes() {
+    const el = document.getElementById('beneficios');
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -96,7 +105,7 @@ export function Navigation({ onOpenCheckout }: NavigationProps) {
                 Mi Portal
               </a>
               <button
-                onClick={onOpenCheckout}
+                onClick={scrollToPlanes}
                 className="bg-white text-[var(--purple)] border-none px-5 py-2.5 rounded-full text-[13px] font-bold cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-[1.02] active:scale-95 font-['DM_Sans'] whitespace-nowrap flex items-center gap-1.5 group"
               >
                 Quiero mi cobertura
@@ -201,7 +210,7 @@ export function Navigation({ onOpenCheckout }: NavigationProps) {
 
           <div className="w-full max-w-xs flex flex-col gap-3">
             <button
-              onClick={() => { setMobileOpen(false); onOpenCheckout(); }}
+              onClick={() => { setMobileOpen(false); scrollToPlanes(); }}
               className="w-full bg-white text-[var(--purple)] border-none px-8 py-4 rounded-full text-base cursor-pointer transition-all hover:shadow-2xl font-['DM_Sans'] font-bold flex items-center justify-center gap-2 group"
             >
               Quiero mi cobertura
