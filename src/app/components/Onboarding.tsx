@@ -484,6 +484,24 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
     }
   }
 
+  // Enriquecimiento progresivo del lead en SF: fire-and-forget al backend
+  // apenas el usuario completa un step. El backend acumula datos parciales
+  // en el lead y dispara /leads a SF con snapshot actual. No bloquea el
+  // avance de step (si falla, seguimos como si nada).
+  function enrichLeadInBackground(currentLeadId: string, extra: Record<string, unknown>) {
+    fetch(`${API_URL}/api/leads/${currentLeadId}/enrich`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ...extra,
+        sales_channel: 'Nexo',
+        document_type: 'DNI',
+        declared_members_count: 1,
+        senior_members_count: 0,
+      }),
+    }).catch(() => { /* ignoramos, es best-effort */ });
+  }
+
   async function next() {
     if (typeof step !== 'number' || step >= 6) return;
     const { error: err, fields } = validateStep(step);
@@ -499,6 +517,26 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
       const newLeadId = await callCreateLead();
       setSubmitting(false);
       if (!newLeadId) return;
+    }
+
+    // Step 3 → 4: DNI + fecha_nac ya validados → enrich a SF con esos datos.
+    // Este es el PRIMER envío a SF (sin address todavía → readyToSell: false).
+    if (step === 3 && leadId) {
+      enrichLeadInBackground(leadId, {
+        dni: form.dni.trim(),
+        fecha_nacimiento: form.fecha_nacimiento,
+      });
+    }
+
+    // Step 4 → 5: address completo → enrich a SF con street + city (+ apartment).
+    // Después de este envío, SF debería responder readyToSell: true.
+    if (step === 4 && leadId) {
+      enrichLeadInBackground(leadId, {
+        ciudad: form.ciudad,
+        calle: form.calle.trim(),
+        numero: form.numero.trim(),
+        depto: form.depto?.trim() || undefined,
+      });
     }
 
     // Step 5 → 6: finalizar lead, crear affiliate + suscripción MP.
