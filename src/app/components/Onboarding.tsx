@@ -200,72 +200,21 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
     d.setFullYear(d.getFullYear() - 18);
     return d.toISOString().slice(0, 10);
   })();
-  const [leadId, setLeadId] = useState<string | null>(
-    typeof window !== 'undefined' ? localStorage.getItem(LS_LEAD) : null
-  );
+  // El onboarding NO persiste nada en localStorage — si el usuario cierra el
+  // navegador arranca de cero. Evita el bug de leadId huérfano cuando la DB
+  // se limpió (staging) o cuando el lead vencido dejó de existir.
+  const [leadId, setLeadId] = useState<string | null>(null);
   // affiliateId, checkoutUrl y eventIdIC viven SOLO en memoria — nunca en localStorage.
   // Si el browser se reinicia, el usuario empieza de cero (a propósito).
   const [affiliateId, setAffiliateId] = useState<string | null>(null);
   const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
   const [eventIdIC, setEventIdIC] = useState<string | null>(null);
 
-  // Restaurar form data del localStorage al montar + limpiar caches legacy
+  // Ninguna restauración desde localStorage. El form nace en `initialForm` y
+  // arranca en step 1. Cargamos solo GA + Meta Pixel.
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const stored = localStorage.getItem(LS_FORM);
-    if (stored) {
-      try {
-        // Restauramos lo que había — incluye `mp_email` (email de MP), que
-        // ahora es el único campo del step 5 y conviene conservarlo si el
-        // usuario ya lo tipeó. `medio_pago` desapareció del flow.
-        const stored_ = JSON.parse(stored);
-        setForm({ ...initialForm, ...stored_ });
-      } catch { /* ignore */ }
-    }
-    // Limpiar caches viejos que podían provocar URL hijacking entre sesiones.
-    localStorage.removeItem(LS_LEGACY_AFFILIATE);
-    localStorage.removeItem(LS_LEGACY_CHECKOUT);
-    localStorage.removeItem(LS_LEGACY_EVENT_ID_IC);
-    // Forzar carga de GA + Meta Pixel ahora (no esperar al idle) para que los
-    // cookies `_ga` y `_fbp` existan cuando el usuario complete el PATCH.
-    // El helper en index.html es idempotente (si ya cargó, no hace nada).
     window.loadNexoTrackingNow?.();
-  }, []);
-
-  // Validar el lead guardado: si existe, GET al backend; si está partial → saltar a step 3,
-  // si está converted o no existe → limpiar localStorage y arrancar limpio
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const stored = localStorage.getItem(LS_LEAD);
-    if (!stored) return;
-    (async () => {
-      try {
-        const res = await fetch(`${API_URL}/api/leads/${stored}`);
-        if (!res.ok) throw new Error('lead invalid');
-        const data = await res.json();
-        if (!data.success || data.lead.status !== 'partial') {
-          localStorage.removeItem(LS_LEAD);
-          // El plan guardado está atado a este lead; si el lead ya no es válido
-          // (convertido o inexistente), el plan tampoco debe sobrevivir.
-          localStorage.removeItem(LS_PLAN_KEY);
-          setLeadId(null);
-          return;
-        }
-        // Si estamos en step 1 o 2 y hay lead válido, saltamos a step 3
-        if (typeof window !== 'undefined') {
-          const path = window.location.pathname;
-          if (path === '/onboarding' || path === '/onboarding/' || path === '/onboarding/afiliado' || path === '/onboarding/datos') {
-            const target = STEP_TO_PATH['3'];
-            window.history.replaceState({}, '', target);
-            setStep(3);
-          }
-        }
-      } catch {
-        localStorage.removeItem(LS_LEAD);
-        localStorage.removeItem(LS_PLAN_KEY);
-        setLeadId(null);
-      }
-    })();
   }, []);
 
   const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -855,6 +804,22 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
               <>
                 <h2 className="ob-title">Confirmá tu compra</h2>
                 <p className="ob-desc">Revisá los datos antes de pagar.</p>
+                {typeof window !== 'undefined' && window.location.host.includes('staging') && (
+                  <div style={{
+                    background: 'rgba(255,193,7,0.12)',
+                    border: '1px solid rgba(255,193,7,0.55)',
+                    color: '#ffd54f',
+                    padding: '10px 14px',
+                    borderRadius: 8,
+                    fontSize: '0.85rem',
+                    lineHeight: 1.35,
+                    marginBottom: '1rem',
+                  }}>
+                    <strong>⚠ Ambiente de PRUEBA · pago REAL.</strong> Este entorno
+                    ejecuta cobros contra la cuenta MercadoPago de producción. Se te
+                    va a debitar ${formatearMiles(plan.precio)} de tu tarjeta.
+                  </div>
+                )}
                 <div className="ob-summary-block">
                   <p className="ob-summary-label">Afiliado</p>
                   <p className="ob-summary-value">{form.nombre || '—'} {form.apellido}</p>
