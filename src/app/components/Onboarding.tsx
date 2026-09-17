@@ -914,9 +914,7 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
                     lineHeight: 1.35,
                     marginBottom: '1rem',
                   }}>
-                    <strong>⚠ Ambiente de PRUEBA · pago REAL.</strong> Este entorno
-                    ejecuta cobros contra la cuenta MercadoPago de producción. Se te
-                    va a debitar ${formatearMiles(plan.precio)} de tu tarjeta.
+                    Ambiente de prueba con pago real. Vamos a cobrar $15 para validar el proceso completo.
                   </div>
                 )}
                 <div className="ob-summary-block">
