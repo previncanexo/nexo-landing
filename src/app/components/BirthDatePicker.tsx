@@ -90,19 +90,34 @@ export function BirthDatePicker({ value, onChange, hasError }: Props) {
   const anioMax = today.getFullYear() - 18;
   const anioMin = anioMax - 82;
 
-  const [y, m, d] = value
-    ? value.split('-').map(n => parseInt(n, 10))
-    : [NaN, NaN, NaN];
-  const dia = isNaN(d) ? null : d;
-  const mes = isNaN(m) ? null : m;
-  const anio = isNaN(y) ? null : y;
+  // State local para preservar selecciones parciales — si `value` es "" y
+  // el usuario elige solo "día", tenemos que recordar ese día para que el
+  // trigger lo muestre aunque `value` siga vacío hasta que complete los 3.
+  const parsed = value ? value.split('-').map(n => parseInt(n, 10)) : [NaN, NaN, NaN];
+  const [dia, setDia] = useState<number | null>(isNaN(parsed[2]) ? null : parsed[2]);
+  const [mes, setMes] = useState<number | null>(isNaN(parsed[1]) ? null : parsed[1]);
+  const [anio, setAnio] = useState<number | null>(isNaN(parsed[0]) ? null : parsed[0]);
+
+  // Si el `value` externo cambia (ej: reset del form), rehidratamos el state
+  // local a partir de él.
+  useEffect(() => {
+    const p = value ? value.split('-').map(n => parseInt(n, 10)) : [NaN, NaN, NaN];
+    setAnio(isNaN(p[0]) ? null : p[0]);
+    setMes(isNaN(p[1]) ? null : p[1]);
+    setDia(isNaN(p[2]) ? null : p[2]);
+  }, [value]);
 
   const emitChange = (nd: number | null, nm: number | null, ny: number | null) => {
+    // Actualizamos el state local siempre (para que la UI refleje la
+    // selección parcial), y solo emitimos al padre cuando los 3 valores
+    // están presentes.
+    setDia(nd);
+    setMes(nm);
+    setAnio(ny);
     if (nd == null || nm == null || ny == null) {
-      onChange('');
+      if (value) onChange('');
       return;
     }
-    // Ajustar día si el mes/año elegidos tienen menos días
     const diasMes = new Date(ny, nm, 0).getDate();
     const dAjustado = Math.min(nd, diasMes);
     const iso = `${ny}-${String(nm).padStart(2, '0')}-${String(dAjustado).padStart(2, '0')}`;
