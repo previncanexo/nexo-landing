@@ -227,8 +227,11 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
     } else if (s === 2) {
       if (!form.nombre.trim()) invalid.add('nombre');
       if (!form.apellido.trim()) invalid.add('apellido');
+      // El email es la identidad de la cuenta Nexo — el backend rechaza si
+      // ya existe un afiliado activo con ese email (unicidad hard).
+      const email = form.email.trim();
+      if (!email || !EMAIL_RE.test(email)) invalid.add('email');
       if (form.whatsapp.replace(/\D/g, '').length < 8) invalid.add('whatsapp');
-      // El email se pide en el step 5 (junto al de MP), no acá.
     } else if (s === 3) {
       if (!/^\d{7,8}$/.test(form.dni.trim())) invalid.add('dni');
       if (!form.fecha_nacimiento) {
@@ -244,9 +247,11 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
       if (!form.calle.trim()) invalid.add('calle');
       if (!form.numero.trim()) invalid.add('numero');
     } else if (s === 5) {
-      // Único campo del step: email asociado a Mercado Pago. Obligatorio y
-      // con formato válido — MP rechaza la creación de la sub si viene mal,
-      // y es el mismo email que Nexo usa para activar la cuenta del portal.
+      // Medio de pago: tarjeta o dinero en cuenta MP. Requerido — se usa
+      // como `payer_email` en la preapproval; sin él MP no crea la sub.
+      // El mp_email NO valida unicidad — un pagador puede pagar por N
+      // afiliados con la misma cuenta MP (ej: alguien paga por familia).
+      if (!['tarjeta', 'mp_balance'].includes(form.medio_pago)) invalid.add('medio_pago');
       const mp = form.mp_email.trim();
       if (!mp || !EMAIL_RE.test(mp)) invalid.add('mp_email');
     }
@@ -340,9 +345,10 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
           para_quien: form.para_quien,
           nombre: form.nombre.trim(),
           apellido: form.apellido.trim(),
-          // El email ya no se pide en el step 2 — se completa en el step 5
-          // junto al email de MP. El backend acepta el POST sin email y lo
-          // guarda como null hasta el PATCH final.
+          // Email de la cuenta Nexo — requerido y único a nivel de afiliado
+          // pagado. El backend responde `email_taken` si ya existe un
+          // afiliado activo con este email.
+          email: form.email.trim().toLowerCase(),
           whatsapp: form.whatsapp.trim(),
           // Plan elegido en la card. Persistir desde el step 1 para no perder
           // la elección si el usuario abandona antes del stage 2 (PATCH).
@@ -413,11 +419,12 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
           calle: form.calle.trim(),
           numero: form.numero.trim(),
           depto: form.depto.trim(),
-          // Ya no preguntamos método de pago (lo elige el usuario dentro del
-          // checkout de MP). Mandamos el email declarado como email de contacto
-          // Y como email MP — es el mismo dato ahora.
-          email: form.mp_email.trim().toLowerCase(),
+          // El email de contacto Nexo se persistió en el POST del step 2 y
+          // NO se pisa acá. `mp_email` es el email de la cuenta MP del
+          // pagador — se usa como `payer_email` de la preapproval y NO
+          // valida unicidad (un pagador puede pagar por N afiliados).
           mp_email: form.mp_email.trim().toLowerCase(),
+          medio_pago: form.medio_pago,
           event_id_complete_registration: eventIdCR,
           event_id_initiate_checkout: eventIdIC,
           event_source_url: typeof window !== 'undefined' ? window.location.href : undefined,
@@ -646,6 +653,18 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
         .ob-cselect-option { width: 100%; padding: 0.75rem 1rem; background: transparent; border: none; color: #fff; font-family: inherit; font-size: 0.95rem; text-align: left; cursor: pointer; display: block; }
         .ob-cselect-option:hover { background: rgba(134,96,239,0.25); }
         .ob-cselect-option.selected { background: rgba(134,96,239,0.18); color: #ee5cd0; font-weight: 600; }
+        /* Método de pago (step 5): 2 cards seleccionables (tarjeta / mp balance) */
+        .ob-paymethod { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-bottom: 1.1rem; }
+        @media (max-width: 380px) { .ob-paymethod { grid-template-columns: 1fr; } }
+        .ob-paymethod-card { display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem 0.9rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.14); border-radius: 14px; color: #fff; font-family: inherit; cursor: pointer; text-align: left; transition: all 0.2s ease; }
+        .ob-paymethod-card:hover { border-color: rgba(255,255,255,0.28); background: rgba(255,255,255,0.09); }
+        .ob-paymethod-card.selected { border-color: #8660ef; background: rgba(134,96,239,0.14); box-shadow: 0 0 0 3px rgba(134,96,239,0.18); }
+        .ob-paymethod-icon { width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, rgba(134,96,239,0.28) 0%, rgba(238,92,208,0.28) 100%); display: flex; align-items: center; justify-content: center; color: #fff; flex-shrink: 0; }
+        .ob-paymethod-body { min-width: 0; }
+        .ob-paymethod-title { font-size: 0.95rem; font-weight: 600; margin: 0; }
+        .ob-paymethod-sub { font-size: 0.78rem; color: rgba(255,255,255,0.55); margin: 2px 0 0; }
+        .ob-paymethod.ob-input-error .ob-paymethod-card:not(.selected) { border-color: rgba(255,120,130,0.5); }
+        .ob-field-hint { font-size: 0.78rem; color: rgba(255,255,255,0.55); margin: 0.5rem 0 0; line-height: 1.35; }
         /* BirthDatePicker: 3 selects custom (día · mes · año) con scrollbar
            estilado al tema. Reemplaza el input date nativo del step 3. */
         .bdp-picker { display: grid; grid-template-columns: 90px 1fr 100px; gap: 0.6rem; }
@@ -756,6 +775,7 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
                   <div className="ob-field"><label className="ob-label">Nombre</label><input className={`ob-input${errCls('nombre')}`} type="text" value={form.nombre} onChange={(e) => setField('nombre', e.target.value)} placeholder="Juan" /></div>
                   <div className="ob-field"><label className="ob-label">Apellido</label><input className={`ob-input${errCls('apellido')}`} type="text" value={form.apellido} onChange={(e) => setField('apellido', e.target.value)} placeholder="García" /></div>
                 </div>
+                <div className="ob-field"><label className="ob-label">Email</label><input className={`ob-input${errCls('email')}`} type="email" value={form.email} onChange={(e) => setField('email', e.target.value)} placeholder="tu@email.com" autoComplete="email" inputMode="email" /></div>
                 <div className="ob-field"><label className="ob-label">WhatsApp</label><input className={`ob-input${errCls('whatsapp')}`} type="tel" value={form.whatsapp} onChange={(e) => setField('whatsapp', e.target.value)} placeholder="+54 9 341 1234 5678" /></div>
                 {error && <ErrorMsg msg={error} />}
                 <div className="ob-actions">
@@ -823,8 +843,36 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
 
             {step === 5 && (
               <>
-                <h2 className="ob-title">Email de tu cuenta de Mercado Pago</h2>
-                <p className="ob-desc">Con este email emitimos tu suscripción y activamos tu cuenta en Nexo.</p>
+                <h2 className="ob-title">¿Cómo querés pagar?</h2>
+                <p className="ob-desc">Elegí el método y confirmá el email asociado a tu cuenta de Mercado Pago.</p>
+                <div className={`ob-paymethod${errCls('medio_pago')}`}>
+                  <button
+                    type="button"
+                    className={`ob-paymethod-card${form.medio_pago === 'tarjeta' ? ' selected' : ''}`}
+                    onClick={() => setField('medio_pago', 'tarjeta')}
+                  >
+                    <div className="ob-paymethod-icon">
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                    </div>
+                    <div className="ob-paymethod-body">
+                      <p className="ob-paymethod-title">Tarjeta</p>
+                      <p className="ob-paymethod-sub">Crédito o débito</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`ob-paymethod-card${form.medio_pago === 'mp_balance' ? ' selected' : ''}`}
+                    onClick={() => setField('medio_pago', 'mp_balance')}
+                  >
+                    <div className="ob-paymethod-icon">
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20M5 8h11a3 3 0 010 6H8a3 3 0 000 6h11"/></svg>
+                    </div>
+                    <div className="ob-paymethod-body">
+                      <p className="ob-paymethod-title">Dinero en cuenta</p>
+                      <p className="ob-paymethod-sub">Saldo Mercado Pago</p>
+                    </div>
+                  </button>
+                </div>
                 <div className="ob-field">
                   <label className="ob-label">Email de tu cuenta de Mercado Pago</label>
                   <input
@@ -836,6 +884,7 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
                     autoComplete="email"
                     inputMode="email"
                   />
+                  <p className="ob-field-hint">Puede ser distinto al email de tu cuenta Nexo. Se usa para procesar el cobro.</p>
                 </div>
                 {error && <ErrorMsg msg={error} />}
                 <div className="ob-actions">
