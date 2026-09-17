@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import logoImage from '@/assets/logo.png';
 import { getAttribution } from '../lib/attribution';
 import { PLANES, formatearMiles, LS_PLAN_KEY, type PlanComercial } from '@/app/data/planes';
+import { BirthDatePicker } from './BirthDatePicker';
 
 type Step = 1 | 2 | 3 | 4 | 5 | 6 | 'success';
 
@@ -645,6 +646,29 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
         .ob-cselect-option { width: 100%; padding: 0.75rem 1rem; background: transparent; border: none; color: #fff; font-family: inherit; font-size: 0.95rem; text-align: left; cursor: pointer; display: block; }
         .ob-cselect-option:hover { background: rgba(134,96,239,0.25); }
         .ob-cselect-option.selected { background: rgba(134,96,239,0.18); color: #ee5cd0; font-weight: 600; }
+        /* BirthDatePicker: 3 selects custom (día · mes · año) con scrollbar
+           estilado al tema. Reemplaza el input date nativo del step 3. */
+        .bdp-picker { display: grid; grid-template-columns: 90px 1fr 100px; gap: 0.6rem; }
+        @media (max-width: 380px) { .bdp-picker { grid-template-columns: 80px 1fr 92px; } }
+        .bdp-select { position: relative; font-family: inherit; }
+        .bdp-trigger { width: 100%; background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.14); border-radius: 12px; padding: 0.85rem 0.75rem; font-family: inherit; font-size: 1rem; cursor: pointer; text-align: left; display: flex; align-items: center; justify-content: space-between; transition: all 0.2s ease; line-height: 1.25; }
+        .bdp-trigger:hover { border-color: rgba(255,255,255,0.25); background: rgba(255,255,255,0.08); }
+        .bdp-select.bdp-open .bdp-trigger,
+        .bdp-trigger:focus { outline: none; border-color: #8660ef; background: rgba(134,96,239,0.08); box-shadow: 0 0 0 3px rgba(134,96,239,0.18); }
+        .bdp-placeholder { color: rgba(255,255,255,0.4); }
+        .bdp-value { color: white; }
+        .bdp-chevron { width: 16px; height: 16px; transition: transform 0.2s ease; flex-shrink: 0; margin-left: 0.4rem; }
+        .bdp-select.bdp-open .bdp-chevron { transform: rotate(180deg); }
+        .bdp-options { position: absolute; top: calc(100% + 6px); left: 0; right: 0; background: rgba(18,5,61,0.98); border: 1px solid rgba(255,255,255,0.14); border-radius: 12px; padding: 6px; max-height: 240px; overflow-y: auto; z-index: 20; box-shadow: 0 20px 40px rgba(0,0,0,0.5); backdrop-filter: blur(20px); display: none; scrollbar-width: thin; scrollbar-color: rgba(180,130,255,0.55) rgba(255,255,255,0.05); }
+        .bdp-select.bdp-open .bdp-options { display: block; }
+        .bdp-options::-webkit-scrollbar { width: 8px; }
+        .bdp-options::-webkit-scrollbar-track { background: rgba(255,255,255,0.04); border-radius: 4px; margin: 4px 0; }
+        .bdp-options::-webkit-scrollbar-thumb { background: linear-gradient(180deg, rgba(134,96,239,0.65) 0%, rgba(238,92,208,0.65) 100%); border-radius: 4px; border: 1px solid rgba(255,255,255,0.06); }
+        .bdp-options::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, rgba(134,96,239,0.9) 0%, rgba(238,92,208,0.9) 100%); }
+        .bdp-option { padding: 0.65rem 0.85rem; border-radius: 10px; cursor: pointer; font-size: 0.98rem; color: rgba(255,255,255,0.85); transition: background 0.1s ease, color 0.1s ease; }
+        .bdp-option:hover { background: rgba(134,96,239,0.22); color: white; }
+        .bdp-option-selected { background: linear-gradient(135deg, rgba(134,96,239,0.32) 0%, rgba(238,92,208,0.32) 100%); color: white; font-weight: 500; }
+        .bdp-select.bdp-error .bdp-trigger { border-color: rgba(255,120,130,0.7); background-color: rgba(255,120,130,0.08); }
         .ob-actions { display: flex; gap: 0.75rem; margin-top: 1.5rem; }
         .ob-btn { flex: 1; padding: 0.95rem 1.25rem; border-radius: 50px; border: 1px solid rgba(255,255,255,0.22); background: transparent; color: #fff; font-family: inherit; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.25s ease; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; line-height: 1; }
         .ob-btn:hover { background: rgba(255,255,255,0.06); }
@@ -750,26 +774,11 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
                 <div className="ob-field"><label className="ob-label">DNI</label><input className={`ob-input${errCls('dni')}`} type="text" inputMode="numeric" maxLength={8} value={form.dni} onChange={(e) => setField('dni', e.target.value)} placeholder="12345678" /></div>
                 <div className="ob-field">
                   <label className="ob-label">Fecha de nacimiento</label>
-                  <div className="ob-date-wrap">
-                    <input
-                      className={`ob-input${errCls('fecha_nacimiento')}`}
-                      type="text"
-                      readOnly
-                      inputMode="none"
-                      placeholder="DD/MM/AAAA"
-                      value={form.fecha_nacimiento ? form.fecha_nacimiento.split('-').reverse().join('/') : ''}
-                      onClick={(e) => (e.currentTarget.nextElementSibling?.nextElementSibling as HTMLInputElement | null)?.showPicker?.()}
-                    />
-                    <svg className="ob-date-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    <input
-                      className="ob-date-native"
-                      type="date"
-                      value={form.fecha_nacimiento}
-                      max={maxBirthDate}
-                      onChange={(e) => setField('fecha_nacimiento', e.target.value)}
-                      aria-label="Fecha de nacimiento"
-                    />
-                  </div>
+                  <BirthDatePicker
+                    value={form.fecha_nacimiento}
+                    onChange={(iso) => setField('fecha_nacimiento', iso)}
+                    hasError={isInvalid('fecha_nacimiento')}
+                  />
                 </div>
                 {error && <ErrorMsg msg={error} />}
                 <div className="ob-actions">
