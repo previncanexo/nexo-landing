@@ -23,7 +23,10 @@ interface FormData {
 }
 
 const initialForm: FormData = {
-  para_quien: '',
+  // Default: si el usuario aterriza directo en /onboarding/datos sin pasar
+  // por el step 1 (elección de plan), asumimos que se afilia a sí mismo.
+  // El backend rechaza el POST si `para_quien` viene vacío.
+  para_quien: 'para_mi',
   nombre: '',
   apellido: '',
   email: '',
@@ -116,16 +119,16 @@ const LS_PLAN_TTL_MS = 24 * 60 * 60 * 1000;
 function leerPlanGuardado(): string | null {
   if (typeof window === 'undefined') return null;
   try {
-    const crudo = localStorage.getItem(LS_PLAN_KEY);
+    const crudo = sessionStorage.getItem(LS_PLAN_KEY);
     if (!crudo) return null;
     const { slug, ts } = JSON.parse(crudo);
     if (typeof ts !== 'number' || Date.now() - ts > LS_PLAN_TTL_MS) {
-      localStorage.removeItem(LS_PLAN_KEY);
+      sessionStorage.removeItem(LS_PLAN_KEY);
       return null;
     }
     return typeof slug === 'string' ? slug : null;
   } catch {
-    try { localStorage.removeItem(LS_PLAN_KEY); } catch { /* ignore */ }
+    try { sessionStorage.removeItem(LS_PLAN_KEY); } catch { /* ignore */ }
     return null;
   }
 }
@@ -205,13 +208,13 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
   // navegador arranca de cero. Evita el bug de leadId huérfano cuando la DB
   // se limpió (staging) o cuando el lead vencido dejó de existir.
   const [leadId, setLeadId] = useState<string | null>(null);
-  // affiliateId, checkoutUrl y eventIdIC viven SOLO en memoria — nunca en localStorage.
+  // affiliateId, checkoutUrl y eventIdIC viven SOLO en memoria — nunca en sessionStorage.
   // Si el browser se reinicia, el usuario empieza de cero (a propósito).
   const [affiliateId, setAffiliateId] = useState<string | null>(null);
   const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
   const [eventIdIC, setEventIdIC] = useState<string | null>(null);
 
-  // Ninguna restauración desde localStorage. El form nace en `initialForm` y
+  // Ninguna restauración desde sessionStorage. El form nace en `initialForm` y
   // arranca en step 1. Cargamos solo GA + Meta Pixel.
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -305,7 +308,7 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
     setForm((prev) => {
       const updated = { ...prev, [key]: value };
       if (typeof window !== 'undefined') {
-        try { localStorage.setItem(LS_FORM, JSON.stringify(updated)); } catch { /* ignore */ }
+        try { sessionStorage.setItem(LS_FORM, JSON.stringify(updated)); } catch { /* ignore */ }
       }
       return updated;
     });
@@ -385,7 +388,7 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
         }
         return null;
       }
-      localStorage.setItem(LS_LEAD, data.leadId);
+      sessionStorage.setItem(LS_LEAD, data.leadId);
       setLeadId(data.leadId);
       // Pixel Lead + GA4 generate_lead (mismo event_id que el CAPI server-side)
       if (typeof window !== 'undefined') {
@@ -465,10 +468,10 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
         }
         return null;
       }
-      localStorage.removeItem(LS_LEAD);
+      sessionStorage.removeItem(LS_LEAD);
       // El alta se completó: el próximo visitante de este browser no debe heredar
       // el plan de otro affiliate ya creado.
-      localStorage.removeItem(LS_PLAN_KEY);
+      sessionStorage.removeItem(LS_PLAN_KEY);
       setLeadId(null);
       setAffiliateId(data.affiliateId);
       setCheckoutUrl(data.checkoutUrl);

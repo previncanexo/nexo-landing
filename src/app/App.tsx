@@ -117,7 +117,7 @@ export default function App() {
   // y cobrarle $7.000 a quien quiso el de $20.000 es peor que asumir el principal.
   const [planSlug, setPlanSlug] = useState<string>('nexo-1');
 
-  // Navegación pura hacia /onboarding, sin efectos sobre localStorage. Separada
+  // Navegación pura hacia /onboarding, sin efectos sobre sessionStorage. Separada
   // de goToRegistro/elegirPlan a propósito: si esas dos funciones compartieran
   // este paso de limpieza, elegirPlan (que escribe el plan en localStorage y
   // navega en el mismo tick) se borraría a sí misma. Ver el porqué completo en
@@ -161,9 +161,9 @@ export default function App() {
     // x, y volvió por esta misma CTA genérica). Es justo el caso que este
     // reset NO debe cubrir — el que sí cubre es el abandono SIN lead, donde
     // no hay nada que reanudar.
-    if (typeof window !== 'undefined' && !localStorage.getItem(LS_LEAD)) {
+    if (typeof window !== 'undefined' && !sessionStorage.getItem(LS_LEAD)) {
       setPlanSlug('nexo-1');
-      try { localStorage.removeItem(LS_PLAN_KEY); } catch { /* ignore */ }
+      try { sessionStorage.removeItem(LS_PLAN_KEY); } catch { /* ignore */ }
     }
     irAOnboarding();
   }, [irAOnboarding]);
@@ -191,7 +191,7 @@ export default function App() {
   const elegirPlan = useCallback((slug: string) => {
     setPlanSlug(slug);
     if (typeof window !== 'undefined') {
-      try { localStorage.setItem(LS_PLAN_KEY, JSON.stringify({ slug, ts: Date.now() })); } catch { /* ignore */ }
+      try { sessionStorage.setItem(LS_PLAN_KEY, JSON.stringify({ slug, ts: Date.now() })); } catch { /* ignore */ }
     }
     irAOnboarding();
   }, [irAOnboarding]);
