@@ -7,8 +7,16 @@ interface IPhoneCTAProps {
   onOpenCheckout: () => void;
 }
 
-export function IPhoneCTA({ isVisible, onOpenCheckout }: IPhoneCTAProps) {
+export function IPhoneCTA({ isVisible, onOpenCheckout: _onOpenCheckout }: IPhoneCTAProps) {
   const isMobile = useIsMobile();
+  // La CTA scrollea a la sección de planes (#beneficios) — el user elige
+  // plan antes de arrancar el onboarding. Prop `onOpenCheckout` queda por
+  // compat con el llamador; ya no se usa.
+  void _onOpenCheckout;
+  const goToPlans = () => {
+    const el = document.getElementById('beneficios');
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
   return (
     <AnimatePresence>
       {isVisible && (
@@ -35,7 +43,7 @@ export function IPhoneCTA({ isVisible, onOpenCheckout }: IPhoneCTAProps) {
               <p className="text-base font-bold text-[var(--gray-900)] leading-tight">Desde ${formatearMiles(PRECIO_DESDE)}/mes</p>
             </div>
             <button
-              onClick={onOpenCheckout}
+              onClick={goToPlans}
               /* min-h-[44px]: es el único CTA persistente en mobile y medía 40px,
                  bajo el mínimo táctil de ~44px que pide AGENTS.md §7 — importa
                  más acá que en ningún otro botón, porque parte del público son

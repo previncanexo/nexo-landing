@@ -348,10 +348,18 @@ export function Hero({ onOpenCheckout }: { onOpenCheckout?: () => void } = {}) {
   );
 }
 
-function HeroCtaButton({ animate = true, onOpenCheckout }: { animate?: boolean; onOpenCheckout?: () => void }) {
+function HeroCtaButton({ animate = true, onOpenCheckout: _onOpenCheckout }: { animate?: boolean; onOpenCheckout?: () => void }) {
+  // La CTA scrollea a la sección de planes (#beneficios) para que el
+  // usuario elija plan antes de arrancar el onboarding. Se conserva la
+  // prop `onOpenCheckout` por compat con el llamador; ya no se usa.
+  void _onOpenCheckout;
+  const goToPlans = () => {
+    const el = document.getElementById('beneficios');
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
   return (
     <m.button
-      onClick={() => onOpenCheckout?.()}
+      onClick={goToPlans}
       className="bg-white text-[var(--purple)] border-none px-8 sm:px-10 py-4 rounded-full text-[15px] sm:text-base font-bold cursor-pointer font-['DM_Sans'] whitespace-nowrap group flex items-center gap-2 w-full justify-center"
       whileHover={animate ? { scale: 1.03, boxShadow: '0 20px 60px rgba(255,255,255,0.25)' } : undefined}
       whileTap={{ scale: 0.97 }}
