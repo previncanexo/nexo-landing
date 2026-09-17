@@ -942,8 +942,10 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
                   <p className="ob-summary-sub">Fecha de cobro cada 30 días</p>
                 </div>
                 <div className="ob-actions">
-                  <button type="button" className="ob-btn" onClick={prev}>← Atrás</button>
-                  <button type="submit" className="ob-btn ob-btn-primary">Pagar</button>
+                  <button type="button" className="ob-btn" onClick={prev} disabled={submitting}>← Atrás</button>
+                  <button type="submit" className="ob-btn ob-btn-primary" disabled={submitting}>
+                    {submitting ? 'Redirigiendo a Mercado Pago…' : 'Pagar'}
+                  </button>
                 </div>
               </>
             )}
