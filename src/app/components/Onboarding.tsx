@@ -751,7 +751,7 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
                 </div>
                 <div className={`ob-collapsible ${form.medio_pago === 'mp_balance' ? 'open' : 'closed'}`}>
                   <div className="ob-field" style={{ marginBottom: 0 }}>
-                    <label className="ob-label">Email de la cuenta Mercado Pago (opcional)</label>
+                    <label className="ob-label">Email de la cuenta Mercado Pago</label>
                     <input className="ob-input" type="email" value={form.mp_email} onChange={(e) => setField('mp_email', e.target.value)} placeholder="tu@email.com" />
                   </div>
                 </div>
