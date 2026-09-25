@@ -18,6 +18,7 @@ interface FormData {
   calle: string;
   numero: string;
   depto: string;
+  codigo_postal: string;
   medio_pago: string;
   mp_email: string;
 }
@@ -37,6 +38,7 @@ const initialForm: FormData = {
   calle: '',
   numero: '',
   depto: '',
+  codigo_postal: '',
   medio_pago: '',
   mp_email: '',
 };
@@ -249,6 +251,7 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
       if (!form.ciudad) invalid.add('ciudad');
       if (!form.calle.trim()) invalid.add('calle');
       if (!form.numero.trim()) invalid.add('numero');
+      if (!form.codigo_postal.trim()) invalid.add('codigo_postal');
     } else if (s === 5) {
       // Medio de pago: tarjeta o dinero en cuenta MP. Requerido — se usa
       // como `payer_email` en la preapproval; sin él MP no crea la sub.
@@ -422,6 +425,7 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
           calle: form.calle.trim(),
           numero: form.numero.trim(),
           depto: form.depto.trim(),
+          codigo_postal: form.codigo_postal.trim(),
           // El email de contacto Nexo se persistió en el POST del step 2 y
           // NO se pisa acá. `mp_email` es el email de la cuenta MP del
           // pagador — se usa como `payer_email` de la preapproval y NO
@@ -547,6 +551,7 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
         calle: form.calle.trim(),
         numero: form.numero.trim(),
         depto: form.depto?.trim() || undefined,
+        codigo_postal: form.codigo_postal.trim() || undefined,
       });
     }
 
@@ -836,6 +841,7 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
                   <div className="ob-field"><label className="ob-label">Número</label><input className={`ob-input${errCls('numero')}`} type="text" inputMode="numeric" value={form.numero} onChange={(e) => setField('numero', e.target.value)} placeholder="1234" /></div>
                   <div className="ob-field"><label className="ob-label">Departamento</label><input className="ob-input" type="text" value={form.depto} onChange={(e) => setField('depto', e.target.value)} placeholder="Ej: 3B (opcional)" /></div>
                 </div>
+                <div className="ob-field"><label className="ob-label">Código postal</label><input className={`ob-input${errCls('codigo_postal')}`} type="text" inputMode="numeric" value={form.codigo_postal} onChange={(e) => setField('codigo_postal', e.target.value)} placeholder="Ej: 2000" /></div>
                 {error && <ErrorMsg msg={error} />}
                 <div className="ob-actions">
                   <button type="button" className="ob-btn" onClick={prev}>← Atrás</button>
