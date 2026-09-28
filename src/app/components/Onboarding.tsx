@@ -920,7 +920,7 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
                     lineHeight: 1.35,
                     marginBottom: '1rem',
                   }}>
-                    Ambiente de prueba con pago real. Vamos a cobrar $15 para validar el proceso completo.
+                    Ambiente de prueba con pago real. Vamos a cobrar $19.210 para validar el proceso completo.
                   </div>
                 )}
                 <div className="ob-summary-block">
