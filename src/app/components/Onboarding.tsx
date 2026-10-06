@@ -89,19 +89,16 @@ function trackStepView(n: number) {
 const API_URL = (import.meta as { env?: Record<string, string> }).env?.VITE_NEXO_API_URL
   ?? 'https://nexo.portal.previncasalud.com.ar';
 
-// localStorage keys
-// LS_LEAD y LS_FORM se persisten para que el usuario pueda reanudar el onboarding
-// si cierra y vuelve. affiliateId, checkoutUrl y eventIdIC NO se persisten: si
-// quedan cacheados, otros usuarios que abran el flow en el mismo browser podrían
-// pagar usando la URL de MP del usuario original (bug histórico — un payer cargó
-// 3 pagos al affiliate de Matias por este motivo).
-// Exportada: App.tsx (goToRegistro) necesita saber si hay un lead en curso
-// antes de limpiar el plan persistido — ver el comentario de goToRegistro.
+// El form NO se persiste: cada visita arranca con los campos vacíos. Las
+// otras keys (LS_LEAD, LS_PLAN_KEY) sí viven en sessionStorage por idempotencia
+// del lead y supervivencia del plan a un reload a mitad del wizard.
+// LS_LEGACY_FORM queda nombrado para purgarlo del browser de usuarios que
+// visitaron el deploy anterior que lo escribía.
 export const LS_LEAD = 'nexo_lead_id';
-const LS_FORM = 'nexo_form_data';
+const LS_LEGACY_FORM = 'nexo_form_data';
 // El plan viaja en memoria desde App (prop `planSlug`), pero el flujo YA está
 // diseñado para sobrevivir un reload a mitad del wizard (por eso existen LS_LEAD
-// y LS_FORM arriba) — si recargás en el step 4 habiendo elegido Nexo III, App se
+// arriba) — si recargás en el step 4 habiendo elegido Nexo III, App se
 // remonta con su default y el resumen/PATCH terminarían cobrando $20.000 en vez
 // de $7.000. Se persiste acá, con la misma convención. La key vive en
 // `data/planes.ts` (LS_PLAN_KEY) porque App.tsx también la escribe.
@@ -217,9 +214,11 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
   const [eventIdIC, setEventIdIC] = useState<string | null>(null);
 
   // Ninguna restauración desde sessionStorage. El form nace en `initialForm` y
-  // arranca en step 1. Cargamos solo GA + Meta Pixel.
+  // arranca en step 1. Cargamos solo GA + Meta Pixel y purgamos el blob del
+  // deploy anterior que escribía LS_LEGACY_FORM.
   useEffect(() => {
     if (typeof window === 'undefined') return;
+    try { sessionStorage.removeItem(LS_LEGACY_FORM); } catch { /* ignore */ }
     window.loadNexoTrackingNow?.();
   }, []);
 
@@ -308,13 +307,7 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   function setField<K extends keyof FormData>(key: K, value: FormData[K]) {
-    setForm((prev) => {
-      const updated = { ...prev, [key]: value };
-      if (typeof window !== 'undefined') {
-        try { sessionStorage.setItem(LS_FORM, JSON.stringify(updated)); } catch { /* ignore */ }
-      }
-      return updated;
-    });
+    setForm((prev) => ({ ...prev, [key]: value }));
     if (invalidFields.has(key)) {
       const next = new Set(invalidFields);
       next.delete(key);
@@ -593,10 +586,15 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (submitting) return;
     if (!checkoutUrl) {
       setError('No tenemos el link de pago todavía. Volvé al paso anterior y reintentá.');
       return;
     }
+    // Feedback inmediato: el redirect a MP puede tardar ~400ms (delay del pixel)
+    // + lo que tarde en resolver el DNS del checkout. Sin este estado el botón
+    // queda sin cambio y el usuario clickea varias veces.
+    setSubmitting(true);
     // Dispara InitiateCheckout client-side justo antes del redirect.
     // Usa el mismo event_id que el server-side ya envió a CAPI → dedup.
     if (typeof window !== 'undefined') {

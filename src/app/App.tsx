@@ -92,14 +92,18 @@ export default function App() {
   // Routing client-side: si la URL es /onboarding, montamos el componente Onboarding
   // en lugar de la landing. Soporta deep-link, back/forward del browser, y navegación
   // programática desde las CTAs.
-  const [pathname, setPathname] = useState<string>(
-    typeof window !== 'undefined' ? window.location.pathname : '/'
-  );
+  //
+  // SSG renderiza SIEMPRE '/' (la landing). Si el initial state del cliente leyera
+  // window.location.pathname, un deep-link a /onboarding/datos pintaría Onboarding
+  // en la primera render del cliente mientras el HTML servido es la landing → React
+  // tira hydration mismatch (#418/#423). Arrancamos con '/' y el useEffect de abajo
+  // corrige a la ruta real post-mount.
+  const [pathname, setPathname] = useState<string>('/');
 
   useEffect(() => {
     const onPopState = () => setPathname(window.location.pathname);
     window.addEventListener('popstate', onPopState);
-    // Asegurar sync inicial post-hydration (SSG renderiza con / por defecto)
+    // Sync post-hydration a la ruta real del browser.
     setPathname(window.location.pathname);
     // First-touch attribution: capturamos UTM/click IDs + referrer + landing_url
     // ANTES de que las CTAs limpien la query navegando a /onboarding.
