@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import logoImage from '@/assets/logo.png';
 import { getAttribution } from '../lib/attribution';
+import { PLANES, formatearMiles, LS_PLAN_KEY, type PlanComercial } from '@/app/data/planes';
+import { BirthDatePicker } from './BirthDatePicker';
 
 type Step = 1 | 2 | 3 | 4 | 5 | 6 | 'success';
 
@@ -16,12 +18,16 @@ interface FormData {
   calle: string;
   numero: string;
   depto: string;
+  codigo_postal: string;
   medio_pago: string;
   mp_email: string;
 }
 
 const initialForm: FormData = {
-  para_quien: '',
+  // Default: si el usuario aterriza directo en /onboarding/datos sin pasar
+  // por el step 1 (elección de plan), asumimos que se afilia a sí mismo.
+  // El backend rechaza el POST si `para_quien` viene vacío.
+  para_quien: 'para_mi',
   nombre: '',
   apellido: '',
   email: '',
@@ -32,6 +38,7 @@ const initialForm: FormData = {
   calle: '',
   numero: '',
   depto: '',
+  codigo_postal: '',
   medio_pago: '',
   mp_email: '',
 };
@@ -88,8 +95,45 @@ const API_URL = (import.meta as { env?: Record<string, string> }).env?.VITE_NEXO
 // quedan cacheados, otros usuarios que abran el flow en el mismo browser podrían
 // pagar usando la URL de MP del usuario original (bug histórico — un payer cargó
 // 3 pagos al affiliate de Matias por este motivo).
-const LS_LEAD = 'nexo_lead_id';
+// Exportada: App.tsx (goToRegistro) necesita saber si hay un lead en curso
+// antes de limpiar el plan persistido — ver el comentario de goToRegistro.
+export const LS_LEAD = 'nexo_lead_id';
 const LS_FORM = 'nexo_form_data';
+// El plan viaja en memoria desde App (prop `planSlug`), pero el flujo YA está
+// diseñado para sobrevivir un reload a mitad del wizard (por eso existen LS_LEAD
+// y LS_FORM arriba) — si recargás en el step 4 habiendo elegido Nexo III, App se
+// remonta con su default y el resumen/PATCH terminarían cobrando $20.000 en vez
+// de $7.000. Se persiste acá, con la misma convención. La key vive en
+// `data/planes.ts` (LS_PLAN_KEY) porque App.tsx también la escribe.
+//
+// El plan elegido caduca: si alguien abandona el alta sin crear lead, ningún
+// removeItem de abajo se dispara (todos cuelgan de que exista LS_LEAD), y el
+// slug queda huérfano en el browser. Semanas después, un deep link directo a
+// /onboarding/afiliado (sin pasar por ninguna card) leería ese slug viejo antes
+// que el fallback 'nexo-1' — la misma familia del incidente de URL hijacking
+// entre sesiones que documentan los LS_LEGACY_* de abajo.
+const LS_PLAN_TTL_MS = 24 * 60 * 60 * 1000;
+
+/** Lee el plan guardado y lo descarta si caducó, no matchea un slug vigente, o
+ *  el JSON es viejo/corrupto (versión anterior guardaba el slug plano: un
+ *  `JSON.parse('nexo-3')` tira, y ahí también hay que caer al fallback en vez
+ *  de arriesgar cobrar mal). */
+function leerPlanGuardado(): string | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    const crudo = sessionStorage.getItem(LS_PLAN_KEY);
+    if (!crudo) return null;
+    const { slug, ts } = JSON.parse(crudo);
+    if (typeof ts !== 'number' || Date.now() - ts > LS_PLAN_TTL_MS) {
+      sessionStorage.removeItem(LS_PLAN_KEY);
+      return null;
+    }
+    return typeof slug === 'string' ? slug : null;
+  } catch {
+    try { sessionStorage.removeItem(LS_PLAN_KEY); } catch { /* ignore */ }
+    return null;
+  }
+}
 // Caches legacy que se limpian al montar (ver useEffect de cleanup):
 const LS_LEGACY_AFFILIATE = 'nexo_affiliate_id';
 const LS_LEGACY_CHECKOUT = 'nexo_checkout_url';
@@ -122,7 +166,31 @@ function stepFromPath(path: string): Step {
   return PATH_TO_STEP[path.replace(/\/$/, '') || '/onboarding'] ?? 1;
 }
 
-export function Onboarding({ onClose }: { onClose: () => void }) {
+export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlug?: string }) {
+  // El wizard tenía el producto único hardcodeado en cinco lugares. Con tres planes
+  // eso mostraba un precio y cobraba otro. El plan se resuelve una vez y de acá salen
+  // tanto la UI del resumen como los eventos de tracking. Fallback explícito a
+  // 'nexo-1' (no a PLANES[0]) para que un cambio de orden en el array de datos no
+  // termine cayendo silenciosamente al plan más barato.
+  // El plan se congela al montar el wizard. Recalcularlo en cada render lo hacía
+  // depender del localStorage vivo, y el removeItem(LS_PLAN_KEY) del cierre del
+  // alta lo dejaba caer al prop stale en el re-render intermedio: el resumen y
+  // el InitiateCheckout mostraban otro plan que el que se mandó a cobrar. Mismo
+  // patrón que ya usa este archivo para `step` y `leadId`: useState perezoso.
+  //
+  // Precedencia: localStorage primero (sobrevive un reload a mitad del wizard,
+  // que App no sobrevive porque su estado vuelve a 'nexo-1'), después el prop
+  // `planSlug` de App, después el plan principal como último resort.
+  // `leerPlanGuardado` valida el TTL: un slug legítimo pero viejo no debe
+  // secuestrar la sesión de otra persona que entra semanas después.
+  const [plan] = useState<PlanComercial>(() => {
+    const guardado = leerPlanGuardado();
+    return PLANES.find((p) => p.slug === guardado)
+      ?? PLANES.find((p) => p.slug === planSlug)
+      ?? PLANES.find((p) => p.slug === 'nexo-1')
+      ?? PLANES[0];
+  });
+
   const [step, setStep] = useState<Step>(
     typeof window !== 'undefined' ? stepFromPath(window.location.pathname) : 1
   );
@@ -138,68 +206,21 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
     d.setFullYear(d.getFullYear() - 18);
     return d.toISOString().slice(0, 10);
   })();
-  const [leadId, setLeadId] = useState<string | null>(
-    typeof window !== 'undefined' ? localStorage.getItem(LS_LEAD) : null
-  );
-  // affiliateId, checkoutUrl y eventIdIC viven SOLO en memoria — nunca en localStorage.
+  // El onboarding NO persiste nada en localStorage — si el usuario cierra el
+  // navegador arranca de cero. Evita el bug de leadId huérfano cuando la DB
+  // se limpió (staging) o cuando el lead vencido dejó de existir.
+  const [leadId, setLeadId] = useState<string | null>(null);
+  // affiliateId, checkoutUrl y eventIdIC viven SOLO en memoria — nunca en sessionStorage.
   // Si el browser se reinicia, el usuario empieza de cero (a propósito).
   const [affiliateId, setAffiliateId] = useState<string | null>(null);
   const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
   const [eventIdIC, setEventIdIC] = useState<string | null>(null);
 
-  // Restaurar form data del localStorage al montar + limpiar caches legacy
+  // Ninguna restauración desde sessionStorage. El form nace en `initialForm` y
+  // arranca en step 1. Cargamos solo GA + Meta Pixel.
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const stored = localStorage.getItem(LS_FORM);
-    if (stored) {
-      try {
-        // El medio de pago se re-elige cada vez que se llega al step 5 —
-        // guardar la selección anterior confunde (aparece pre-marcada sin
-        // que el usuario haya hecho clic en esta sesión).
-        const { medio_pago: _mp, mp_email: _me, ...rest } = JSON.parse(stored);
-        setForm({ ...initialForm, ...rest });
-      } catch { /* ignore */ }
-    }
-    // Limpiar caches viejos que podían provocar URL hijacking entre sesiones.
-    localStorage.removeItem(LS_LEGACY_AFFILIATE);
-    localStorage.removeItem(LS_LEGACY_CHECKOUT);
-    localStorage.removeItem(LS_LEGACY_EVENT_ID_IC);
-    // Forzar carga de GA + Meta Pixel ahora (no esperar al idle) para que los
-    // cookies `_ga` y `_fbp` existan cuando el usuario complete el PATCH.
-    // El helper en index.html es idempotente (si ya cargó, no hace nada).
     window.loadNexoTrackingNow?.();
-  }, []);
-
-  // Validar el lead guardado: si existe, GET al backend; si está partial → saltar a step 3,
-  // si está converted o no existe → limpiar localStorage y arrancar limpio
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const stored = localStorage.getItem(LS_LEAD);
-    if (!stored) return;
-    (async () => {
-      try {
-        const res = await fetch(`${API_URL}/api/leads/${stored}`);
-        if (!res.ok) throw new Error('lead invalid');
-        const data = await res.json();
-        if (!data.success || data.lead.status !== 'partial') {
-          localStorage.removeItem(LS_LEAD);
-          setLeadId(null);
-          return;
-        }
-        // Si estamos en step 1 o 2 y hay lead válido, saltamos a step 3
-        if (typeof window !== 'undefined') {
-          const path = window.location.pathname;
-          if (path === '/onboarding' || path === '/onboarding/' || path === '/onboarding/afiliado' || path === '/onboarding/datos') {
-            const target = STEP_TO_PATH['3'];
-            window.history.replaceState({}, '', target);
-            setStep(3);
-          }
-        }
-      } catch {
-        localStorage.removeItem(LS_LEAD);
-        setLeadId(null);
-      }
-    })();
   }, []);
 
   const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -211,7 +232,10 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
     } else if (s === 2) {
       if (!form.nombre.trim()) invalid.add('nombre');
       if (!form.apellido.trim()) invalid.add('apellido');
-      if (!form.email.trim() || !EMAIL_RE.test(form.email.trim())) invalid.add('email');
+      // El email es la identidad de la cuenta Nexo — el backend rechaza si
+      // ya existe un afiliado activo con ese email (unicidad hard).
+      const email = form.email.trim();
+      if (!email || !EMAIL_RE.test(email)) invalid.add('email');
       if (form.whatsapp.replace(/\D/g, '').length < 8) invalid.add('whatsapp');
     } else if (s === 3) {
       if (!/^\d{7,8}$/.test(form.dni.trim())) invalid.add('dni');
@@ -227,10 +251,15 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
       if (!form.ciudad) invalid.add('ciudad');
       if (!form.calle.trim()) invalid.add('calle');
       if (!form.numero.trim()) invalid.add('numero');
+      if (!form.codigo_postal.trim()) invalid.add('codigo_postal');
     } else if (s === 5) {
-      if (!form.medio_pago) invalid.add('medio_pago');
-      // mp_email es opcional: si viene, mejora la trazabilidad; si no, MP
-      // acepta la sub igual con el email de contacto.
+      // Medio de pago: tarjeta o dinero en cuenta MP. Requerido — se usa
+      // como `payer_email` en la preapproval; sin él MP no crea la sub.
+      // El mp_email NO valida unicidad — un pagador puede pagar por N
+      // afiliados con la misma cuenta MP (ej: alguien paga por familia).
+      if (!['tarjeta', 'mp_balance'].includes(form.medio_pago)) invalid.add('medio_pago');
+      const mp = form.mp_email.trim();
+      if (!mp || !EMAIL_RE.test(mp)) invalid.add('mp_email');
     }
     return {
       error: invalid.size > 0 ? 'Completá los campos en rojo para continuar.' : null,
@@ -282,7 +311,7 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
     setForm((prev) => {
       const updated = { ...prev, [key]: value };
       if (typeof window !== 'undefined') {
-        try { localStorage.setItem(LS_FORM, JSON.stringify(updated)); } catch { /* ignore */ }
+        try { sessionStorage.setItem(LS_FORM, JSON.stringify(updated)); } catch { /* ignore */ }
       }
       return updated;
     });
@@ -322,8 +351,14 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
           para_quien: form.para_quien,
           nombre: form.nombre.trim(),
           apellido: form.apellido.trim(),
+          // Email de la cuenta Nexo — requerido y único a nivel de afiliado
+          // pagado. El backend responde `email_taken` si ya existe un
+          // afiliado activo con este email.
           email: form.email.trim().toLowerCase(),
           whatsapp: form.whatsapp.trim(),
+          // Plan elegido en la card. Persistir desde el step 1 para no perder
+          // la elección si el usuario abandona antes del stage 2 (PATCH).
+          plan_slug: plan.slug,
           event_id,
           event_source_url: typeof window !== 'undefined' ? window.location.href : undefined,
           utm_source: attr.utm_source ?? undefined,
@@ -335,6 +370,15 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
           gclid: attr.gclid ?? undefined,
           referer: attr.referer ?? undefined,
           landing_url: attr.landing_url ?? undefined,
+          // Constantes del canal Nexo para la integración con Salesforce.
+          // El backend las reenvía tal cual a SF, así queda agnóstico del canal:
+          // otro canal (WhatsApp, etc.) mandaría sus propios valores.
+          sales_channel: 'Nexo',
+          document_type: 'DNI',
+          country: 'Argentina',
+          state: 'Santa Fe',
+          declared_members_count: 1,
+          senior_members_count: 0,
         }),
       });
       const data = await res.json();
@@ -347,7 +391,7 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
         }
         return null;
       }
-      localStorage.setItem(LS_LEAD, data.leadId);
+      sessionStorage.setItem(LS_LEAD, data.leadId);
       setLeadId(data.leadId);
       // Pixel Lead + GA4 generate_lead (mismo event_id que el CAPI server-side)
       if (typeof window !== 'undefined') {
@@ -374,14 +418,20 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          plan_slug: plan.slug,
           dni: form.dni.trim(),
           fecha_nacimiento: form.fecha_nacimiento,
           ciudad: form.ciudad,
           calle: form.calle.trim(),
           numero: form.numero.trim(),
           depto: form.depto.trim(),
+          codigo_postal: form.codigo_postal.trim(),
+          // El email de contacto Nexo se persistió en el POST del step 2 y
+          // NO se pisa acá. `mp_email` es el email de la cuenta MP del
+          // pagador — se usa como `payer_email` de la preapproval y NO
+          // valida unicidad (un pagador puede pagar por N afiliados).
+          mp_email: form.mp_email.trim().toLowerCase(),
           medio_pago: form.medio_pago,
-          mp_email: form.mp_email.trim() || undefined,
           event_id_complete_registration: eventIdCR,
           event_id_initiate_checkout: eventIdIC,
           event_source_url: typeof window !== 'undefined' ? window.location.href : undefined,
@@ -402,6 +452,14 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
           gclid: attr.gclid ?? undefined,
           referer: attr.referer ?? undefined,
           landing_url: attr.landing_url ?? undefined,
+          // Constantes del canal Nexo (idem POST) — el backend las reenvía
+          // a Salesforce sin conocer el canal.
+          sales_channel: 'Nexo',
+          document_type: 'DNI',
+          country: 'Argentina',
+          state: 'Santa Fe',
+          declared_members_count: 1,
+          senior_members_count: 0,
         }),
       });
       const data = await res.json();
@@ -414,15 +472,18 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
         }
         return null;
       }
-      localStorage.removeItem(LS_LEAD);
+      sessionStorage.removeItem(LS_LEAD);
+      // El alta se completó: el próximo visitante de este browser no debe heredar
+      // el plan de otro affiliate ya creado.
+      sessionStorage.removeItem(LS_PLAN_KEY);
       setLeadId(null);
       setAffiliateId(data.affiliateId);
       setCheckoutUrl(data.checkoutUrl);
       setEventIdIC(eventIdIC);
 
       // Pixel CompleteRegistration + GA4 sign_up (dedup CAPI vía eventID compartido)
-      const planName = 'Previnca Nexo';
-      const value = 19500;
+      const planName = plan.nombre;
+      const value = plan.precio;
       if (typeof window !== 'undefined') {
         try {
           window.fbq?.('track', 'CompleteRegistration', { content_name: planName, currency: 'ARS', value }, { eventID: eventIdCR });
@@ -436,6 +497,24 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
       setError('No se pudo conectar con el servidor. Probá de nuevo.');
       return null;
     }
+  }
+
+  // Enriquecimiento progresivo del lead en SF: fire-and-forget al backend
+  // apenas el usuario completa un step. El backend acumula datos parciales
+  // en el lead y dispara /leads a SF con snapshot actual. No bloquea el
+  // avance de step (si falla, seguimos como si nada).
+  function enrichLeadInBackground(currentLeadId: string, extra: Record<string, unknown>) {
+    fetch(`${API_URL}/api/leads/${currentLeadId}/enrich`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ...extra,
+        sales_channel: 'Nexo',
+        document_type: 'DNI',
+        declared_members_count: 1,
+        senior_members_count: 0,
+      }),
+    }).catch(() => { /* ignoramos, es best-effort */ });
   }
 
   async function next() {
@@ -453,6 +532,27 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
       const newLeadId = await callCreateLead();
       setSubmitting(false);
       if (!newLeadId) return;
+    }
+
+    // Step 3 → 4: DNI + fecha_nac ya validados → enrich a SF con esos datos.
+    // Este es el PRIMER envío a SF (sin address todavía → readyToSell: false).
+    if (step === 3 && leadId) {
+      enrichLeadInBackground(leadId, {
+        dni: form.dni.trim(),
+        fecha_nacimiento: form.fecha_nacimiento,
+      });
+    }
+
+    // Step 4 → 5: address completo → enrich a SF con street + city (+ apartment).
+    // Después de este envío, SF debería responder readyToSell: true.
+    if (step === 4 && leadId) {
+      enrichLeadInBackground(leadId, {
+        ciudad: form.ciudad,
+        calle: form.calle.trim(),
+        numero: form.numero.trim(),
+        depto: form.depto?.trim() || undefined,
+        codigo_postal: form.codigo_postal.trim() || undefined,
+      });
     }
 
     // Step 5 → 6: finalizar lead, crear affiliate + suscripción MP.
@@ -502,10 +602,10 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
     if (typeof window !== 'undefined') {
       const ic = eventIdIC ?? newEventId();
       try {
-        window.fbq?.('track', 'InitiateCheckout', { content_name: 'Previnca Nexo', currency: 'ARS', value: 19500 }, { eventID: ic });
+        window.fbq?.('track', 'InitiateCheckout', { content_name: plan.nombre, currency: 'ARS', value: plan.precio }, { eventID: ic });
       } catch {}
       try {
-        window.gtag?.('event', 'begin_checkout', { currency: 'ARS', value: 19500, items: [{ item_name: 'Previnca Nexo', price: 19500, quantity: 1 }] });
+        window.gtag?.('event', 'begin_checkout', { currency: 'ARS', value: plan.precio, items: [{ item_name: plan.nombre, price: plan.precio, quantity: 1 }] });
       } catch {}
     }
     // Pequeño delay para que el pixel pueda enviar el request antes del navigate
@@ -561,6 +661,41 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
         .ob-cselect-option { width: 100%; padding: 0.75rem 1rem; background: transparent; border: none; color: #fff; font-family: inherit; font-size: 0.95rem; text-align: left; cursor: pointer; display: block; }
         .ob-cselect-option:hover { background: rgba(134,96,239,0.25); }
         .ob-cselect-option.selected { background: rgba(134,96,239,0.18); color: #ee5cd0; font-weight: 600; }
+        /* Método de pago (step 5): 2 cards seleccionables (tarjeta / mp balance) */
+        .ob-paymethod { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-bottom: 1.1rem; }
+        @media (max-width: 380px) { .ob-paymethod { grid-template-columns: 1fr; } }
+        .ob-paymethod-card { display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem 0.9rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.14); border-radius: 14px; color: #fff; font-family: inherit; cursor: pointer; text-align: left; transition: all 0.2s ease; }
+        .ob-paymethod-card:hover { border-color: rgba(255,255,255,0.28); background: rgba(255,255,255,0.09); }
+        .ob-paymethod-card.selected { border-color: #8660ef; background: rgba(134,96,239,0.14); box-shadow: 0 0 0 3px rgba(134,96,239,0.18); }
+        .ob-paymethod-icon { width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, rgba(134,96,239,0.28) 0%, rgba(238,92,208,0.28) 100%); display: flex; align-items: center; justify-content: center; color: #fff; flex-shrink: 0; }
+        .ob-paymethod-body { min-width: 0; }
+        .ob-paymethod-title { font-size: 0.95rem; font-weight: 600; margin: 0; }
+        .ob-paymethod-sub { font-size: 0.78rem; color: rgba(255,255,255,0.55); margin: 2px 0 0; }
+        .ob-paymethod.ob-input-error .ob-paymethod-card:not(.selected) { border-color: rgba(255,120,130,0.5); }
+        .ob-field-hint { font-size: 0.78rem; color: rgba(255,255,255,0.55); margin: 0.5rem 0 0; line-height: 1.35; }
+        /* BirthDatePicker: 3 selects custom (día · mes · año) con scrollbar
+           estilado al tema. Reemplaza el input date nativo del step 3. */
+        .bdp-picker { display: grid; grid-template-columns: 90px 1fr 100px; gap: 0.6rem; }
+        @media (max-width: 380px) { .bdp-picker { grid-template-columns: 80px 1fr 92px; } }
+        .bdp-select { position: relative; font-family: inherit; }
+        .bdp-trigger { width: 100%; background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.14); border-radius: 12px; padding: 0.85rem 0.75rem; font-family: inherit; font-size: 1rem; cursor: pointer; text-align: left; display: flex; align-items: center; justify-content: space-between; transition: all 0.2s ease; line-height: 1.25; }
+        .bdp-trigger:hover { border-color: rgba(255,255,255,0.25); background: rgba(255,255,255,0.08); }
+        .bdp-select.bdp-open .bdp-trigger,
+        .bdp-trigger:focus { outline: none; border-color: #8660ef; background: rgba(134,96,239,0.08); box-shadow: 0 0 0 3px rgba(134,96,239,0.18); }
+        .bdp-placeholder { color: rgba(255,255,255,0.4); }
+        .bdp-value { color: white; }
+        .bdp-chevron { width: 16px; height: 16px; transition: transform 0.2s ease; flex-shrink: 0; margin-left: 0.4rem; }
+        .bdp-select.bdp-open .bdp-chevron { transform: rotate(180deg); }
+        .bdp-options { position: absolute; top: calc(100% + 6px); left: 0; right: 0; background: rgba(18,5,61,0.98); border: 1px solid rgba(255,255,255,0.14); border-radius: 12px; padding: 6px; max-height: 240px; overflow-y: auto; z-index: 20; box-shadow: 0 20px 40px rgba(0,0,0,0.5); backdrop-filter: blur(20px); display: none; scrollbar-width: thin; scrollbar-color: rgba(180,130,255,0.55) rgba(255,255,255,0.05); }
+        .bdp-select.bdp-open .bdp-options { display: block; }
+        .bdp-options::-webkit-scrollbar { width: 8px; }
+        .bdp-options::-webkit-scrollbar-track { background: rgba(255,255,255,0.04); border-radius: 4px; margin: 4px 0; }
+        .bdp-options::-webkit-scrollbar-thumb { background: linear-gradient(180deg, rgba(134,96,239,0.65) 0%, rgba(238,92,208,0.65) 100%); border-radius: 4px; border: 1px solid rgba(255,255,255,0.06); }
+        .bdp-options::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, rgba(134,96,239,0.9) 0%, rgba(238,92,208,0.9) 100%); }
+        .bdp-option { padding: 0.65rem 0.85rem; border-radius: 10px; cursor: pointer; font-size: 0.98rem; color: rgba(255,255,255,0.85); transition: background 0.1s ease, color 0.1s ease; }
+        .bdp-option:hover { background: rgba(134,96,239,0.22); color: white; }
+        .bdp-option-selected { background: linear-gradient(135deg, rgba(134,96,239,0.32) 0%, rgba(238,92,208,0.32) 100%); color: white; font-weight: 500; }
+        .bdp-select.bdp-error .bdp-trigger { border-color: rgba(255,120,130,0.7); background-color: rgba(255,120,130,0.08); }
         .ob-actions { display: flex; gap: 0.75rem; margin-top: 1.5rem; }
         .ob-btn { flex: 1; padding: 0.95rem 1.25rem; border-radius: 50px; border: 1px solid rgba(255,255,255,0.22); background: transparent; color: #fff; font-family: inherit; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.25s ease; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; line-height: 1; }
         .ob-btn:hover { background: rgba(255,255,255,0.06); }
@@ -648,7 +783,7 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
                   <div className="ob-field"><label className="ob-label">Nombre</label><input className={`ob-input${errCls('nombre')}`} type="text" value={form.nombre} onChange={(e) => setField('nombre', e.target.value)} placeholder="Juan" /></div>
                   <div className="ob-field"><label className="ob-label">Apellido</label><input className={`ob-input${errCls('apellido')}`} type="text" value={form.apellido} onChange={(e) => setField('apellido', e.target.value)} placeholder="García" /></div>
                 </div>
-                <div className="ob-field"><label className="ob-label">Email</label><input className={`ob-input${errCls('email')}`} type="email" value={form.email} onChange={(e) => setField('email', e.target.value)} placeholder="tu@email.com" /></div>
+                <div className="ob-field"><label className="ob-label">Email</label><input className={`ob-input${errCls('email')}`} type="email" value={form.email} onChange={(e) => setField('email', e.target.value)} placeholder="tu@email.com" autoComplete="email" inputMode="email" /></div>
                 <div className="ob-field"><label className="ob-label">WhatsApp</label><input className={`ob-input${errCls('whatsapp')}`} type="tel" value={form.whatsapp} onChange={(e) => setField('whatsapp', e.target.value)} placeholder="+54 9 341 1234 5678" /></div>
                 {error && <ErrorMsg msg={error} />}
                 <div className="ob-actions">
@@ -667,26 +802,11 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
                 <div className="ob-field"><label className="ob-label">DNI</label><input className={`ob-input${errCls('dni')}`} type="text" inputMode="numeric" maxLength={8} value={form.dni} onChange={(e) => setField('dni', e.target.value)} placeholder="12345678" /></div>
                 <div className="ob-field">
                   <label className="ob-label">Fecha de nacimiento</label>
-                  <div className="ob-date-wrap">
-                    <input
-                      className={`ob-input${errCls('fecha_nacimiento')}`}
-                      type="text"
-                      readOnly
-                      inputMode="none"
-                      placeholder="DD/MM/AAAA"
-                      value={form.fecha_nacimiento ? form.fecha_nacimiento.split('-').reverse().join('/') : ''}
-                      onClick={(e) => (e.currentTarget.nextElementSibling?.nextElementSibling as HTMLInputElement | null)?.showPicker?.()}
-                    />
-                    <svg className="ob-date-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    <input
-                      className="ob-date-native"
-                      type="date"
-                      value={form.fecha_nacimiento}
-                      max={maxBirthDate}
-                      onChange={(e) => setField('fecha_nacimiento', e.target.value)}
-                      aria-label="Fecha de nacimiento"
-                    />
-                  </div>
+                  <BirthDatePicker
+                    value={form.fecha_nacimiento}
+                    onChange={(iso) => setField('fecha_nacimiento', iso)}
+                    hasError={isInvalid('fecha_nacimiento')}
+                  />
                 </div>
                 {error && <ErrorMsg msg={error} />}
                 <div className="ob-actions">
@@ -721,6 +841,7 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
                   <div className="ob-field"><label className="ob-label">Número</label><input className={`ob-input${errCls('numero')}`} type="text" inputMode="numeric" value={form.numero} onChange={(e) => setField('numero', e.target.value)} placeholder="1234" /></div>
                   <div className="ob-field"><label className="ob-label">Departamento</label><input className="ob-input" type="text" value={form.depto} onChange={(e) => setField('depto', e.target.value)} placeholder="Ej: 3B (opcional)" /></div>
                 </div>
+                <div className="ob-field"><label className="ob-label">Código postal</label><input className={`ob-input${errCls('codigo_postal')}`} type="text" inputMode="numeric" value={form.codigo_postal} onChange={(e) => setField('codigo_postal', e.target.value)} placeholder="Ej: 2000" /></div>
                 {error && <ErrorMsg msg={error} />}
                 <div className="ob-actions">
                   <button type="button" className="ob-btn" onClick={prev}>← Atrás</button>
@@ -732,28 +853,47 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
             {step === 5 && (
               <>
                 <h2 className="ob-title">¿Cómo querés pagar?</h2>
-                <p className="ob-desc">Elegí el medio de pago para tu suscripción mensual.</p>
-                <div className="ob-options">
-                  {[
-                    { value: 'tarjeta', title: 'Tarjeta de crédito o débito', sub: 'Visa, Mastercard, American Express', icon: 'M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z' },
-                    { value: 'mp_balance', title: 'Dinero en cuenta Mercado Pago', sub: 'Saldo disponible en tu billetera', icon: 'M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z' },
-                  ].map((opt) => (
-                    <label key={opt.value} className={`ob-option ${form.medio_pago === opt.value ? 'checked' : ''} ${isInvalid('medio_pago') ? 'ob-option-error' : ''}`}>
-                      <input type="radio" name="medio_pago" value={opt.value} checked={form.medio_pago === opt.value} onChange={() => setField('medio_pago', opt.value)} style={{ position: 'absolute', opacity: 0, pointerEvents: 'none' }} />
-                      <span className="ob-option-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="#fff"><path d={opt.icon} /></svg></span>
-                      <span className="ob-option-text">
-                        <span className="ob-option-title">{opt.title}</span>
-                        <span className="ob-option-sub">{opt.sub}</span>
-                      </span>
-                      <span className="ob-option-check">{form.medio_pago === opt.value && <svg width="12" height="12" viewBox="0 0 24 24" fill="#fff"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" /></svg>}</span>
-                    </label>
-                  ))}
+                <p className="ob-desc">Elegí el método y confirmá el email asociado a tu cuenta de Mercado Pago.</p>
+                <div className={`ob-paymethod${errCls('medio_pago')}`}>
+                  <button
+                    type="button"
+                    className={`ob-paymethod-card${form.medio_pago === 'tarjeta' ? ' selected' : ''}`}
+                    onClick={() => setField('medio_pago', 'tarjeta')}
+                  >
+                    <div className="ob-paymethod-icon">
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                    </div>
+                    <div className="ob-paymethod-body">
+                      <p className="ob-paymethod-title">Tarjeta</p>
+                      <p className="ob-paymethod-sub">Crédito o débito</p>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={`ob-paymethod-card${form.medio_pago === 'mp_balance' ? ' selected' : ''}`}
+                    onClick={() => setField('medio_pago', 'mp_balance')}
+                  >
+                    <div className="ob-paymethod-icon">
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20M5 8h11a3 3 0 010 6H8a3 3 0 000 6h11"/></svg>
+                    </div>
+                    <div className="ob-paymethod-body">
+                      <p className="ob-paymethod-title">Dinero en cuenta</p>
+                      <p className="ob-paymethod-sub">Saldo Mercado Pago</p>
+                    </div>
+                  </button>
                 </div>
-                <div className={`ob-collapsible ${form.medio_pago === 'mp_balance' ? 'open' : 'closed'}`}>
-                  <div className="ob-field" style={{ marginBottom: 0 }}>
-                    <label className="ob-label">Email de la cuenta Mercado Pago</label>
-                    <input className="ob-input" type="email" value={form.mp_email} onChange={(e) => setField('mp_email', e.target.value)} placeholder="tu@email.com" />
-                  </div>
+                <div className="ob-field">
+                  <label className="ob-label">Email de tu cuenta de Mercado Pago</label>
+                  <input
+                    className={`ob-input${errCls('mp_email')}`}
+                    type="email"
+                    value={form.mp_email}
+                    onChange={(e) => setField('mp_email', e.target.value)}
+                    placeholder="tu@email.com"
+                    autoComplete="email"
+                    inputMode="email"
+                  />
+                  <p className="ob-field-hint">Puede ser distinto al email de tu cuenta Nexo. Se usa para procesar el cobro.</p>
                 </div>
                 {error && <ErrorMsg msg={error} />}
                 <div className="ob-actions">
@@ -779,11 +919,11 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
                   <div className="ob-summary-plan-body">
                     <div>
                       <p className="ob-summary-plan-label">Plan</p>
-                      <p className="ob-summary-plan-name">Previnca Nexo</p>
+                      <p className="ob-summary-plan-name">{plan.nombre}</p>
                     </div>
                     <div>
                       <p className="ob-summary-plan-period">por mes</p>
-                      <p className="ob-summary-plan-price">$19.500</p>
+                      <p className="ob-summary-plan-price">${formatearMiles(plan.precio)}</p>
                     </div>
                   </div>
                 </div>
@@ -794,8 +934,10 @@ export function Onboarding({ onClose }: { onClose: () => void }) {
                   <p className="ob-summary-sub">Fecha de cobro cada 30 días</p>
                 </div>
                 <div className="ob-actions">
-                  <button type="button" className="ob-btn" onClick={prev}>← Atrás</button>
-                  <button type="submit" className="ob-btn ob-btn-primary">Pagar</button>
+                  <button type="button" className="ob-btn" onClick={prev} disabled={submitting}>← Atrás</button>
+                  <button type="submit" className="ob-btn ob-btn-primary" disabled={submitting}>
+                    {submitting ? 'Redirigiendo a Mercado Pago…' : 'Pagar'}
+                  </button>
                 </div>
               </>
             )}
