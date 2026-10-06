@@ -934,7 +934,7 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
                 <div className="ob-actions">
                   <button type="button" className="ob-btn" onClick={prev} disabled={submitting}>← Atrás</button>
                   <button type="submit" className="ob-btn ob-btn-primary" disabled={submitting}>
-                    {submitting ? 'Redirigiendo a Mercado Pago…' : 'Pagar'}
+                    {submitting ? 'Procesando…' : 'Pagar'}
                   </button>
                 </div>
               </>
