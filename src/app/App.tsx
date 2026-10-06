@@ -14,6 +14,7 @@ import { Testimonios } from './components/Testimonios';
 import { FAQ } from './components/FAQ';
 import { Footer } from './components/Footer';
 import { Onboarding } from './components/Onboarding';
+import { Gracias } from './components/Gracias';
 import { captureAttribution } from './lib/attribution';
 
 const testimonials = [
@@ -128,6 +129,7 @@ export default function App() {
   }, []);
 
   const isOnboarding = pathname.startsWith('/onboarding');
+  const isGracias = pathname === '/gracias' || pathname === '/gracias/';
 
   useEffect(() => {
     const handleAnchorClick = (e: MouseEvent) => {
@@ -188,6 +190,10 @@ export default function App() {
 
   if (isOnboarding) {
     return <Onboarding onClose={goToLanding} />;
+  }
+
+  if (isGracias) {
+    return <Gracias onClose={goToLanding} />;
   }
 
   return (
