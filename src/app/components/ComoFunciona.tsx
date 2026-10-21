@@ -97,7 +97,7 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
             <span className="text-sm font-bold tracking-wide uppercase text-white">¿Cómo funciona?</span>
           </div>
 
-          <h2 className="font-['DM_Serif_Display'] text-[clamp(36px,5.5vw,68px)] text-[var(--gray-900)] leading-tight tracking-[-2px] mb-4 sm:mb-5 max-w-[760px] mx-auto">
+          <h2 className="fx-title font-['DM_Serif_Display'] text-[clamp(36px,5.5vw,68px)] text-[var(--gray-900)] leading-tight tracking-[-2px] mb-4 sm:mb-5 max-w-[760px] mx-auto">
             Pensar en tu bienestar es{' '}
             <span className="italic text-[var(--pink)]">elegir Previnca Nexo</span>
           </h2>
@@ -119,7 +119,7 @@ export function ComoFunciona({ onOpenCheckout }: ComoFuncionaProps) {
             /* Outer: solo entrada stagger. Inner: solo hover. Sin conflicto. */
             <m.div key={step.number} variants={staggerItem}>
               <m.div
-                className="group bg-white rounded-[24px] border border-[var(--gray-100)] hover:border-[var(--purple)]/15 transition-colors duration-500 p-5 sm:p-6 flex flex-col h-full relative overflow-hidden"
+                className="fx-card group bg-white rounded-[24px] border border-[var(--gray-100)] hover:border-[var(--purple)]/15 transition-colors duration-500 p-5 sm:p-6 flex flex-col h-full relative overflow-hidden"
                 style={{ boxShadow: '0 2px 24px rgba(0,0,0,0.04)' }}
                 whileHover={{ y: -4, boxShadow: '0 8px 40px rgba(134,96,239,0.10)' }}
                 transition={{ type: 'spring', stiffness: 400, damping: 28 }}

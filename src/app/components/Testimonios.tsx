@@ -40,7 +40,7 @@ function TestimonialCard({ testimonial, index }: { testimonial: Testimonial; ind
     <m.div
       variants={staggerItem}
       whileHover={{ y: -6, transition: { type: 'spring', stiffness: 400, damping: 28 } }}
-      className="bg-white rounded-[28px] p-8 sm:p-10 border border-[var(--gray-100)] group cursor-default flex flex-col transition-all duration-500 hover:border-[var(--purple)]/15"
+      className="fx-card bg-white rounded-[28px] p-8 sm:p-10 border border-[var(--gray-100)] group cursor-default flex flex-col transition-all duration-500 hover:border-[var(--purple)]/15"
       style={{ boxShadow: '0 2px 24px rgba(0,0,0,0.04)' }}
     >
       {/* Quote Icon */}
@@ -142,7 +142,7 @@ export function Testimonios({ testimonials }: TestimoniosProps) {
           variants={fadeUp}
           className="text-center mb-12 sm:mb-16"
         >
-          <h2 className="font-['DM_Serif_Display'] text-[clamp(36px,5.5vw,68px)] mb-4 leading-tight tracking-[-2px] text-[var(--gray-900)]">
+          <h2 className="fx-title font-['DM_Serif_Display'] text-[clamp(36px,5.5vw,68px)] mb-4 leading-tight tracking-[-2px] text-[var(--gray-900)]">
             Lo que dicen nuestros{' '}
             <span className="italic text-[var(--pink)]">miembros</span>
           </h2>

@@ -56,7 +56,7 @@ export function FAQ({ items }: FAQProps) {
           variants={fadeUp}
           className="text-center mb-12 sm:mb-16"
         >
-          <h2 className="font-['DM_Serif_Display'] text-[clamp(36px,5.5vw,68px)] mb-4 leading-tight tracking-[-2px] text-white">
+          <h2 className="fx-title font-['DM_Serif_Display'] text-[clamp(36px,5.5vw,68px)] mb-4 leading-tight tracking-[-2px] text-white">
             Preguntas{' '}
             <span className="italic text-[var(--pink)]">frecuentes</span>
           </h2>

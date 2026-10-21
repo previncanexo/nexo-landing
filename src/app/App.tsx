@@ -15,6 +15,7 @@ import { FAQ } from './components/FAQ';
 import { Footer } from './components/Footer';
 import { Onboarding, LS_LEAD } from './components/Onboarding';
 import { captureAttribution } from './lib/attribution';
+import { ScrollEffects } from './lib/scroll-reveal';
 import { PLANES, LS_PLAN_KEY } from './data/planes';
 
 const testimonials = [
@@ -279,6 +280,7 @@ export default function App() {
 
   return (
     <div className="overflow-x-clip">
+      <ScrollEffects />
       <Navigation onOpenCheckout={goToRegistro} />
       <Hero onOpenCheckout={goToRegistro} />
       <Planes onElegirPlan={elegirPlan} />

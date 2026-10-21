@@ -86,7 +86,7 @@ export function ALaCarta({ onOpenCheckout: _onOpenCheckout }: ALaCartaProps) {
             <span className="bg-white/25 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full border border-white/40">Próximamente</span>
           </div>
 
-          <h2 className="font-['DM_Serif_Display'] text-[clamp(36px,5.5vw,68px)] text-[var(--gray-900)] leading-tight tracking-[-2px] mb-5">
+          <h2 className="fx-title font-['DM_Serif_Display'] text-[clamp(36px,5.5vw,68px)] text-[var(--gray-900)] leading-tight tracking-[-2px] mb-5">
             Próximamente:{' '}
             <span className="italic text-[var(--pink)]">nuevas posibilidades</span>
           </h2>
@@ -109,7 +109,7 @@ export function ALaCarta({ onOpenCheckout: _onOpenCheckout }: ALaCartaProps) {
               key={service.title}
               variants={staggerItem}
               whileHover={{ y: -5, transition: { type: 'spring', stiffness: 400, damping: 28 } }}
-              className="group bg-white rounded-[28px] border border-[var(--gray-100)] hover:border-[var(--purple)]/15 transition-all duration-500 overflow-hidden flex flex-col"
+              className="fx-card group bg-white rounded-[28px] border border-[var(--gray-100)] hover:border-[var(--purple)]/15 transition-all duration-500 overflow-hidden flex flex-col"
               style={{ boxShadow: '0 2px 24px rgba(0,0,0,0.04)' }}
             >
               {/* Foto */}

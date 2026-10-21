@@ -307,7 +307,7 @@ export function Hero({ onOpenCheckout }: { onOpenCheckout?: () => void } = {}) {
             // @ts-expect-error atributo DOM en minúscula para evitar warning/mismatch en SSR
             fetchpriority={i === 0 ? 'high' : 'low'}
             decoding={i === 0 ? 'sync' : 'async'}
-            className="absolute inset-0 w-full h-full object-cover select-none"
+            className="hero-photo absolute inset-0 w-full h-full object-cover select-none"
             style={{
               objectPosition: img.position,
               opacity: i === current ? 1 : 0,
@@ -361,7 +361,7 @@ function HeroCtaButton({ animate = true, onOpenCheckout: _onOpenCheckout }: { an
   return (
     <m.button
       onClick={goToPlans}
-      className="bg-white text-[var(--purple)] border-none px-8 sm:px-10 py-4 rounded-full text-[15px] sm:text-base font-bold cursor-pointer font-['DM_Sans'] whitespace-nowrap group flex items-center gap-2 w-full justify-center"
+      className="fx-shine bg-white text-[var(--purple)] border-none px-8 sm:px-10 py-4 rounded-full text-[15px] sm:text-base font-bold cursor-pointer font-['DM_Sans'] whitespace-nowrap group flex items-center gap-2 w-full justify-center"
       whileHover={animate ? { scale: 1.03, boxShadow: '0 20px 60px rgba(255,255,255,0.25)' } : undefined}
       whileTap={{ scale: 0.97 }}
       transition={{ type: 'spring', stiffness: 400, damping: 25 }}

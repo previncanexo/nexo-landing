@@ -191,3 +191,130 @@
     display: none !important;
   }
 }
+/* ── Efectos (oct 2026) ──────────────────────────────────────────────────────
+   Todo con CSS + un IntersectionObserver (scroll-reveal.ts); Framer sigue afuera.
+   Solo se animan opacity/transform/translate (compositor, baratos también en mobile)
+   y nada esconde contenido en el HTML del SSG. */
+
+/* Entrada al hacer scroll: las clases las pone useScrollReveal, solo debajo del pliegue */
+.fx-reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1) var(--fx-delay, 0ms),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) var(--fx-delay, 0ms);
+}
+.fx-reveal.fx-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Tarjetas: elevación + borde en degradé de marca al hover (solo con mouse) */
+.fx-card {
+  position: relative;
+}
+.fx-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: linear-gradient(135deg, var(--purple), var(--pink));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+  pointer-events: none;
+  z-index: 3;
+}
+@media (hover: hover) and (pointer: fine) {
+  .fx-card:not(.fx-reveal) {
+    transition:
+      translate 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.45s ease,
+      border-color 0.45s ease;
+  }
+  .fx-card:hover {
+    translate: 0 -6px;
+    box-shadow: 0 22px 50px -18px rgba(134, 96, 239, 0.35) !important;
+  }
+  .fx-card:hover::after {
+    opacity: 1;
+  }
+}
+
+/* Brillo que recorre el CTA principal: al hover y, en desktop, cada tanto solo */
+.fx-shine {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.fx-shine::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(110deg, transparent 30%, rgba(238, 92, 208, 0.22) 45%, rgba(134, 96, 239, 0.28) 55%, transparent 70%);
+  translate: -110% 0;
+  pointer-events: none;
+}
+.fx-shine:hover::before {
+  translate: 110% 0;
+  transition: translate 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes fx-shine {
+  0%, 70% { translate: -110% 0; }
+  90%, 100% { translate: 110% 0; }
+}
+@media (min-width: 768px) {
+  .fx-shine:not(:hover)::before {
+    animation: fx-shine 6s ease-in-out 2.5s infinite;
+  }
+}
+
+/* Barra de progreso de lectura: scroll-driven, sin JS. Si el navegador no lo soporta, no aparece */
+.fx-progress {
+  display: none;
+}
+@supports (animation-timeline: scroll()) {
+  .fx-progress {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    z-index: 101;
+    transform-origin: 0 50%;
+    background: linear-gradient(90deg, var(--purple), var(--pink));
+    pointer-events: none;
+    animation: fx-progress linear both;
+    animation-timeline: scroll(root);
+  }
+}
+@keyframes fx-progress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+/* Fotos del hero: zoom lento tipo Ken Burns, solo desktop (en mobile la foto es estática) */
+@keyframes fx-kenburns {
+  from { transform: scale(1); }
+  to { transform: scale(1.08); }
+}
+@media (min-width: 768px) {
+  .hero-photo {
+    animation: fx-kenburns 16s ease-in-out infinite alternate;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-progress,
+  .fx-shine::before {
+    display: none;
+  }
+  .hero-photo {
+    animation: none;
+  }
+}

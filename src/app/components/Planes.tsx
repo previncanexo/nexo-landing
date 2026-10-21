@@ -78,7 +78,7 @@ function PlanCard({ plan, onElegirPlan }: { plan: PlanComercial; onElegirPlan: (
   return (
     <div
       id={`plan-${plan.slug}`}
-      className="relative flex scroll-mt-24 flex-col overflow-hidden rounded-3xl bg-white transition-all hover:-translate-y-1.5"
+      className="fx-card relative flex scroll-mt-24 flex-col overflow-hidden rounded-3xl bg-white transition-all hover:-translate-y-1.5"
       style={{
         boxShadow: plan.recomendado ? '0 18px 50px -12px rgba(134,96,239,0.35)' : 'var(--shadow-card)',
         border: plan.recomendado ? `1.5px solid ${NEXO_PURPLE}` : '1.5px solid transparent',
@@ -142,7 +142,7 @@ export function Planes({ onElegirPlan }: { onElegirPlan: (slug: string) => void 
         style={{ color: VIOLETA_TEXTO }}>
         Nuestros planes
       </p>
-      <h2 className="mx-auto mt-3 max-w-[600px] text-center text-[clamp(26px,5vw,42px)] leading-tight tracking-[-1px]">
+      <h2 className="fx-title mx-auto mt-3 max-w-[600px] text-center text-[clamp(26px,5vw,42px)] leading-tight tracking-[-1px]">
         Elegí la cobertura que necesitás
       </h2>
       {/*
@@ -225,7 +225,7 @@ export function ServiciosOnDemand() {
         style={{ color: ROSA_TEXTO }}>
         Servicios on demand
       </p>
-      <h2 className="mx-auto mt-3 max-w-[600px] text-center text-[clamp(26px,5vw,42px)] leading-tight tracking-[-1px]">
+      <h2 className="fx-title mx-auto mt-3 max-w-[600px] text-center text-[clamp(26px,5vw,42px)] leading-tight tracking-[-1px]">
         Sumá solo lo que necesites
       </h2>
       <p className="mx-auto mt-3 max-w-[460px] text-center text-sm text-[#6b6b6b]">
@@ -249,7 +249,7 @@ export function ServiciosOnDemand() {
           return (
             <div
               key={s.id}
-              className="flex flex-col rounded-3xl bg-white p-6 transition-all hover:-translate-y-1"
+              className="fx-card flex flex-col rounded-3xl bg-white p-6 transition-all hover:-translate-y-1"
               style={{
                 border: `1.5px solid ${rojo ? `${PENDIENTE_ROJO}33` : '#f0eaf9'}`,
                 boxShadow: 'var(--shadow-card)',
