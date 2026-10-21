@@ -2,17 +2,21 @@ import { useState, useEffect, useRef } from 'react';
 import { m, useScroll, useTransform } from '../lib/motion-shim';
 import { fadeUpSubtle } from './motion-variants';
 import { PRECIO_DESDE, formatearMiles } from '@/app/data/planes';
-import heroWoman from '@/assets/hero-woman.webp';
-import heroWoman2 from '@/assets/hero-woman-2.webp';
-import heroWoman3 from '@/assets/hero-woman-3.webp';
-import heroWomanSet from '@/assets/hero-woman.webp?w=480;768;1080;1672&format=webp&quality=70&as=srcset';
-import heroWoman2Set from '@/assets/hero-woman-2.webp?w=480;768;1080;1672&format=webp&quality=70&as=srcset';
-import heroWoman3Set from '@/assets/hero-woman-3.webp?w=480;768;1080;1672&format=webp&quality=70&as=srcset';
+import heroTeleconsulta from '@/assets/hero-teleconsulta.webp';
+import heroFarmacias from '@/assets/hero-farmacias.webp';
+import heroBienestarFamiliar from '@/assets/hero-bienestar-familiar.webp';
+import heroVidaActiva from '@/assets/hero-vida-activa.webp';
+import heroTeleconsultaSet from '@/assets/hero-teleconsulta.webp?w=480;768;1080;1672&format=webp&quality=70&as=srcset';
+import heroFarmaciasSet from '@/assets/hero-farmacias.webp?w=480;768;1080;1672&format=webp&quality=70&as=srcset';
+import heroBienestarFamiliarSet from '@/assets/hero-bienestar-familiar.webp?w=480;768;1080;1672&format=webp&quality=70&as=srcset';
+import heroVidaActivaSet from '@/assets/hero-vida-activa.webp?w=480;768;1080;1672&format=webp&quality=70&as=srcset';
 
+// position = encuadre horizontal de cada foto (dónde cae la cara), clave en mobile donde se recorta fuerte
 const heroImages = [
-  { src: heroWoman, srcSet: heroWomanSet },
-  { src: heroWoman2, srcSet: heroWoman2Set },
-  { src: heroWoman3, srcSet: heroWoman3Set },
+  { src: heroTeleconsulta, srcSet: heroTeleconsultaSet, position: '65% center' },
+  { src: heroFarmacias, srcSet: heroFarmaciasSet, position: '52% center' },
+  { src: heroBienestarFamiliar, srcSet: heroBienestarFamiliarSet, position: '50% center' },
+  { src: heroVidaActiva, srcSet: heroVidaActivaSet, position: '55% center' },
 ];
 
 const BLUR_STAGGER = 0.025;
@@ -158,14 +162,14 @@ export function Hero({ onOpenCheckout }: { onOpenCheckout?: () => void } = {}) {
   // del SSG, el primer render del cliente y el render en mobile son IDÉNTICOS (1 foto
   // estática, sin animación). Al hidratar en el celu, el effect ve mobile y NO llama a
   // setDesktopReady → React no re-renderiza → cero flash/trabón. Solo el desktop "sube"
-  // a la versión animada con crossfade de 3 fotos.
+  // a la versión animada con crossfade de 4 fotos.
   const [desktopReady, setDesktopReady] = useState(false);
   const animate = desktopReady;
   const heroRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     // Mobile: queda estático (1 foto, sin crossfade, sin grano, sin scroll-linked) →
-    // no se re-renderiza al hidratar y no se descargan las otras 2 fotos (~240KB menos).
+    // no se re-renderiza al hidratar y no se descargan las otras 3 fotos.
     if (!window.matchMedia('(min-width: 768px)').matches) return;
     setDesktopReady(true);
     const id = setInterval(() => {
@@ -308,7 +312,7 @@ export function Hero({ onOpenCheckout }: { onOpenCheckout?: () => void } = {}) {
             decoding={i === 0 ? 'sync' : 'async'}
             className="absolute inset-0 w-full h-full object-cover select-none"
             style={{
-              objectPosition: '65% center',
+              objectPosition: img.position,
               opacity: i === current ? 1 : 0,
               transition: 'opacity 0.9s ease-in-out',
               willChange: 'opacity',
