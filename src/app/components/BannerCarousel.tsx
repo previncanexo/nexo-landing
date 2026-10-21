@@ -1,25 +1,53 @@
 import { useState, useEffect, useCallback } from 'react';
-import banner1 from '@/assets/banner-comunidad-1.webp';
-import banner2 from '@/assets/banner-comunidad-2.webp';
-import banner1Set from '@/assets/banner-comunidad-1.webp?w=480;768;1080&format=webp&quality=68&as=srcset';
-import banner2Set from '@/assets/banner-comunidad-2.webp?w=480;768;1080&format=webp&quality=68&as=srcset';
+import bannerTeleconsulta from '@/assets/banner-teleconsulta.webp';
+import bannerFarmacias from '@/assets/banner-farmacias.webp';
+import bannerEmergencias from '@/assets/banner-emergencias.webp';
+import bannerOdontologia from '@/assets/banner-odontologia.webp';
+import bannerTeleconsultaSet from '@/assets/banner-teleconsulta.webp?w=480;768;1080;1440;1920&format=webp&quality=68&as=srcset';
+import bannerFarmaciasSet from '@/assets/banner-farmacias.webp?w=480;768;1080;1440;1920&format=webp&quality=68&as=srcset';
+import bannerEmergenciasSet from '@/assets/banner-emergencias.webp?w=480;768;1080;1440;1920&format=webp&quality=68&as=srcset';
+import bannerOdontologiaSet from '@/assets/banner-odontologia.webp?w=480;768;1080;1440;1920&format=webp&quality=68&as=srcset';
 // Placeholders blur-up en base64 (inline en el HTML → preview instantáneo, sin requests)
-import { banner1Ph, banner2Ph } from './placeholders';
+import {
+  bannerTeleconsultaPh,
+  bannerFarmaciasPh,
+  bannerEmergenciasPh,
+  bannerOdontologiaPh,
+} from './placeholders';
 
+// position = encuadre horizontal (las fotos son 1920x665; en mobile se ve ~40% del ancho)
 const slides = [
   {
-    img: banner2,
-    imgSet: banner2Set,
-    imgPh: banner2Ph,
-    label: 'Salud sin fronteras',
-    sub: 'Accedé desde donde estés',
+    img: bannerTeleconsulta,
+    imgSet: bannerTeleconsultaSet,
+    imgPh: bannerTeleconsultaPh,
+    position: '72% center',
+    label: 'Teleconsultas médicas sin salir de casa',
+    sub: 'Tu médico, desde donde estés',
   },
   {
-    img: banner1,
-    imgSet: banner1Set,
-    imgPh: banner1Ph,
-    label: 'Para los que van siempre para adelante',
-    sub: 'Tu salud, sin pausas',
+    img: bannerFarmacias,
+    imgSet: bannerFarmaciasSet,
+    imgPh: bannerFarmaciasPh,
+    position: '50% center',
+    label: 'Beneficios en farmacias',
+    sub: 'Cuidarte también es ahorrar',
+  },
+  {
+    img: bannerEmergencias,
+    imgSet: bannerEmergenciasSet,
+    imgPh: bannerEmergenciasPh,
+    position: '62% center',
+    label: 'Emergencias médicas',
+    sub: 'Cuando más lo necesitás',
+  },
+  {
+    img: bannerOdontologia,
+    imgSet: bannerOdontologiaSet,
+    imgPh: bannerOdontologiaPh,
+    position: '30% center',
+    label: 'Guardia odontológica',
+    sub: 'Sonrisas para toda la familia',
   },
 ];
 
@@ -58,7 +86,7 @@ export function BannerCarousel() {
             transition: 'opacity 0.8s ease-in-out',
             backgroundImage: `url(${slide.imgPh})`,
             backgroundSize: 'cover',
-            backgroundPosition: 'center',
+            backgroundPosition: slide.position,
           }}
         >
           <img
@@ -71,7 +99,8 @@ export function BannerCarousel() {
             fetchpriority="low"
             decoding={i === 0 ? 'sync' : 'async'}
             draggable={false}
-            className="w-full h-full object-cover object-center select-none"
+            className="w-full h-full object-cover select-none"
+            style={{ objectPosition: slide.position }}
           />
           <div className="absolute inset-0" style={overlayStyle} />
         </div>
