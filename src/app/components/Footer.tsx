@@ -1,5 +1,3 @@
-'use client'
-
 import { useState } from 'react'
 import logoImage from "@/assets/logo.png";
 import { m } from '../lib/motion-shim';
@@ -135,8 +133,10 @@ function TerminosModal({ onClose }: { onClose: () => void }) {
   const paragraphs = TYC_TEXT.trim().split(/\n\n+/)
   return (
     <div
-      className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center p-3 sm:p-6"
-      style={{ background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(8px)' }}
+      className="modal-backdrop fixed inset-0 z-[200] flex items-end sm:items-center justify-center p-3 sm:p-6"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Términos y Condiciones"
       onClick={onClose}
     >
       <div
@@ -155,7 +155,8 @@ function TerminosModal({ onClose }: { onClose: () => void }) {
           <h2 className="font-bold text-white text-base">Términos y Condiciones</h2>
           <button
             onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center rounded-full text-sm"
+            aria-label="Cerrar términos y condiciones"
+            className="w-11 h-11 flex items-center justify-center rounded-full text-sm"
             style={{ background: 'rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.70)', border: 'none', cursor: 'pointer' }}
           >
             ✕
@@ -246,7 +247,7 @@ export function Footer({ servicios = SERVICIOS_POR_DEFECTO }: FooterProps = {}) 
           >
             {/* Logo & Description - 4 cols */}
             <div className="col-span-2 md:col-span-4">
-              <img src={logoImage} alt="Previnca Nexo" className="h-10 mb-5" />
+              <img src={logoImage} alt="Previnca Nexo" className="h-10 mb-5" loading="eager" fetchPriority="low" />
               <p className="text-sm text-white/80 leading-relaxed mb-6 max-w-[280px]">
                 Tu salud y tu bienestar, sin vueltas.
               </p>
@@ -302,10 +303,10 @@ export function Footer({ servicios = SERVICIOS_POR_DEFECTO }: FooterProps = {}) 
             {/* Servicios - 2 cols */}
             <div className="col-span-1 md:col-span-2">
               <h3 className="text-white font-bold text-xs mb-4 uppercase tracking-wider">Servicios</h3>
-              <ul className="space-y-3">
+              <ul className="space-y-1 md:space-y-3">
                 {servicios.map((link) => (
                   <li key={link.label}>
-                    <a href={link.href} className="text-white/65 text-sm hover:text-white transition-colors duration-300 no-underline">
+                    <a href={link.href} className="inline-block py-2.5 md:py-0 text-white/65 text-sm hover:text-white transition-colors duration-300 no-underline">
                       {link.label}
                     </a>
                   </li>
@@ -316,7 +317,7 @@ export function Footer({ servicios = SERVICIOS_POR_DEFECTO }: FooterProps = {}) 
             {/* Contacto - 3 cols */}
             <div className="col-span-1 md:col-span-3">
               <h3 className="text-white font-bold text-xs mb-4 uppercase tracking-wider">Contacto</h3>
-              <ul className="space-y-3">
+              <ul className="space-y-1 md:space-y-3">
                 {[
                   {
                     icon: (
@@ -356,11 +357,11 @@ export function Footer({ servicios = SERVICIOS_POR_DEFECTO }: FooterProps = {}) 
             {/* Información - 3 cols */}
             <div className="col-span-2 md:col-span-3">
               <h3 className="text-white font-bold text-xs mb-4 uppercase tracking-wider">Información</h3>
-              <ul className="space-y-3">
+              <ul className="space-y-1 md:space-y-3">
                 <li>
                   <button
                     onClick={() => setShowTyC(true)}
-                    className="text-white/65 text-sm hover:text-white transition-colors duration-300 cursor-pointer bg-transparent border-none p-0 text-left"
+                    className="text-white/65 text-sm hover:text-white transition-colors duration-300 cursor-pointer bg-transparent border-none py-2.5 md:py-0 text-left"
                   >
                     Términos y Condiciones
                   </button>
@@ -369,7 +370,7 @@ export function Footer({ servicios = SERVICIOS_POR_DEFECTO }: FooterProps = {}) 
                   { label: 'Preguntas Frecuentes', href: '#faq' },
                 ].map(({ label, href }) => (
                   <li key={label}>
-                    <a href={href} className="text-white/65 text-sm hover:text-white transition-colors duration-300 no-underline">
+                    <a href={href} className="inline-block py-2.5 md:py-0 text-white/65 text-sm hover:text-white transition-colors duration-300 no-underline">
                       {label}
                     </a>
                   </li>

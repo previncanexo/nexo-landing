@@ -40,7 +40,7 @@ function TestimonialCard({ testimonial, index }: { testimonial: Testimonial; ind
     <m.div
       variants={staggerItem}
       whileHover={{ y: -6, transition: { type: 'spring', stiffness: 400, damping: 28 } }}
-      className="fx-card bg-white rounded-[28px] p-8 sm:p-10 border border-[var(--gray-100)] group cursor-default flex flex-col transition-all duration-500 hover:border-[var(--purple)]/15"
+      className="fx-card w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.34rem)] bg-white rounded-[28px] p-8 sm:p-10 border border-[var(--gray-100)] group cursor-default flex flex-col transition-all duration-500 hover:border-[var(--purple)]/15"
       style={{ boxShadow: '0 2px 24px rgba(0,0,0,0.04)' }}
     >
       {/* Quote Icon */}
@@ -72,7 +72,8 @@ function TestimonialCard({ testimonial, index }: { testimonial: Testimonial; ind
         {isLong && (
           <button
             onClick={() => setExpanded(!expanded)}
-            className="mt-3 flex items-center gap-1.5 cursor-pointer border-none bg-transparent p-0"
+            // py-2.5 compensado con el margen: el texto mide 20px; así el área táctil llega a ~40px sin mover el layout
+            className="mt-0.5 -mb-2.5 flex items-center gap-1.5 cursor-pointer border-none bg-transparent py-2.5 pr-3"
           >
             <span
               className={`text-sm font-semibold bg-gradient-to-r ${gradients[index % 3]} bg-clip-text`}
@@ -157,7 +158,7 @@ export function Testimonios({ testimonials }: TestimoniosProps) {
           whileInView="visible"
           viewport={viewportOnce}
           variants={staggerContainer}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
+          className="flex flex-wrap justify-center gap-6 sm:gap-8"
         >
           {testimonials.map((testimonial, index) => (
             <TestimonialCard key={index} testimonial={testimonial} index={index} />

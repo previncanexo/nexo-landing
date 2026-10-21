@@ -96,13 +96,14 @@ function PlanCard({ plan, onElegirPlan }: { plan: PlanComercial; onElegirPlan: (
         </>
       )}
 
-      <div className="flex flex-1 flex-col p-7">
+      <div className="flex flex-1 flex-col p-7 md:p-5 lg:p-7">
         <h3 className="mt-2 text-2xl">{plan.nombre}</h3>
         <p className="mt-2 text-sm leading-snug text-[#6b6b6b]">{plan.bajada}</p>
 
-        <div className="mt-4 flex items-baseline gap-1.5">
+        <div className="mt-4 flex flex-wrap items-baseline gap-x-1.5">
+          {/* md (tablet, 3 columnas angostas): el precio baja un poco para que "/mes" no pise el borde */}
           <span
-            className="font-['DM_Serif_Display'] text-[clamp(38px,6vw,48px)] leading-none"
+            className="font-['DM_Serif_Display'] text-[clamp(38px,6vw,48px)] md:text-[clamp(32px,4vw,48px)] leading-none"
             style={{
               background: NEXO_GRADIENT,
               WebkitBackgroundClip: 'text',
@@ -124,7 +125,7 @@ function PlanCard({ plan, onElegirPlan }: { plan: PlanComercial; onElegirPlan: (
           <Button
             onClick={() => onElegirPlan(plan.slug)}
             aria-label={`Afiliarme a ${plan.nombre}`}
-            className="w-full cursor-pointer rounded-full text-white transition-opacity hover:opacity-90"
+            className="fx-press h-11 w-full cursor-pointer rounded-full text-white transition-opacity hover:opacity-90"
             style={{ background: plan.recomendado ? NEXO_GRADIENT : VIOLETA_BOTON }}
           >
             Afiliarme
@@ -243,13 +244,15 @@ export function ServiciosOnDemand() {
         Necesitás un plan Nexo activo para contratarlos.
       </p>
 
-      <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {/* Flex centrado en vez de grid: son 5 tarjetas y en 2/3 columnas la última fila quedaba
+          huérfana pegada a la izquierda. Con flex-wrap + justify-center queda centrada. */}
+      <div className="mt-10 flex flex-wrap justify-center gap-4">
         {ON_DEMAND.map((s) => {
           const rojo = !!s.pendiente;
           return (
             <div
               key={s.id}
-              className="fx-card flex flex-col rounded-3xl bg-white p-6 transition-all hover:-translate-y-1"
+              className="fx-card flex w-full flex-col rounded-3xl bg-white p-6 transition-all hover:-translate-y-1 sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.7rem)]"
               style={{
                 border: `1.5px solid ${rojo ? `${PENDIENTE_ROJO}33` : '#f0eaf9'}`,
                 boxShadow: 'var(--shadow-card)',

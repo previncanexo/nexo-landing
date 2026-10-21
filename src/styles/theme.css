@@ -318,3 +318,15 @@
     animation: none;
   }
 }
+
+/* Fondo de los modales: oscuro sólido en mobile; el blur (capa GPU cara sobre un fixed a pantalla completa) solo en desktop */
+.modal-backdrop {
+  background: rgba(0, 0, 0, 0.82);
+}
+@media (min-width: 768px) {
+  .modal-backdrop {
+    background: rgba(0, 0, 0, 0.75);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
+}
