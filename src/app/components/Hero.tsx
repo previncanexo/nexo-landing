@@ -2,18 +2,15 @@ import { useState, useEffect, useRef } from 'react';
 import { m, useScroll, useTransform } from '../lib/motion-shim';
 import { fadeUpSubtle } from './motion-variants';
 import { PRECIO_DESDE, formatearMiles } from '@/app/data/planes';
-import heroTeleconsulta from '@/assets/hero-teleconsulta.webp';
 import heroFarmacias from '@/assets/hero-farmacias.webp';
 import heroBienestarFamiliar from '@/assets/hero-bienestar-familiar.webp';
 import heroVidaActiva from '@/assets/hero-vida-activa.webp';
-import heroTeleconsultaSet from '@/assets/hero-teleconsulta.webp?w=480;768;1080;1672&format=webp&quality=70&as=srcset';
 import heroFarmaciasSet from '@/assets/hero-farmacias.webp?w=480;768;1080;1672&format=webp&quality=70&as=srcset';
 import heroBienestarFamiliarSet from '@/assets/hero-bienestar-familiar.webp?w=480;768;1080;1672&format=webp&quality=70&as=srcset';
 import heroVidaActivaSet from '@/assets/hero-vida-activa.webp?w=480;768;1080;1672&format=webp&quality=70&as=srcset';
 
 // position = encuadre horizontal de cada foto (dónde cae la cara), clave en mobile donde se recorta fuerte
 const heroImages = [
-  { src: heroTeleconsulta, srcSet: heroTeleconsultaSet, position: '65% center' },
   { src: heroFarmacias, srcSet: heroFarmaciasSet, position: '52% center' },
   { src: heroBienestarFamiliar, srcSet: heroBienestarFamiliarSet, position: '50% center' },
   { src: heroVidaActiva, srcSet: heroVidaActivaSet, position: '55% center' },
@@ -162,14 +159,14 @@ export function Hero({ onOpenCheckout }: { onOpenCheckout?: () => void } = {}) {
   // del SSG, el primer render del cliente y el render en mobile son IDÉNTICOS (1 foto
   // estática, sin animación). Al hidratar en el celu, el effect ve mobile y NO llama a
   // setDesktopReady → React no re-renderiza → cero flash/trabón. Solo el desktop "sube"
-  // a la versión animada con crossfade de 4 fotos.
+  // a la versión animada con crossfade de 3 fotos.
   const [desktopReady, setDesktopReady] = useState(false);
   const animate = desktopReady;
   const heroRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     // Mobile: queda estático (1 foto, sin crossfade, sin grano, sin scroll-linked) →
-    // no se re-renderiza al hidratar y no se descargan las otras 3 fotos.
+    // no se re-renderiza al hidratar y no se descargan las otras 2 fotos.
     if (!window.matchMedia('(min-width: 768px)').matches) return;
     setDesktopReady(true);
     const id = setInterval(() => {
