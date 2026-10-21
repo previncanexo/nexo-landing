@@ -330,15 +330,20 @@
 
 /* Foco visible para teclado: anillo de marca, con variante clara sobre fondos oscuros.
    Solo :focus-visible, así el click con mouse no dibuja nada. */
-:focus-visible {
-  outline: 2px solid var(--purple);
-  outline-offset: 3px;
-}
-#hero :focus-visible,
-#faq :focus-visible,
-footer :focus-visible,
-.nav-pill :focus-visible {
-  outline-color: #fff;
+/* En @layer base para que las utilities (focus-visible:outline-none de shadcn) sigan ganando */
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--purple);
+    outline-offset: 3px;
+  }
+  #hero :focus-visible,
+  #faq :focus-visible,
+  footer :focus-visible,
+  .nav-pill :focus-visible,
+  .modal-backdrop :focus-visible,
+  .menu-overlay :focus-visible {
+    outline-color: #fff;
+  }
 }
 
 /* Feedback de press en botones que no lo tenían (scale no pisa el transform de Tailwind) */

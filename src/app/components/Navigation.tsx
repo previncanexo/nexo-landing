@@ -37,7 +37,16 @@ export function Navigation({ onOpenCheckout: _onOpenCheckout }: NavigationProps)
     // Franja fina a ~35% del alto: la sección que la cruza es la "actual"
     const io = new IntersectionObserver(
       (entries) => {
-        for (const e of entries) if (e.isIntersecting) setActiveHref(`#${e.target.id}`);
+        for (const e of entries) {
+          const href = `#${e.target.id}`;
+          if (e.isIntersecting) {
+            setActiveHref(href);
+          } else {
+            // Al salir la sección activa (volver al hero o llegar al footer) se limpia el link;
+            // si otra sección entra en la misma tanda, su set posterior gana (orden de entries)
+            setActiveHref((cur) => (cur === href ? null : cur));
+          }
+        }
       },
       { rootMargin: '-35% 0px -64% 0px' },
     );
@@ -186,7 +195,7 @@ export function Navigation({ onOpenCheckout: _onOpenCheckout }: NavigationProps)
 
       {/* ── MOBILE MENU OVERLAY ── */}
       <div
-        className={`fixed inset-0 z-[99] lg:hidden transition-opacity duration-150 ${
+        className={`menu-overlay fixed inset-0 z-[99] lg:hidden transition-opacity duration-150 ${
           mobileOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
         style={{
@@ -194,7 +203,7 @@ export function Navigation({ onOpenCheckout: _onOpenCheckout }: NavigationProps)
           // el fondo quedaba transparente y el menú "roto". Sin backdrop-filter:
           // el overlay (fixed inset-0) está SIEMPRE en el DOM y su blur creaba una
           // capa GPU permanente que trababa el scroll aun con el menú cerrado.
-          background: 'linear-gradient(135deg, rgba(134, 96, 239, 0.98) 0%, rgba(238, 92, 208, 0.98) 100%)',
+          background: 'linear-gradient(135deg, rgba(134, 96, 239, 1) 0%, rgba(238, 92, 208, 1) 100%)',
         }}
       >
         <button

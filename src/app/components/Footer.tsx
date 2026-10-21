@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import logoImage from "@/assets/logo.png";
 import { m } from '../lib/motion-shim';
 import { fadeUp, viewportOnce } from './motion-variants';
@@ -131,8 +131,33 @@ Al completar el proceso de afiliación digital y hacer "click" en el botón de a
 
 function TerminosModal({ onClose }: { onClose: () => void }) {
   const paragraphs = TYC_TEXT.trim().split(/\n\n+/)
+  const dialogRef = useRef<HTMLDivElement>(null)
+  const closeRef = useRef<HTMLButtonElement>(null)
+  // onClose llega como arrow nueva en cada render: va por ref para que el efecto corra solo al montar
+  const onCloseRef = useRef(onClose)
+  onCloseRef.current = onClose
+
+  // Teclado: foco inicial en "cerrar", Escape cierra, Tab queda dentro del diálogo y al
+  // cerrar el foco vuelve al botón que lo abrió.
+  useEffect(() => {
+    const opener = document.activeElement as HTMLElement | null
+    closeRef.current?.focus()
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') { onCloseRef.current(); return }
+      if (e.key !== 'Tab' || !dialogRef.current) return
+      const f = dialogRef.current.querySelectorAll<HTMLElement>('button, a[href], [tabindex]:not([tabindex="-1"])')
+      if (!f.length) return
+      const first = f[0], last = f[f.length - 1]
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus() }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus() }
+    }
+    document.addEventListener('keydown', onKey)
+    return () => { document.removeEventListener('keydown', onKey); opener?.focus() }
+  }, [])
+
   return (
     <div
+      ref={dialogRef}
       className="modal-backdrop fixed inset-0 z-[200] flex items-end sm:items-center justify-center p-3 sm:p-6"
       role="dialog"
       aria-modal="true"
@@ -154,6 +179,7 @@ function TerminosModal({ onClose }: { onClose: () => void }) {
         >
           <h2 className="font-bold text-white text-base">Términos y Condiciones</h2>
           <button
+            ref={closeRef}
             onClick={onClose}
             aria-label="Cerrar términos y condiciones"
             className="w-11 h-11 flex items-center justify-center rounded-full text-sm"
