@@ -73,6 +73,13 @@
 
   h1, h2, h3 {
     font-family: 'DM Serif Display', serif;
+    /* Reparte las líneas parejo: evita el "Nexo" huérfano en el segundo renglón de los títulos */
+    text-wrap: balance;
+  }
+
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
@@ -319,6 +326,80 @@
   }
 }
 
+/* ── Pulido (oct 2026): foco, press, nav activo, carrusel ─────────────────── */
+
+/* Foco visible para teclado: anillo de marca, con variante clara sobre fondos oscuros.
+   Solo :focus-visible, así el click con mouse no dibuja nada. */
+:focus-visible {
+  outline: 2px solid var(--purple);
+  outline-offset: 3px;
+}
+#hero :focus-visible,
+#faq :focus-visible,
+footer :focus-visible,
+.nav-pill :focus-visible {
+  outline-color: #fff;
+}
+
+/* Feedback de press en botones que no lo tenían (scale no pisa el transform de Tailwind) */
+.fx-press {
+  transition: scale 0.18s var(--ease-out-quart), opacity 0.2s ease, box-shadow 0.3s ease;
+}
+.fx-press:active {
+  scale: 0.97;
+}
+
+/* Link activo del nav (scrollspy): puntito de marca bajo el texto */
+.nav-link {
+  position: relative;
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 3px;
+  width: 4px;
+  height: 4px;
+  margin-left: -2px;
+  border-radius: 50%;
+  background: var(--pink);
+  opacity: 0;
+  scale: 0.4;
+  transition: opacity 0.3s ease, scale 0.3s var(--ease-out-expo);
+}
+.nav-link[data-active="true"] {
+  color: #fff;
+}
+.nav-link[data-active="true"]::after {
+  opacity: 1;
+  scale: 1;
+}
+
+/* Nav con scroll en desktop: vidrio más translúcido (el blur ya está en .nav-pill) */
+@media (min-width: 768px) {
+  .nav-pill[data-scrolled="true"] {
+    background: rgba(18, 5, 61, 0.8);
+    -webkit-backdrop-filter: blur(22px) saturate(1.5);
+    backdrop-filter: blur(22px) saturate(1.5);
+  }
+}
+
+/* Carrusel: la slide activa entra con un zoom suave (solo desktop; en mobile queda estática) */
+@keyframes fx-slide-zoom {
+  from { transform: scale(1.07); }
+  to { transform: scale(1); }
+}
+@media (min-width: 768px) {
+  .fx-slide-active {
+    animation: fx-slide-zoom 6s ease-out both;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fx-slide-active {
+    animation: none;
+  }
+}
+
 /* Fondo de los modales: oscuro sólido en mobile; el blur (capa GPU cara sobre un fixed a pantalla completa) solo en desktop */
 .modal-backdrop {
   background: rgba(0, 0, 0, 0.82);
@@ -326,6 +407,14 @@
 @media (min-width: 768px) {
   .modal-backdrop {
     background: rgba(0, 0, 0, 0.75);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
+}
+
+/* Flechas del carrusel: el blur sobre una imagen que cambia cada 5 s repinta la capa; solo en desktop */
+@media (min-width: 768px) {
+  .carousel-arrow {
     -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
   }

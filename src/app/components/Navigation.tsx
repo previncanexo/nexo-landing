@@ -16,6 +16,8 @@ export function Navigation({ onOpenCheckout: _onOpenCheckout }: NavigationProps)
   void _onOpenCheckout;
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  // Sección visible (para marcar el link activo del nav de desktop). Arranca en null: igual que el SSG.
+  const [activeHref, setActiveHref] = useState<string | null>(null);
 
   function scrollToPlanes() {
     const el = document.getElementById('beneficios');
@@ -26,6 +28,21 @@ export function Navigation({ onOpenCheckout: _onOpenCheckout }: NavigationProps)
     const onScroll = () => setScrolled(window.scrollY > 60);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => {
+    if (!('IntersectionObserver' in window)) return;
+    const ids = ['beneficios', 'carta', 'como', 'faq'];
+    const els = ids.map((id) => document.getElementById(id)).filter((el): el is HTMLElement => !!el);
+    // Franja fina a ~35% del alto: la sección que la cruza es la "actual"
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) if (e.isIntersecting) setActiveHref(`#${e.target.id}`);
+      },
+      { rootMargin: '-35% 0px -64% 0px' },
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
   }, []);
 
   useEffect(() => {
@@ -64,7 +81,8 @@ export function Navigation({ onOpenCheckout: _onOpenCheckout }: NavigationProps)
                 <li key={link.href}>
                   <a
                     href={link.href}
-                    className="text-[13px] text-white/80 no-underline font-medium px-3.5 py-2 rounded-full transition-all duration-200 hover:text-white hover:bg-white/10 block whitespace-nowrap"
+                    data-active={activeHref === link.href}
+                    className="nav-link text-[13px] text-white/80 no-underline font-medium px-3.5 py-2.5 rounded-full transition-all duration-200 hover:text-white hover:bg-white/10 block whitespace-nowrap"
                   >
                     {link.label}
                   </a>
@@ -95,7 +113,7 @@ export function Navigation({ onOpenCheckout: _onOpenCheckout }: NavigationProps)
                 href={PORTAL_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 text-[13px] font-semibold text-white/80 no-underline px-3.5 py-2 rounded-full border border-white/25 transition-all duration-200 hover:bg-white/10 hover:text-white hover:border-white/40 active:scale-95 whitespace-nowrap"
+                className="flex items-center gap-1.5 text-[13px] font-semibold text-white/80 no-underline px-3.5 py-3 rounded-full border border-white/25 transition-all duration-200 hover:bg-white/10 hover:text-white hover:border-white/40 active:scale-95 whitespace-nowrap"
                 style={{ backgroundColor: 'rgba(255,255,255,0.07)' }}
               >
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -106,7 +124,7 @@ export function Navigation({ onOpenCheckout: _onOpenCheckout }: NavigationProps)
               </a>
               <button
                 onClick={scrollToPlanes}
-                className="bg-white text-[var(--purple)] border-none px-5 py-2.5 rounded-full text-[13px] font-bold cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-[1.02] active:scale-95 font-['DM_Sans'] whitespace-nowrap flex items-center gap-1.5 group"
+                className="bg-white text-[var(--purple)] border-none px-5 py-3 rounded-full text-[13px] font-bold cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-[1.02] active:scale-95 font-['DM_Sans'] whitespace-nowrap flex items-center gap-1.5 group"
               >
                 Quiero mi cobertura
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="group-hover:translate-x-0.5 transition-transform">
@@ -138,7 +156,7 @@ export function Navigation({ onOpenCheckout: _onOpenCheckout }: NavigationProps)
                 href={PORTAL_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1 text-[11px] font-semibold text-white no-underline px-3 py-2 rounded-full border border-white/30 transition-all hover:bg-white/20 active:scale-95"
+                className="flex items-center gap-1 min-h-[44px] text-[11px] font-semibold text-white no-underline px-3.5 rounded-full border border-white/30 transition-all hover:bg-white/20 active:scale-95"
                 style={{ backgroundColor: 'rgba(255,255,255,0.10)' }}
               >
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -149,9 +167,10 @@ export function Navigation({ onOpenCheckout: _onOpenCheckout }: NavigationProps)
               </a>
               <button
                 onClick={() => setMobileOpen(!mobileOpen)}
-                className="w-9 h-9 flex items-center justify-center rounded-full border border-white/20 cursor-pointer transition-all hover:bg-white/20 active:scale-95"
+                className="w-11 h-11 flex items-center justify-center rounded-full border border-white/20 cursor-pointer transition-all hover:bg-white/20 active:scale-95"
                 style={{ backgroundColor: 'rgba(255,255,255,0.10)' }}
                 aria-label="Menú"
+                aria-expanded={mobileOpen}
               >
                 <div className="flex flex-col gap-[4px]">
                   <span className={`block w-[18px] h-[1.5px] bg-white rounded-full transition-all duration-300 origin-center ${mobileOpen ? 'rotate-45 translate-y-[5.5px]' : ''}`} />
@@ -180,7 +199,7 @@ export function Navigation({ onOpenCheckout: _onOpenCheckout }: NavigationProps)
       >
         <button
           onClick={() => setMobileOpen(false)}
-          className="absolute top-5 right-4 z-10 w-10 h-10 flex items-center justify-center rounded-xl border border-white/20 bg-white/10 cursor-pointer hover:bg-white/20 active:scale-95 transition-all"
+          className="absolute top-5 right-4 z-10 w-11 h-11 flex items-center justify-center rounded-xl border border-white/20 bg-white/10 cursor-pointer hover:bg-white/20 active:scale-95 transition-all"
           aria-label="Cerrar menú"
         >
           <div className="flex flex-col gap-[5px]">
@@ -195,7 +214,14 @@ export function Navigation({ onOpenCheckout: _onOpenCheckout }: NavigationProps)
             {navLinks.map((link, i) => (
               <li
                 key={link.href}
-                className="w-full"
+                className="w-full transition-[opacity,transform] duration-500"
+                style={{
+                  // Entrada escalonada de los links al abrir el menú (opacity/transform, barato en mobile)
+                  opacity: mobileOpen ? 1 : 0,
+                  transform: mobileOpen ? 'none' : 'translateY(14px)',
+                  transitionTimingFunction: 'var(--ease-out-expo)',
+                  transitionDelay: mobileOpen ? `${80 + i * 55}ms` : '0ms',
+                }}
               >
                 <a
                   href={link.href}

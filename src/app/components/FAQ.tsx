@@ -77,14 +77,14 @@ export function FAQ({ items }: FAQProps) {
               <m.div key={index} variants={staggerItem}>
                 <AccordionItem
                   value={`item-${index}`}
-                  className="rounded-2xl overflow-hidden border"
+                  className="rounded-2xl overflow-hidden border transition-colors duration-300 data-[state=open]:border-[rgba(238,92,208,0.38)]! data-[state=open]:bg-white/[0.09]!"
                   style={{
                     background: 'rgba(255, 255, 255, 0.06)',
                     borderColor: 'rgba(255, 255, 255, 0.10)',
                   }}
                 >
                   <AccordionTrigger
-                    className="px-6 py-5 hover:no-underline group [&[data-state=open]]:pb-3 hover:bg-white/[0.04] transition-colors duration-200"
+                    className="px-6 py-5 hover:no-underline group [&[data-state=open]]:pb-3 hover:bg-white/[0.04] transition-colors duration-200 [&>svg]:hidden focus-visible:ring-[var(--pink)]/60"
                   >
                     <div className="flex items-center gap-4 text-left">
                       <div

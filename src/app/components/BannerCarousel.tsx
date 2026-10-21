@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import bannerTeleconsulta from '@/assets/banner-teleconsulta.webp';
 import bannerFarmacias from '@/assets/banner-farmacias.webp';
 import bannerEmergencias from '@/assets/banner-emergencias.webp';
@@ -58,12 +58,14 @@ const overlayStyle = {
 export function BannerCarousel() {
   const [current, setCurrent] = useState(0);
   const [paused, setPaused] = useState(false);
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
 
   const next = useCallback(() => setCurrent((c) => (c + 1) % slides.length), []);
   const goPrev = useCallback(() => setCurrent((c) => (c - 1 + slides.length) % slides.length), []);
 
   useEffect(() => {
-    if (paused) return;
+    // Con reduced-motion no hay rotación automática (WCAG 2.2.2): se navega con flechas/dots/swipe
+    if (paused || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const id = setInterval(next, 5000);
     return () => clearInterval(id);
   }, [paused, next]);
@@ -74,6 +76,16 @@ export function BannerCarousel() {
       style={{ height: 'clamp(320px, 52vw, 620px)', background: '#12053d' }}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
+      // Swipe horizontal en touch (sin librerías): >40px y más horizontal que vertical
+      onTouchStart={(e) => { touchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY }; }}
+      onTouchEnd={(e) => {
+        const s0 = touchStart.current;
+        touchStart.current = null;
+        if (!s0) return;
+        const dx = e.changedTouches[0].clientX - s0.x;
+        const dy = e.changedTouches[0].clientY - s0.y;
+        if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.5) (dx < 0 ? next : goPrev)();
+      }}
     >
       {/* Todas las slides apiladas — solo la activa tiene opacity 1 */}
       {slides.map((slide, i) => (
@@ -99,7 +111,7 @@ export function BannerCarousel() {
             fetchpriority="low"
             decoding={i === 0 ? 'sync' : 'async'}
             draggable={false}
-            className="w-full h-full object-cover select-none"
+            className={`w-full h-full object-cover select-none ${i === current ? 'fx-slide-active' : ''}`}
             style={{ objectPosition: slide.position }}
           />
           <div className="absolute inset-0" style={overlayStyle} />
@@ -110,7 +122,7 @@ export function BannerCarousel() {
       {slides.map((slide, i) => (
         <div
           key={`text-${i}`}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 text-center w-full px-6"
+          className="absolute bottom-12 left-1/2 -translate-x-1/2 text-center w-full px-6"
           style={{
             zIndex: 5,
             opacity: i === current ? 1 : 0,
@@ -128,30 +140,35 @@ export function BannerCarousel() {
         </div>
       ))}
 
-      {/* Dots */}
-      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2" style={{ zIndex: 10 }}>
+      {/* Dots: el punto visible mide 8px, pero el botón tiene ~28px de área táctil (padding) */}
+      <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2 flex" style={{ zIndex: 10 }}>
         {slides.map((_, i) => (
           <button
             key={i}
             onClick={() => setCurrent(i)}
             aria-label={`Slide ${i + 1}`}
-            className="transition-all duration-300 rounded-full"
-            style={{
-              width: i === current ? '28px' : '8px',
-              height: '8px',
-              background: i === current
-                ? 'linear-gradient(to right, var(--purple), var(--pink))'
-                : 'rgba(255,255,255,0.4)',
-            }}
-          />
+            aria-current={i === current}
+            className="flex items-center justify-center px-2.5 py-3 cursor-pointer"
+          >
+            <span
+              className="block rounded-full transition-all duration-300"
+              style={{
+                width: i === current ? '28px' : '8px',
+                height: '8px',
+                background: i === current
+                  ? 'linear-gradient(to right, var(--purple), var(--pink))'
+                  : 'rgba(255,255,255,0.4)',
+              }}
+            />
+          </button>
         ))}
       </div>
 
       {/* Flecha anterior */}
       <button
         onClick={goPrev}
-        className="absolute left-4 sm:left-6 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110"
-        style={{ zIndex: 10, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.25)' }}
+        className="absolute left-4 sm:left-6 top-1/2 -translate-y-1/2 carousel-arrow w-11 h-11 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95"
+        style={{ zIndex: 10, background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.25)' }}
         aria-label="Anterior"
       >
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -162,8 +179,8 @@ export function BannerCarousel() {
       {/* Flecha siguiente */}
       <button
         onClick={next}
-        className="absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110"
-        style={{ zIndex: 10, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.25)' }}
+        className="absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 carousel-arrow w-11 h-11 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95"
+        style={{ zIndex: 10, background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.25)' }}
         aria-label="Siguiente"
       >
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
