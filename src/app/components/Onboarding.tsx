@@ -14,6 +14,7 @@ interface FormData {
   whatsapp: string;
   dni: string;
   fecha_nacimiento: string;
+  altura: string;
   ciudad: string;
   calle: string;
   numero: string;
@@ -34,6 +35,7 @@ const initialForm: FormData = {
   whatsapp: '',
   dni: '',
   fecha_nacimiento: '',
+  altura: '',
   ciudad: '',
   calle: '',
   numero: '',
@@ -246,6 +248,9 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
         minAge.setFullYear(minAge.getFullYear() - 18);
         if (isNaN(birth.getTime()) || birth > minAge) invalid.add('fecha_nacimiento');
       }
+      // Altura en cm. Rango razonable 120-230 para evitar typos (ej. 1 o 2000).
+      const altura = parseInt(form.altura.trim(), 10);
+      if (!Number.isFinite(altura) || altura < 120 || altura > 230) invalid.add('altura');
     } else if (s === 4) {
       if (!form.ciudad) invalid.add('ciudad');
       if (!form.calle.trim()) invalid.add('calle');
@@ -414,6 +419,7 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
           plan_slug: plan.slug,
           dni: form.dni.trim(),
           fecha_nacimiento: form.fecha_nacimiento,
+          altura_cm: parseInt(form.altura.trim(), 10) || undefined,
           ciudad: form.ciudad,
           calle: form.calle.trim(),
           numero: form.numero.trim(),
@@ -533,6 +539,7 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
       enrichLeadInBackground(leadId, {
         dni: form.dni.trim(),
         fecha_nacimiento: form.fecha_nacimiento,
+        altura_cm: parseInt(form.altura.trim(), 10) || undefined,
       });
     }
 
@@ -804,6 +811,19 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
                     value={form.fecha_nacimiento}
                     onChange={(iso) => setField('fecha_nacimiento', iso)}
                     hasError={isInvalid('fecha_nacimiento')}
+                  />
+                </div>
+                <div className="ob-field">
+                  <label className="ob-label">Altura (cm)</label>
+                  <input
+                    className={`ob-input${errCls('altura')}`}
+                    type="number"
+                    inputMode="numeric"
+                    min={120}
+                    max={230}
+                    value={form.altura}
+                    onChange={(e) => setField('altura', e.target.value.replace(/\D/g, ''))}
+                    placeholder="170"
                   />
                 </div>
                 {error && <ErrorMsg msg={error} />}
