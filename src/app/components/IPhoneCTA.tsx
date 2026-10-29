@@ -31,7 +31,7 @@ export function IPhoneCTA({ isVisible, onOpenCheckout }: IPhoneCTAProps) {
           >
             <div className="min-w-0">
               <p className="text-[11px] font-medium text-[var(--gray-500)] leading-none mb-0.5">Previnca Nexo</p>
-              <p className="text-base font-bold text-[var(--gray-900)] leading-tight">$19.500/mes</p>
+              <p className="text-base font-bold text-[var(--gray-900)] leading-tight">$15.000/mes</p>
             </div>
             <button
               onClick={onOpenCheckout}

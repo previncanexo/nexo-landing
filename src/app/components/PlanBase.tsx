@@ -258,7 +258,7 @@ export function PlanBase() {
                   <div className="text-[11px] text-[var(--gray-400)] font-medium uppercase tracking-[0.18em] mb-4">Suscripción mensual</div>
                   <div className="flex items-baseline gap-2 mb-5">
                     <span className="font-['DM_Serif_Display'] text-[clamp(40px,7.5vw,96px)] text-transparent bg-clip-text bg-gradient-to-br from-[var(--purple)] to-[var(--pink)] tracking-[-3px] leading-none inline-block pr-2">
-                      $19.500
+                      $15.000
                     </span>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-[var(--gray-500)]">

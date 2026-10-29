@@ -1,5 +1,5 @@
 // Catálogo comercial del landing. Producción vende un único plan ("Previnca
-// Nexo") a $19.500. El array queda abierto para sumar planes sin tocar el
+// Nexo") a $15.000. El array queda abierto para sumar planes sin tocar el
 // Onboarding, que se apoya en PLANES / PlanComercial para resolver el plan por
 // slug (coincide con la columna `slug` de la tabla `plans` del portal).
 
@@ -13,7 +13,7 @@ export const PLANES: PlanComercial[] = [
   {
     slug: 'nexo-1',
     nombre: 'Previnca Nexo',
-    precio: 19500,
+    precio: 15000,
   },
 ];
 
