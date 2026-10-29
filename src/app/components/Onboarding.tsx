@@ -14,7 +14,6 @@ interface FormData {
   whatsapp: string;
   dni: string;
   fecha_nacimiento: string;
-  altura: string;
   ciudad: string;
   calle: string;
   numero: string;
@@ -35,7 +34,6 @@ const initialForm: FormData = {
   whatsapp: '',
   dni: '',
   fecha_nacimiento: '',
-  altura: '',
   ciudad: '',
   calle: '',
   numero: '',
@@ -248,9 +246,6 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
         minAge.setFullYear(minAge.getFullYear() - 18);
         if (isNaN(birth.getTime()) || birth > minAge) invalid.add('fecha_nacimiento');
       }
-      // Altura en cm. Rango razonable 120-230 para evitar typos (ej. 1 o 2000).
-      const altura = parseInt(form.altura.trim(), 10);
-      if (!Number.isFinite(altura) || altura < 120 || altura > 230) invalid.add('altura');
     } else if (s === 4) {
       if (!form.ciudad) invalid.add('ciudad');
       if (!form.calle.trim()) invalid.add('calle');
@@ -419,7 +414,6 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
           plan_slug: plan.slug,
           dni: form.dni.trim(),
           fecha_nacimiento: form.fecha_nacimiento,
-          altura_cm: parseInt(form.altura.trim(), 10) || undefined,
           ciudad: form.ciudad,
           calle: form.calle.trim(),
           numero: form.numero.trim(),
@@ -539,7 +533,6 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
       enrichLeadInBackground(leadId, {
         dni: form.dni.trim(),
         fecha_nacimiento: form.fecha_nacimiento,
-        altura_cm: parseInt(form.altura.trim(), 10) || undefined,
       });
     }
 
@@ -813,19 +806,6 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
                     hasError={isInvalid('fecha_nacimiento')}
                   />
                 </div>
-                <div className="ob-field">
-                  <label className="ob-label">Altura (cm)</label>
-                  <input
-                    className={`ob-input${errCls('altura')}`}
-                    type="number"
-                    inputMode="numeric"
-                    min={120}
-                    max={230}
-                    value={form.altura}
-                    onChange={(e) => setField('altura', e.target.value.replace(/\D/g, ''))}
-                    placeholder="170"
-                  />
-                </div>
                 {error && <ErrorMsg msg={error} />}
                 <div className="ob-actions">
                   <button type="button" className="ob-btn" onClick={prev}>← Atrás</button>
@@ -856,7 +836,7 @@ export function Onboarding({ onClose, planSlug }: { onClose: () => void; planSlu
                 </div>
                 <div className="ob-field"><label className="ob-label">Calle</label><input className={`ob-input${errCls('calle')}`} type="text" value={form.calle} onChange={(e) => setField('calle', e.target.value)} placeholder="Nombre de la calle" /></div>
                 <div className="ob-field-grid">
-                  <div className="ob-field"><label className="ob-label">Número</label><input className={`ob-input${errCls('numero')}`} type="text" inputMode="numeric" value={form.numero} onChange={(e) => setField('numero', e.target.value)} placeholder="1234" /></div>
+                  <div className="ob-field"><label className="ob-label">Número</label><input className={`ob-input${errCls('numero')}`} type="text" inputMode="numeric" pattern="[0-9]*" maxLength={6} value={form.numero} onChange={(e) => setField('numero', e.target.value.replace(/\D/g, ''))} placeholder="1234" /></div>
                   <div className="ob-field"><label className="ob-label">Departamento</label><input className="ob-input" type="text" value={form.depto} onChange={(e) => setField('depto', e.target.value)} placeholder="Ej: 3B (opcional)" /></div>
                 </div>
                 <div className="ob-field"><label className="ob-label">Código postal</label><input className={`ob-input${errCls('codigo_postal')}`} type="text" inputMode="numeric" value={form.codigo_postal} onChange={(e) => setField('codigo_postal', e.target.value)} placeholder="Ej: 2000" /></div>
